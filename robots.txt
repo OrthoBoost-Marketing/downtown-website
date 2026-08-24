@@ -1,0 +1,5 @@
+# Client review build. This must not be indexed, and must not compete with
+# downtownorthodontics.ca. Remove this file (and the noindex meta in index.html)
+# only when the site goes live on the real domain.
+User-agent: *
+Disallow: /
