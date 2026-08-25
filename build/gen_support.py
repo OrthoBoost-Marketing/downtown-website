@@ -163,7 +163,7 @@ FAQS = [
     ("Braces or Invisalign: how do we choose?",
      "At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. We charge the same for both, so the recommendation you get is about your bite, not our margin."),
     ("How long does treatment usually take?",
-     "Most full plans run 12 to 24 months, and simpler express cases considerably less. That is the point of the Quick 6 Fix. You will get a realistic timeline at your consultation rather than a vague guess, and we will keep you updated as you progress."),
+     "Treatment length depends on what your bite actually needs, so you will get a realistic timeline for your own case at your consultation rather than a range that may not apply to you. Simple express cases finish considerably sooner, which is the point of the Quick 6 Fix, and we will keep you updated as you progress."),
     ("What about retainers when we are done?",
      "Every plan finishes with clear retainers and a retention plan, because teeth drift if you let them. Dr. Daher checks your retention himself, and if an old retainer has stopped fitting, we can help with that too."),
     ("What if we move partway through treatment?",

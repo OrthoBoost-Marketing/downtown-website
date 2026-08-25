@@ -59,7 +59,7 @@
     {
       "@type": "Question",
       "name": "How long does Invisalign take?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Most full plans run 12 to 24 months and express cases considerably less. You will get a realistic timeline at your consultation rather than a vague guess, and we will keep you updated as you progress. Wear time is the biggest single factor." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Treatment length depends on what your bite needs, so you will get a realistic timeline for your own case at your consultation rather than a range that may not apply to you. Express cases finish considerably sooner. With aligners, wear time is the biggest single factor." }
     },
     {
       "@type": "Question",
@@ -370,10 +370,8 @@
 
   /* ---------- credentials marquee ---------- */
   .creds { padding: 17px 0 19px; border-bottom: var(--border) solid var(--line); background: var(--bg); }
+  .mq-creds { gap: 56px; }
   .creds .t { text-align: center; color: var(--ink-faint); font-size: var(--fs-xs); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 11px; }
-  .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
-  .marquee-track { display: flex; gap: 56px; width: max-content; animation: scroll-x 36s linear infinite; }
-  .marquee:hover .marquee-track { animation-play-state: paused; }
   .cred { display: inline-flex; align-items: center; gap: 10px; color: var(--ink-soft); font-weight: 600; font-size: var(--fs-lg); white-space: nowrap; }
   .cred svg { color: var(--teal-2); }
   @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -522,7 +520,6 @@
   @media (prefers-reduced-motion: reduce){
     html { scroll-behavior: auto; }
     .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-    .marquee-track { animation: none; flex-wrap: wrap; justify-content: center; }
     .btn, .path, .path .pic img, details.f summary .pm { transition: none; }
     header.nav, header.nav .nav-inner, .i-cards > *,
     .nav-mid > a::after, .nav-mid .has-menu > button::after, details.f::details-content { transition: none; }
@@ -663,7 +660,6 @@
   }
 
   /* ============== (KIND WORDS) — vertical testimonial marquee (shadcn-style) ============== */
-  .tgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp-5); align-items:start; }
   .tcard{ background:var(--bg); border:var(--border) solid var(--line); border-radius:var(--radius-lg); padding:var(--sp-6) 22px; box-shadow:var(--shadow-soft); height:100%; }
   .tcard blockquote{ margin:0; font-size:var(--fs-lg); font-weight:400; line-height:1.55; color:var(--ink); letter-spacing:-.005em; }
   .tcard figcaption{ margin-top:18px; display:flex; align-items:center; gap:11px; }
@@ -674,8 +670,6 @@
   .tcard.accent blockquote, .tcard.accent .who b{ color:#fff; }
   .tcard.accent .who span{ color:rgba(255,255,255,.62); }
   .tcard.accent .ava{ background:var(--teal); color:var(--ink-on-teal); }
-  @media (max-width:880px){ .tgrid{ grid-template-columns:repeat(2,1fr); } }
-  @media (max-width:560px){ .tgrid{ grid-template-columns:1fr; } }
 
   /* ============== (WHERE TO FIND US) — floating map card ============== */
   .locations{ background: linear-gradient(180deg, var(--surface), var(--bg) 72%); }
@@ -716,6 +710,65 @@
   .locpin.active .ring{ animation: loc-pulse 1.9s var(--e-out) infinite; }
   @keyframes loc-pulse{ 0%{ transform: scale(1); opacity:.5; } 70%{ transform: scale(3.4); opacity:0; } 100%{ opacity:0; } }
   @media (prefers-reduced-motion: reduce){ .locpin .ring{ animation:none; } .locpin.active .loclabel{ transform: translateX(-50%); } }
+
+  /* ---------- MARQUEE (.mq) — reusable, 2026-08-24 ----------
+     Marquees are permitted on this site provided all three hold, per Jules:
+       1. tap / click / hover / focus pauses the scroll,
+       2. it drags on desktop AND mobile,
+       3. everything inside stays visible to Google.
+     So this is a real horizontally scrollable region, not a CSS transform:
+     native touch drag and keyboard scrolling come for free, and pausing is just
+     stopping the rAF loop. Every card is in the static HTML and NOTHING is ever
+     display:none at any breakpoint, so the whole set is crawlable. The seamless
+     loop is made from JS-injected aria-hidden clones, which Google never sees,
+     so there is no duplicate content either. */
+  .mq-wrap { position: relative; }
+  .mq {
+    display: flex; gap: var(--sp-5); align-items: stretch;
+    overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: none; -ms-overflow-style: none;
+    cursor: grab; padding-bottom: var(--sp-2);
+    /* pan-x pan-y: the browser natively drags this horizontally on touch (with
+       momentum) AND still scrolls the page vertically. The JS drag handler only
+       takes over for mouse and pen, which get no native drag. Setting pan-y here
+       instead silently killed touch dragging entirely. */
+    touch-action: pan-x pan-y;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
+  .mq::-webkit-scrollbar { display: none; }
+  .mq.is-drag { cursor: grabbing; scroll-snap-type: none; }
+  .mq > * { flex: 0 0 auto; }
+  .mq:focus-visible { outline: 2px solid var(--teal-2); outline-offset: 4px; }
+  .mq-reviews > .tcard { width: min(360px, 78vw); }
+  .mq-creds > .cred { flex: 0 0 auto; }
+
+  /* the pause control: real button, keyboard reachable, states driven by aria-pressed */
+  .mq-ctl {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    min-height: var(--tap); padding: 0 var(--sp-4);
+    background: var(--bg); color: var(--ink-soft);
+    border: var(--border) solid var(--line); border-radius: var(--radius-pill);
+    font-family: var(--font); font-size: var(--fs-sm); font-weight: var(--fw-semibold);
+    cursor: pointer; transition: color .2s, border-color .2s;
+  }
+  .mq-ctl:hover { color: var(--ink); border-color: var(--teal-2); }
+  .mq-ctl:focus-visible { outline: 2px solid var(--teal-2); outline-offset: 2px; }
+  .mq-hint { font-size: var(--fs-sm); color: var(--ink-faint); }
+  .mq-bar { display: flex; align-items: center; gap: var(--sp-4); flex-wrap: wrap; margin-top: var(--sp-5); }
+
+  /* rating line: displayed as text only. NEVER marked up as AggregateRating. */
+  .rating-line { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-4); }
+  .rating-line .rl-score { font-family: var(--font-display); font-weight: var(--fw-display);
+    font-size: var(--fs-display-sm); letter-spacing: -.02em; color: var(--ink); line-height: 1; }
+  .rating-line .rl-stars { color: var(--teal-2); letter-spacing: 2px; font-size: var(--fs-md); }
+  .rating-line .rl-meta { font-size: var(--fs-base); color: var(--ink-soft); }
+  .rating-line a { color: var(--teal-2); }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* no auto-scroll at all; it stays a scrollable, draggable region */
+    .mq { scroll-behavior: auto; }
+  }
 
   /* ---------- SUB-PAGE SCAFFOLD + REQUEST FORM (added for the site build, 2026-08-24)
      Additive only. The homepage carries no form and no page-hero, so nothing here
@@ -1109,7 +1162,7 @@
         </details>
         <details class="f">
           <summary>How long does Invisalign take?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
-          <div class="ans"><p>Most full plans run 12 to 24 months and express cases considerably less. You will get a realistic timeline at your consultation rather than a vague guess, and we will keep you updated as you progress. Wear time is the biggest single factor.</p></div>
+          <div class="ans"><p>Treatment length depends on what your bite needs, so you will get a realistic timeline for your own case at your consultation rather than a range that may not apply to you. Express cases finish considerably sooner. With aligners, wear time is the biggest single factor.</p></div>
         </details>
         <details class="f">
           <summary>Can teenagers use Invisalign?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
@@ -1135,7 +1188,7 @@
       </div>
       <div class="foot-base">
         <span>© 2026 Downtown Orthodontics. All rights reserved.</span>
-        <span class="foot-legal"><a href="/privacy-policy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/accessibility">Accessibility Statement</a></span>
+        <span class="foot-legal"><a href="/contact">Contact</a><a href="/privacy-policy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/accessibility">Accessibility Statement</a></span>
       </div>
     </div>
   </footer>
@@ -1357,6 +1410,128 @@
         ho.unobserve(e.target);
       }), { threshold: 0.3, rootMargin: '0px 0px -8% 0px' });
       heads.forEach(h => ho.observe(h));
+    })();
+
+    // ===== MARQUEE (.mq) =====
+    // Permitted on this site only while all three hold: pauses on tap/hover/focus,
+    // drags on desktop and mobile, and every item stays in the DOM for crawlers.
+    // Implemented as a scrollable region whose scrollLeft is advanced by rAF, so
+    // touch drag, momentum and keyboard scrolling are native.
+    (function(){
+      document.querySelectorAll('[data-marquee]').forEach(function(track){
+        var speed = parseFloat(track.getAttribute('data-speed')) || 0.35;
+        var originals = [].slice.call(track.children);
+        if (!originals.length) return;
+
+        // Clone for a seamless loop. Clones are injected here, never in the HTML, and
+        // are aria-hidden, so neither Google nor a screen reader sees duplicates.
+        var half = 0;
+        function buildClones(){
+          track.querySelectorAll('[data-mq-clone]').forEach(function(n){ n.remove(); });
+          half = track.scrollWidth;
+          if (half <= track.clientWidth + 8) return false;   // nothing to scroll
+          originals.forEach(function(n){
+            var c = n.cloneNode(true);
+            c.setAttribute('data-mq-clone','');
+            c.setAttribute('aria-hidden','true');
+            c.querySelectorAll('a,button,input,select,textarea').forEach(function(f){ f.tabIndex = -1; });
+            track.appendChild(c);
+          });
+          return true;
+        }
+        var scrollable = buildClones();
+
+        var paused = false, userPaused = false, dragging = false, raf = null;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Position is accumulated in JS and assigned whole. Incrementing scrollLeft by
+        // a sub-pixel amount does NOT work: the property snaps to integers, so a 0.35
+        // increment is discarded every frame and the strip never moves.
+        var pos = 0;
+        function step(){
+          if (!paused && !dragging && !userPaused && !reduce && scrollable) {
+            pos += speed;
+            if (half > 0 && pos >= half) pos -= half;
+            track.scrollLeft = pos;
+          }
+          raf = requestAnimationFrame(step);
+        }
+
+        // pause on hover, on focus, and on tap/press (pointerdown covers mouse+touch+pen)
+        ['pointerenter','focusin'].forEach(function(ev){ track.addEventListener(ev, function(){ paused = true; }); });
+        ['pointerleave','focusout'].forEach(function(ev){ track.addEventListener(ev, function(){ paused = false; }); });
+
+        // drag, one code path for mouse / touch / pen
+        var startX = 0, startLeft = 0, moved = 0;
+        track.addEventListener('pointerdown', function(e){
+          dragging = true; moved = 0;
+          startX = e.clientX; startLeft = track.scrollLeft;
+          track.classList.add('is-drag');
+          if (e.pointerType !== 'touch') { try { track.setPointerCapture(e.pointerId); } catch(_){} }
+        });
+        track.addEventListener('pointermove', function(e){
+          if (!dragging) return;
+          var dx = e.clientX - startX;
+          moved = Math.abs(dx);
+          // let the browser handle native touch scrolling; drive it ourselves for mouse
+          if (e.pointerType !== 'touch') { track.scrollLeft = startLeft - dx; e.preventDefault(); }
+        });
+        ['pointerup','pointercancel'].forEach(function(ev){
+          track.addEventListener(ev, function(e){
+            if (!dragging) return;
+            dragging = false;
+            track.classList.remove('is-drag');
+            try { track.releasePointerCapture(e.pointerId); } catch(_){}
+            // a tap (no meaningful movement) toggles the pause, which is the
+            // "tap to pause" requirement
+            pos = track.scrollLeft;
+            if (moved < 6 && e.pointerType !== 'touch') { userPaused = !userPaused; syncToggle(); }
+          });
+        });
+        // Touch needs its own tap path. When the browser takes over a touch gesture for
+        // native panning it fires pointercancel, not pointerup, so the pointer-based tap
+        // detection above is unreliable on a phone. touchstart/touchend with a movement
+        // guard is, and it is what makes "tap to pause" actually work on mobile.
+        var tStartX = 0, tStartY = 0, tStartT = 0;
+        track.addEventListener('touchstart', function(e){
+          var t = e.touches[0]; if (!t) return;
+          tStartX = t.clientX; tStartY = t.clientY; tStartT = Date.now();
+          paused = true;                      // hold while a finger is down
+        }, { passive: true });
+        track.addEventListener('touchend', function(e){
+          paused = false;
+          var t = (e.changedTouches && e.changedTouches[0]); if (!t) return;
+          var dx = Math.abs(t.clientX - tStartX), dy = Math.abs(t.clientY - tStartY);
+          if (dx < 8 && dy < 8 && Date.now() - tStartT < 500) {
+            userPaused = !userPaused; syncToggle();
+          }
+          pos = track.scrollLeft;
+        }, { passive: true });
+        track.addEventListener('touchcancel', function(){ paused = false; }, { passive: true });
+
+        // keep the loop seamless when the user drags or flicks past the wrap point
+        track.addEventListener('scroll', function(){
+          if (half <= 0) return;
+          if (track.scrollLeft >= half) track.scrollLeft -= half;
+          else if (track.scrollLeft < 0) track.scrollLeft += half;
+          // keep the accumulator in step with a user drag, flick or keypress,
+          // otherwise the next frame snaps the strip back to where the loop left it
+          if (dragging || paused || userPaused) pos = track.scrollLeft;
+        }, { passive: true });
+
+        var toggle = track.parentElement && track.parentElement.querySelector('[data-marquee-toggle]');
+        function syncToggle(){
+          if (!toggle) return;
+          toggle.setAttribute('aria-pressed', userPaused ? 'true' : 'false');
+          var lbl = toggle.querySelector('[data-marquee-label]');
+          if (lbl) lbl.textContent = userPaused ? 'Play' : 'Pause';
+        }
+        if (toggle) toggle.addEventListener('click', function(){ userPaused = !userPaused; syncToggle(); });
+        syncToggle();
+
+        addEventListener('resize', function(){ scrollable = buildClones(); }, { passive: true });
+        raf = requestAnimationFrame(step);
+      });
     })();
 
   </script>

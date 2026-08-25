@@ -27,7 +27,7 @@ location pages: none (single office)
 
 > Hours are client-confirmed and verified line by line against the Notion Locations record; they may ship in `openingHoursSpecification`.
 > `geo` is deliberately **omit**. The homepage previously carried derived coordinates and they were removed in the 2026-08-24 audit. Do not put them back without the pin from the client's Google Business Profile.
-> The four landmarks above are the client's own. The homepage currently says "two blocks from Waterfront Station", which nobody supplied. Replace it with one of these.
+> The four landmarks above are the client's own and are now the ONLY ones used sitewide. The invented "two blocks from Waterfront Station" was removed on 2026-08-24; zero references remain.
 > Do **not** publish (778) 763-1707 anywhere. That is the Google Ads call-tracking number.
 
 ## Nav (the agreed header tree)
@@ -58,10 +58,13 @@ logo: assets/Logo_Full-Dark_Downtown Orthodontics.png · delivered: yes
 > **PHOTO RULE, from the client's second reviewer:** Dr. Daher must not appear touching or hugging child patients. Three shots were pulled for this on 2026-08-24 (`img-0079`, `img-0081`, `img-4241`). A female provider reads better in family-facing slots. **Consequence: there is currently no photograph of a child anywhere on the site.** Do not solve this by reintroducing a pulled shot.
 
 ## Reviews (quotable — verbatim text, not just a count)
-**NONE ON FILE. This is the build's biggest content gap.**
-- The practice has a Google Business Profile but no review count, rating, or quote has been supplied.
-- The homepage currently runs six clearly-labelled placeholder quotes with a visible mockup note.
-- **Builders must not invent quotes.** Any page type that requires a real quote beside the form ships the slot as a visible placeholder, or the section does not run.
+**RESOLVED 2026-08-24.** Pulled from the practice's live Google Business Profile with Jules present.
+- **Rating: 4.4 out of 5, from 160 Google reviews.** Profile link: `https://www.google.com/maps?cid=9098292092356715373`
+- Displayed as **text only**. Never marked up as `AggregateRating` — the kit bans it and so does Google's self-serving-review policy.
+- Twelve quotes run verbatim in the homepage reviews marquee, each doing a different job:
+  Kim Patara (retention: original Invisalign 2007, teeth have not shifted) · Iryna Ponomarenko (comprehensive method, facial and lip proportions) · S Ismail (walks you through the plan) · Dante Foreman (fast first scan) · Fiona Deng (both kids like him) · SassySips (same-day retainer replacement) · Skyla W (finished Invisalign) · Riaz Meghji (attention to detail, worth the investment) · Jayden Dinh (looked forward to appointments) · amber rold (Invisalign, staff) · Sonya Lee (returning patient) · Atlas Hanen (comfort)
+- **Still to place:** service pages, the appointment page and the financing page each want a topic-matched quote beside the form. Those slots remain visible placeholders until the right quote is assigned per page.
+- **Builders must not invent quotes.** Trim only with an ellipsis at a sentence boundary; never reconstruct.
 
 ## Appointment
 type: free
@@ -86,7 +89,7 @@ The homepage grid is the **audience** split, and it stays at three cards: Kids �
 Also offered, to fold into the pages above rather than give their own: complex bite correction, retreatment, aesthetic braces and aligners, digital scans and imaging, bite and jaw alignment assessment, growth and development evaluation, treatment planning.
 
 ## Proof
-rating: TBD · reviews: TBD · patients: 900 (Notion "Patients Served") · years: 30+ · awards: see below
+rating: 4.4 · reviews: 160 · patients: 900 (Notion "Patients Served") · years: 30+ · awards: see below
 trust bar: credential
 
 Dr. Daher's ten client-supplied credentials (Maya, 2026-08-24 — treat as confirmed, run **Invisalign-first** per Jules's explicit call):
@@ -157,10 +160,10 @@ Derived from the skill's own rules: single doctor → no doctor hub · single of
 One deliberate deviation: a **standalone FAQ page** ships even though the practice is not education-heavy, because eight client-voiced Q&As already exist and are already in the homepage `FAQPage` schema, and the client's own Notion sitemap asks for `/faq`.
 
 ## Open questions / assumptions
-- **TBD — review quotes and the rating/count.** The single biggest gap. Blocks every required quote slot.
+- ~~TBD — review quotes and the rating/count.~~ **RESOLVED 2026-08-24:** 4.4 from 160, twelve quotes live. Per-page quote assignment for the service, appointment and financing forms is still open.
 - **TBD — GHL webhook URL.** Blocks form wiring and the leads backup.
 - **TBD — founding year.** Never write one; "30+ years" is the safe form.
-- **TBD — treatment duration.** The homepage FAQ says "most full plans run 12 to 24 months" and nothing supports it. Confirm or cut.
+- ~~TBD — treatment duration.~~ **RESOLVED 2026-08-24:** softened everywhere. No duration range is published; every answer now points at the consultation for a case-specific timeline.
 - **TBD — social profile URLs** (Instagram, Facebook, Google reviews). The footer row was removed on 2026-08-24 rather than ship dead icons.
 - **TBD — Neera Arora endorsement quote**, named as a proof element in brief §8 and still unsupplied.
 - **ASSUMED — avatar `affordable-ortho`.** Derived from the v2 brief's "specialist for everyone: expert, full-service, affordable".

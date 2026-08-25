@@ -51,7 +51,10 @@ Every internal link is written extensionless. Retrofitting this touched every fi
 Siouxland, which is why it was set before the pages were generated.
 
 **Pages deliberately NOT built**, per the skill's own derivation rules:
-- **No reviews page.** Review count unknown and no verbatim quotes on file.
+- **No reviews page — but this is now unblocked and worth revisiting.** It was skipped
+  because the count was unknown and no quotes existed. Both changed on 2026-08-24: the
+  profile carries **160 reviews at 4.4**, which is well past the kit's rough 40+ threshold
+  for a standalone reviews page. Not built, because it was not asked for. Flagged.
 - **No team page.** The client supplies no bios or headshots. A short team block sits on
   `/why-choose-us` instead, with the gap flagged on the page.
 - **No location pages.** Single office, so the city stays in the homepage H1.
@@ -59,13 +62,62 @@ Siouxland, which is why it was set before the pages were generated.
 - **A standalone FAQ page ships** even though the practice is not education-heavy: eight
   client-voiced Q&As already existed and the client's own sitemap asks for `/faq`.
 
+## Marquees are permitted here (house rule, 2026-08-24)
+
+**The kit's blanket "no carousels or sliders" rule is nullified for this site**, on Jules's
+call, provided all three conditions hold. Do not report a marquee as an audit finding on
+Downtown Orthodontics while they do:
+
+1. **Tap, click, hover or focus pauses it**, and there is a real `<button>` pause toggle
+   with `aria-pressed`.
+2. **It drags on desktop and on mobile.**
+3. **Everything inside stays visible to Google.**
+
+The implementation is the reusable `.mq` component in the homepage stylesheet plus its
+controller in the shared script block. It is a genuinely scrollable region
+(`overflow-x:auto`), not a CSS transform, which is what makes native touch drag, momentum
+and keyboard arrow scrolling work for free.
+
+How each condition is met, and what it cost to get right:
+
+- **Pause.** `pointerenter`/`focusin` pause; `pointerdown` holds. Desktop taps toggle via
+  the pointer path. **Touch needed its own `touchstart`/`touchend` path**, because when the
+  browser takes over a touch gesture for native panning it fires `pointercancel`, not
+  `pointerup`, so pointer-based tap detection is unreliable on a phone.
+- **Drag.** Mouse and pen are driven by the pointer handlers. Touch is native.
+  `touch-action` must be **`pan-x pan-y`**; setting it to `pan-y` hands horizontal
+  gestures to JS, and since the JS handler deliberately skips touch, that silently killed
+  touch dragging altogether.
+- **SEO.** All twelve review cards and all eight credential items sit in the static HTML
+  and are **never `display:none` at any breakpoint** (verified at 320, 390, 768, 1440 and
+  2560). The seamless loop is built from **JS-injected `aria-hidden` clones**, so crawlers
+  see each item exactly once and there is no duplicate content. The old implementation was
+  worse on both counts: it hid whole columns below 880px and 560px, and shipped
+  `aria-hidden` duplicates in the markup.
+- **Sub-pixel trap, worth remembering.** `track.scrollLeft += 0.35` does nothing:
+  `scrollLeft` snaps to integers, so a sub-pixel increment is discarded every frame and the
+  strip never moves. Accumulate the position in a JS variable and assign it whole, and
+  resync that accumulator whenever the user drags, flicks or keys the strip.
+- `prefers-reduced-motion` stops the auto-scroll entirely; it stays a draggable region.
+
+## Reviews are real as of 2026-08-24
+
+Pulled from the practice's live Google Business Profile: **4.4 out of 5 from 160 reviews**,
+with twelve quotes running verbatim in the homepage marquee. The rating is **text only and
+deliberately not marked up** as `AggregateRating`. No star glyphs sit beside the 4.4 either,
+because five solid stars next to a 4.4 misrepresents it.
+
+Per-page quote slots on the service, appointment and financing pages are **still visible
+placeholders** — each wants a topic-matched quote, and assigning them is a content decision.
+
 ## Placeholders on the site, all visible
 
 The brief lists these as `TBD`, so they ship as marked placeholders rather than invented
 content. Each renders in the dashed `.slot` style so nobody mistakes it for copy.
 
-1. **Review quotes**, on `/appointment-request`, `/financing` and all four service pages.
-   The specs require a real quote beside the form; none exists. **Biggest content gap.**
+1. **Per-page review quotes**, on `/appointment-request`, `/financing` and all four service
+   pages. Real reviews now exist and run on the homepage; these slots need a topic-matched
+   quote assigned to each page.
 2. **Dr. Daher's personal story**, on `/dr-sam-daher`. `DOCTOR-PAGE-SPEC` wants story
    before credentials: the origin, what shaped the conservative approach, and 60 words on
    life outside the practice. None is on file, and this build does not invent biography.

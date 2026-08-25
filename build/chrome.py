@@ -76,7 +76,8 @@ LINKMAP = {
     # TIER 2 requires Privacy, Terms and a Web Accessibility Statement in the footer.
     # These were plain text because the pages did not exist; the build creates them.
     '<span>Concept mockup &middot; Privacy &middot; Terms</span>':
-        '<span class="foot-legal"><a href="/privacy-policy">Privacy Policy</a>'
+        '<span class="foot-legal"><a href="/contact">Contact</a>'
+        '<a href="/privacy-policy">Privacy Policy</a>'
         '<a href="/terms">Terms &amp; Conditions</a>'
         '<a href="/accessibility">Accessibility Statement</a></span>',
 }

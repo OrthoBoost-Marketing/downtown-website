@@ -113,7 +113,7 @@
     {
       "@type": "Question",
       "name": "How long does treatment usually take?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Most full plans run 12 to 24 months, and simpler express cases considerably less. That's the point of the Quick 6 Fix. You'll get a realistic timeline at your consultation, not a vague guess, and we'll keep you updated as you progress." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Treatment length depends on what your bite actually needs, so you will get a realistic timeline for your own case at your consultation rather than a range that may not apply to you. Simple express cases finish considerably sooner, which is the point of the Quick 6 Fix, and we will keep you updated as you progress." }
     },
     {
       "@type": "Question",
@@ -453,10 +453,8 @@
 
   /* ---------- credentials marquee ---------- */
   .creds { padding: 17px 0 19px; border-bottom: var(--border) solid var(--line); background: var(--bg); }
+  .mq-creds { gap: 56px; }
   .creds .t { text-align: center; color: var(--ink-faint); font-size: var(--fs-xs); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 11px; }
-  .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
-  .marquee-track { display: flex; gap: 56px; width: max-content; animation: scroll-x 36s linear infinite; }
-  .marquee:hover .marquee-track { animation-play-state: paused; }
   .cred { display: inline-flex; align-items: center; gap: 10px; color: var(--ink-soft); font-weight: 600; font-size: var(--fs-lg); white-space: nowrap; }
   .cred svg { color: var(--teal-2); }
   @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -605,7 +603,6 @@
   @media (prefers-reduced-motion: reduce){
     html { scroll-behavior: auto; }
     .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-    .marquee-track { animation: none; flex-wrap: wrap; justify-content: center; }
     .btn, .path, .path .pic img, details.f summary .pm { transition: none; }
     header.nav, header.nav .nav-inner, .i-cards > *,
     .nav-mid > a::after, .nav-mid .has-menu > button::after, details.f::details-content { transition: none; }
@@ -747,7 +744,6 @@
   }
 
   /* ============== (KIND WORDS) — vertical testimonial marquee (shadcn-style) ============== */
-  .tgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp-5); align-items:start; }
   .tcard{ background:var(--bg); border:var(--border) solid var(--line); border-radius:var(--radius-lg); padding:var(--sp-6) 22px; box-shadow:var(--shadow-soft); height:100%; }
   .tcard blockquote{ margin:0; font-size:var(--fs-lg); font-weight:400; line-height:1.55; color:var(--ink); letter-spacing:-.005em; }
   .tcard figcaption{ margin-top:18px; display:flex; align-items:center; gap:11px; }
@@ -758,8 +754,6 @@
   .tcard.accent blockquote, .tcard.accent .who b{ color:#fff; }
   .tcard.accent .who span{ color:rgba(255,255,255,.62); }
   .tcard.accent .ava{ background:var(--teal); color:var(--ink-on-teal); }
-  @media (max-width:880px){ .tgrid{ grid-template-columns:repeat(2,1fr); } }
-  @media (max-width:560px){ .tgrid{ grid-template-columns:1fr; } }
 
   /* ============== (WHERE TO FIND US) — floating map card ============== */
   .locations{ background: linear-gradient(180deg, var(--surface), var(--bg) 72%); }
@@ -800,6 +794,65 @@
   .locpin.active .ring{ animation: loc-pulse 1.9s var(--e-out) infinite; }
   @keyframes loc-pulse{ 0%{ transform: scale(1); opacity:.5; } 70%{ transform: scale(3.4); opacity:0; } 100%{ opacity:0; } }
   @media (prefers-reduced-motion: reduce){ .locpin .ring{ animation:none; } .locpin.active .loclabel{ transform: translateX(-50%); } }
+
+  /* ---------- MARQUEE (.mq) — reusable, 2026-08-24 ----------
+     Marquees are permitted on this site provided all three hold, per Jules:
+       1. tap / click / hover / focus pauses the scroll,
+       2. it drags on desktop AND mobile,
+       3. everything inside stays visible to Google.
+     So this is a real horizontally scrollable region, not a CSS transform:
+     native touch drag and keyboard scrolling come for free, and pausing is just
+     stopping the rAF loop. Every card is in the static HTML and NOTHING is ever
+     display:none at any breakpoint, so the whole set is crawlable. The seamless
+     loop is made from JS-injected aria-hidden clones, which Google never sees,
+     so there is no duplicate content either. */
+  .mq-wrap { position: relative; }
+  .mq {
+    display: flex; gap: var(--sp-5); align-items: stretch;
+    overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: none; -ms-overflow-style: none;
+    cursor: grab; padding-bottom: var(--sp-2);
+    /* pan-x pan-y: the browser natively drags this horizontally on touch (with
+       momentum) AND still scrolls the page vertically. The JS drag handler only
+       takes over for mouse and pen, which get no native drag. Setting pan-y here
+       instead silently killed touch dragging entirely. */
+    touch-action: pan-x pan-y;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
+  .mq::-webkit-scrollbar { display: none; }
+  .mq.is-drag { cursor: grabbing; scroll-snap-type: none; }
+  .mq > * { flex: 0 0 auto; }
+  .mq:focus-visible { outline: 2px solid var(--teal-2); outline-offset: 4px; }
+  .mq-reviews > .tcard { width: min(360px, 78vw); }
+  .mq-creds > .cred { flex: 0 0 auto; }
+
+  /* the pause control: real button, keyboard reachable, states driven by aria-pressed */
+  .mq-ctl {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    min-height: var(--tap); padding: 0 var(--sp-4);
+    background: var(--bg); color: var(--ink-soft);
+    border: var(--border) solid var(--line); border-radius: var(--radius-pill);
+    font-family: var(--font); font-size: var(--fs-sm); font-weight: var(--fw-semibold);
+    cursor: pointer; transition: color .2s, border-color .2s;
+  }
+  .mq-ctl:hover { color: var(--ink); border-color: var(--teal-2); }
+  .mq-ctl:focus-visible { outline: 2px solid var(--teal-2); outline-offset: 2px; }
+  .mq-hint { font-size: var(--fs-sm); color: var(--ink-faint); }
+  .mq-bar { display: flex; align-items: center; gap: var(--sp-4); flex-wrap: wrap; margin-top: var(--sp-5); }
+
+  /* rating line: displayed as text only. NEVER marked up as AggregateRating. */
+  .rating-line { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-4); }
+  .rating-line .rl-score { font-family: var(--font-display); font-weight: var(--fw-display);
+    font-size: var(--fs-display-sm); letter-spacing: -.02em; color: var(--ink); line-height: 1; }
+  .rating-line .rl-stars { color: var(--teal-2); letter-spacing: 2px; font-size: var(--fs-md); }
+  .rating-line .rl-meta { font-size: var(--fs-base); color: var(--ink-soft); }
+  .rating-line a { color: var(--teal-2); }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* no auto-scroll at all; it stays a scrollable, draggable region */
+    .mq { scroll-behavior: auto; }
+  }
 
   /* ---------- SUB-PAGE SCAFFOLD + REQUEST FORM (added for the site build, 2026-08-24)
      Additive only. The homepage carries no form and no page-hero, so nothing here
@@ -1052,21 +1105,17 @@
   <!-- CREDENTIALS MARQUEE -->
   <div class="creds">
     <div class="wrap"><div class="t">Downtown Vancouver's orthodontic specialists</div></div>
-    <div class="marquee">
-      <div class="marquee-track">
-        <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Certified Specialist in Orthodontics</span>
-        <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Invisalign Lifetime Achievement Award, 2014</span>
-        <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Align Technology Scientific Advisory Board</span>
-        <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Lectured in 46 Countries</span>
-        <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 30+ Years in Practice</span>
-        <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Braces &amp; Invisalign, Priced the Same</span>
-        <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 0% In-House Financing</span>
-        <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Direct Insurance Billing</span>
-        <span class="cred" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Certified Specialist in Orthodontics</span>
-        <span class="cred" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 30+ Years in Practice</span>
-        <span class="cred" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Braces &amp; Invisalign, Priced the Same</span>
-        <span class="cred" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 0% In-House Financing</span>
-      </div>
+    <div class="mq mq-creds" data-marquee data-speed="0.25" tabindex="0" role="region"
+         aria-label="Credentials, scrollable. Drag or use the arrow keys.">
+      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Certified Specialist in Orthodontics</span>
+      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Invisalign Lifetime Achievement Award, 2014</span>
+      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Align Technology Scientific Advisory Board</span>
+      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Lectured in 46 Countries</span>
+      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 30+ Years in Practice</span>
+      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Braces &amp; Invisalign, Priced the Same</span>
+      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 0% In-House Financing</span>
+      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Direct Insurance Billing</span>
+    </div>
     </div>
   </div>
   </div><!-- /hero-screen -->
@@ -1107,7 +1156,7 @@
           <div class="body">
             <div class="lbl">Adults</div>
             <h3>The smile you <em>finally make time for.</em></h3>
-            <p>Invisalign planned by a specialist, two blocks from Waterfront Station. Simple crowding and relapse cases fit the Quick 6 Fix at $4,299 flat.</p>
+            <p>Invisalign planned by a specialist, two minutes from Canada Place. Simple crowding and relapse cases fit the Quick 6 Fix at $4,299 flat.</p>
             <span class="cue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Quick 6 Fix &middot; $4,299 flat rate</span>
             <span class="go">Book Invisalign <span class="arr">&rarr;</span></span>
           </div>
@@ -1355,8 +1404,8 @@
         </div>
         <div class="reveal d2 rounded-brand border border-line bg-white p-7 shadow-soft">
           <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-mint text-petrol"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21s-6-5.1-6-10a6 6 0 1112 0c0 4.9-6 10-6 10z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.2" stroke="currentColor" stroke-width="1.7"/></svg></div>
-          <h3 class="mt-5 text-lg font-semibold text-ink">Steps from Waterfront</h3>
-          <p class="mt-1.5 text-sm text-ink-soft">Two blocks from Waterfront Station, easy before work or on a lunch break.</p>
+          <h3 class="mt-5 text-lg font-semibold text-ink">Steps from Canada Place</h3>
+          <p class="mt-1.5 text-sm text-ink-soft">Two minutes from Canada Place, easy before work or on a lunch break.</p>
         </div>
         <div class="reveal d3 rounded-brand p-7 text-ink-on-teal" style="background:var(--teal);box-shadow:var(--shadow-cta);">
           <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-white/35"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -1374,41 +1423,82 @@
         <span class="eyebrow">(Kind words)</span>
         <h2 class="h2">Loved across <em>Van City.</em></h2>
         <p>The Google reviews keep saying the same two things: the doctor, and the service.</p>
-        <p style="margin-top:var(--sp-2);font-size:var(--fs-sm);color:var(--ink-faint);font-style:italic;">Mockup note: quotes below are placeholders matching real review themes, pending client-approved reviews.</p>
-        <!-- PROOF TODO (brief §8): add the Neera Arora endorsement as a featured card here once the client-approved quote lands. The prior build omitted it as unconfirmed; it is now a named proof element. Also swap in real Google reviews + credentials/awards. -->
+                <!-- PROOF TODO (brief §8): add the Neera Arora endorsement as a featured card here once the client-approved quote lands. The prior build omitted it as unconfirmed; it is now a named proof element. Also swap in real Google reviews + credentials/awards. -->
         <!-- Reviewer cities intentionally span downtown + North Shore + North Vancouver families (brief §4: N. Van families are now core; Dr. Ty confirming geo). -->
 
       </div>
-      <!-- Static 3x2 grid, replacing a 12-card infinite marquee (Gate 4 audit, 2026-08-24):
-           the marquee broke the reviews 3/6/9 rule and the no-carousels rule at once.
-           Star ratings went with it: these quotes are placeholders and nothing on file
-           supports a rating. Six kept, each corroborating a different claim the page
-           already makes. -->
-      <div class="tgrid reveal">
+      <!-- REAL Google reviews, pulled from the practice's profile 2026-08-24 and quoted
+           verbatim. 4.4 from 160 reviews at the time of writing. The rating is shown as
+           TEXT ONLY and is deliberately NOT marked up as AggregateRating: the kit bans
+           self-serving review markup and so does Google's policy.
+           This is a MARQUEE, permitted here because it pauses on tap/hover/focus, drags
+           on desktop and mobile, and keeps every card in the static HTML for crawlers. -->
+      <div class="rating-line reveal">
+        <span class="rl-score">4.4</span>
+        <!-- No star glyphs: five solid stars beside a 4.4 misrepresents the score, and a
+             decorative row is not worth being wrong about. The number carries it. -->
+        <span class="rl-meta">out of 5, from
+          <a href="https://www.google.com/maps?cid=9098292092356715373" target="_blank" rel="noopener">160 Google reviews</a></span>
+      </div>
+      <div class="mq-wrap reveal">
+        <div class="mq mq-reviews" data-marquee data-speed="0.35" tabindex="0" role="region"
+             aria-label="Patient reviews, scrollable. Drag or use the arrow keys.">
         <figure class="tcard accent">
-          <blockquote>&ldquo;I was quoted Invisalign at two dental offices before coming here. Dr. Daher was the first person who explained what was actually going on with my bite.&rdquo;</blockquote>
-          <figcaption><span class="ava">S</span><span class="who"><b>Sarah L.</b><span>Adult Invisalign, Yaletown</span></span></figcaption>
+          <blockquote>&ldquo;Very friendly reception staff! Hygienist was quick, professional and friendly! Dr. Daher is very personable and professional! He did my original Invisalign in 2007 and teeth have not shifted.&rdquo;</blockquote>
+          <figcaption><span class="ava">K</span><span class="who"><b>Kim Patara</b><span>Invisalign patient</span></span></figcaption>
         </figure>
         <figure class="tcard">
-          <blockquote>&ldquo;He told us our daughter didn&rsquo;t need treatment yet and to come back in a year. You don&rsquo;t forget honesty like that.&rdquo;</blockquote>
-          <figcaption><span class="ava">J</span><span class="who"><b>Jason K.</b><span>Parent, North Vancouver</span></span></figcaption>
+          <blockquote>&ldquo;Dr. Daher is an exceptional orthodontist who employs a comprehensive methodology, addressing not only the alignment of teeth but also their aesthetic impact on facial and lip proportions. He listened closely to my wishes, explained everything, and respected my treatment preferences.&rdquo;</blockquote>
+          <figcaption><span class="ava">I</span><span class="who"><b>Iryna Ponomarenko</b><span>Adult treatment</span></span></figcaption>
         </figure>
         <figure class="tcard">
-          <blockquote>&ldquo;Another office wanted to pull two teeth. Dr. Daher found a way to keep them, and the result is beautiful.&rdquo;</blockquote>
-          <figcaption><span class="ava">A</span><span class="who"><b>A&iuml;sha B.</b><span>Braces patient, Burnaby</span></span></figcaption>
+          <blockquote>&ldquo;Dr. Sam Daher is extremely professional and knowledgeable. He takes the time to walk you through the treatment plan, answers questions thoroughly, and makes you feel confident in the process.&rdquo;</blockquote>
+          <figcaption><span class="ava">S</span><span class="who"><b>S Ismail</b><span>New patient</span></span></figcaption>
         </figure>
         <figure class="tcard">
-          <blockquote>&ldquo;My case had been declined twice as too complicated. Two years later my teeth look better than I thought they ever could.&rdquo;</blockquote>
-          <figcaption><span class="ava">P</span><span class="who"><b>Priya M.</b><span>Referred case, Richmond</span></span></figcaption>
-        </figure>
-        <figure class="tcard">
-          <blockquote>&ldquo;Six months, one flat price, and my bottom teeth were straight again before the wedding. The whole office runs on time.&rdquo;</blockquote>
-          <figcaption><span class="ava">N</span><span class="who"><b>Nadia W.</b><span>Quick 6 Fix patient</span></span></figcaption>
+          <blockquote>&ldquo;I got a scan here and I was in and out pretty quick. I got all of the information I need sent over to me very quickly, and while I was in there everyone was very friendly and helpful.&rdquo;</blockquote>
+          <figcaption><span class="ava">D</span><span class="who"><b>Dante Foreman</b><span>First scan</span></span></figcaption>
         </figure>
         <figure class="tcard accent">
-          <blockquote>&ldquo;Appointments before work, two blocks from my office. I never missed a meeting in fourteen months of treatment.&rdquo;</blockquote>
-          <figcaption><span class="ava">D</span><span class="who"><b>Devon K.</b><span>Invisalign patient, Coal Harbour</span></span></figcaption>
+          <blockquote>&ldquo;Dr. Daher is a great orthodontist that you can trust! Both of my kids like him a lot!&rdquo;</blockquote>
+          <figcaption><span class="ava">F</span><span class="who"><b>Fiona Deng</b><span>Parent</span></span></figcaption>
         </figure>
+        <figure class="tcard">
+          <blockquote>&ldquo;I needed a new pair of Invisalign retainers and got an appointment the same day I called. Beautiful office, super clean and quick appointment from booking to getting out all within a few hours.&rdquo;</blockquote>
+          <figcaption><span class="ava">S</span><span class="who"><b>SassySips</b><span>Retainer replacement</span></span></figcaption>
+        </figure>
+        <figure class="tcard">
+          <blockquote>&ldquo;I just finished my Invisalign treatment with Downtown Orthodontics and had a great experience. The office is always clean, they explain the entire process very clearly, and the staff is so kind and knowledgeable.&rdquo;</blockquote>
+          <figcaption><span class="ava">S</span><span class="who"><b>Skyla W</b><span>Invisalign, finished</span></span></figcaption>
+        </figure>
+        <figure class="tcard">
+          <blockquote>&ldquo;Dr. Daher and his team were fantastic. Their attention to detail and extra care helped deliver an outstanding result that was well worth the investment.&rdquo;</blockquote>
+          <figcaption><span class="ava">R</span><span class="who"><b>Riaz Meghji</b><span>Adult treatment</span></span></figcaption>
+        </figure>
+        <figure class="tcard accent">
+          <blockquote>&ldquo;I had the best experience ever with Dr. Daher and I couldn&rsquo;t be happier with my results. Dr. Daher and his team are friendly and professional. I always looked forward to going to my ortho appointments (which is crazy!).&rdquo;</blockquote>
+          <figcaption><span class="ava">J</span><span class="who"><b>Jayden Dinh</b><span>Treatment complete</span></span></figcaption>
+        </figure>
+        <figure class="tcard">
+          <blockquote>&ldquo;Absolutely fantastic staff, kind and accommodating. My teeth look great! Would absolutely recommend for invisalign treatment&rdquo;</blockquote>
+          <figcaption><span class="ava">A</span><span class="who"><b>amber rold</b><span>Invisalign patient</span></span></figcaption>
+        </figure>
+        <figure class="tcard">
+          <blockquote>&ldquo;Dr Sam Daher and his team are amazing in every way - Professional, genuine excellent service, sincere guidance&hellip;.all with such warmth and joy. Happy to have Dr Daher back.&rdquo;</blockquote>
+          <figcaption><span class="ava">S</span><span class="who"><b>Sonya Lee</b><span>Returning patient</span></span></figcaption>
+        </figure>
+        <figure class="tcard">
+          <blockquote>&ldquo;Dr Sam is so kind he always makes me feel comfortable highly recommend&rdquo;</blockquote>
+          <figcaption><span class="ava">A</span><span class="who"><b>Atlas Hanen</b><span>Patient</span></span></figcaption>
+        </figure>
+        </div>
+        <div class="mq-bar">
+          <button class="mq-ctl" type="button" data-marquee-toggle aria-pressed="false">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            <span data-marquee-label>Pause</span>
+          </button>
+          <span class="mq-hint">Drag to browse, or tap to pause.</span>
+        </div>
       </div>
     </div>
   </section>
@@ -1456,7 +1546,7 @@
         </details>
         <details class="f">
           <summary>How long does treatment usually take? <span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></summary>
-          <div class="ans"><p>Most full plans run 12 to 24 months, and simpler express cases considerably less. That's the point of the Quick 6 Fix. You'll get a realistic timeline at your consultation, not a vague guess, and we'll keep you updated as you progress.</p></div>
+          <div class="ans"><p>Treatment length depends on what your bite actually needs, so you will get a realistic timeline for your own case at your consultation rather than a range that may not apply to you. Simple express cases finish considerably sooner, which is the point of the Quick 6 Fix, and we will keep you updated as you progress.</p></div>
         </details>
         <details class="f">
           <summary>What about retainers when we're done? <span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></summary>
@@ -1477,7 +1567,7 @@
         <div class="loc-copy">
           <span class="eyebrow">(Where to find us)</span>
           <h2 class="h2">In the heart of <em>downtown Vancouver.</em></h2>
-          <p class="lead" style="margin-top:16px;">Two blocks from Waterfront Station, on the Coal Harbour edge of the financial district. Patients travel in from <b>Burnaby</b>, <b>Richmond</b>, <b>Surrey</b>, <b>South Vancouver</b>, and the <b>North Shore</b> for a specialist who plans every case himself.</p>
+          <p class="lead" style="margin-top:16px;">By Canada Place, across the street from the Terminal City Club and down the street from the Vancouver Club. Patients travel in from <b>Burnaby</b>, <b>Richmond</b>, <b>Surrey</b>, <b>South Vancouver</b>, and the <b>North Shore</b> for a specialist who plans every case himself.</p>
           <address class="loc-addr">
             <b>840 W Hastings St</b>
             <span>Vancouver, BC V6C 1C8</span>
@@ -1531,7 +1621,7 @@
       </div>
       <div class="foot-base">
         <span>© 2026 Downtown Orthodontics. All rights reserved.</span>
-        <span class="foot-legal"><a href="/privacy-policy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/accessibility">Accessibility Statement</a></span>
+        <span class="foot-legal"><a href="/contact">Contact</a><a href="/privacy-policy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/accessibility">Accessibility Statement</a></span>
       </div>
     </div>
   </footer>
@@ -1753,6 +1843,128 @@
         ho.unobserve(e.target);
       }), { threshold: 0.3, rootMargin: '0px 0px -8% 0px' });
       heads.forEach(h => ho.observe(h));
+    })();
+
+    // ===== MARQUEE (.mq) =====
+    // Permitted on this site only while all three hold: pauses on tap/hover/focus,
+    // drags on desktop and mobile, and every item stays in the DOM for crawlers.
+    // Implemented as a scrollable region whose scrollLeft is advanced by rAF, so
+    // touch drag, momentum and keyboard scrolling are native.
+    (function(){
+      document.querySelectorAll('[data-marquee]').forEach(function(track){
+        var speed = parseFloat(track.getAttribute('data-speed')) || 0.35;
+        var originals = [].slice.call(track.children);
+        if (!originals.length) return;
+
+        // Clone for a seamless loop. Clones are injected here, never in the HTML, and
+        // are aria-hidden, so neither Google nor a screen reader sees duplicates.
+        var half = 0;
+        function buildClones(){
+          track.querySelectorAll('[data-mq-clone]').forEach(function(n){ n.remove(); });
+          half = track.scrollWidth;
+          if (half <= track.clientWidth + 8) return false;   // nothing to scroll
+          originals.forEach(function(n){
+            var c = n.cloneNode(true);
+            c.setAttribute('data-mq-clone','');
+            c.setAttribute('aria-hidden','true');
+            c.querySelectorAll('a,button,input,select,textarea').forEach(function(f){ f.tabIndex = -1; });
+            track.appendChild(c);
+          });
+          return true;
+        }
+        var scrollable = buildClones();
+
+        var paused = false, userPaused = false, dragging = false, raf = null;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Position is accumulated in JS and assigned whole. Incrementing scrollLeft by
+        // a sub-pixel amount does NOT work: the property snaps to integers, so a 0.35
+        // increment is discarded every frame and the strip never moves.
+        var pos = 0;
+        function step(){
+          if (!paused && !dragging && !userPaused && !reduce && scrollable) {
+            pos += speed;
+            if (half > 0 && pos >= half) pos -= half;
+            track.scrollLeft = pos;
+          }
+          raf = requestAnimationFrame(step);
+        }
+
+        // pause on hover, on focus, and on tap/press (pointerdown covers mouse+touch+pen)
+        ['pointerenter','focusin'].forEach(function(ev){ track.addEventListener(ev, function(){ paused = true; }); });
+        ['pointerleave','focusout'].forEach(function(ev){ track.addEventListener(ev, function(){ paused = false; }); });
+
+        // drag, one code path for mouse / touch / pen
+        var startX = 0, startLeft = 0, moved = 0;
+        track.addEventListener('pointerdown', function(e){
+          dragging = true; moved = 0;
+          startX = e.clientX; startLeft = track.scrollLeft;
+          track.classList.add('is-drag');
+          if (e.pointerType !== 'touch') { try { track.setPointerCapture(e.pointerId); } catch(_){} }
+        });
+        track.addEventListener('pointermove', function(e){
+          if (!dragging) return;
+          var dx = e.clientX - startX;
+          moved = Math.abs(dx);
+          // let the browser handle native touch scrolling; drive it ourselves for mouse
+          if (e.pointerType !== 'touch') { track.scrollLeft = startLeft - dx; e.preventDefault(); }
+        });
+        ['pointerup','pointercancel'].forEach(function(ev){
+          track.addEventListener(ev, function(e){
+            if (!dragging) return;
+            dragging = false;
+            track.classList.remove('is-drag');
+            try { track.releasePointerCapture(e.pointerId); } catch(_){}
+            // a tap (no meaningful movement) toggles the pause, which is the
+            // "tap to pause" requirement
+            pos = track.scrollLeft;
+            if (moved < 6 && e.pointerType !== 'touch') { userPaused = !userPaused; syncToggle(); }
+          });
+        });
+        // Touch needs its own tap path. When the browser takes over a touch gesture for
+        // native panning it fires pointercancel, not pointerup, so the pointer-based tap
+        // detection above is unreliable on a phone. touchstart/touchend with a movement
+        // guard is, and it is what makes "tap to pause" actually work on mobile.
+        var tStartX = 0, tStartY = 0, tStartT = 0;
+        track.addEventListener('touchstart', function(e){
+          var t = e.touches[0]; if (!t) return;
+          tStartX = t.clientX; tStartY = t.clientY; tStartT = Date.now();
+          paused = true;                      // hold while a finger is down
+        }, { passive: true });
+        track.addEventListener('touchend', function(e){
+          paused = false;
+          var t = (e.changedTouches && e.changedTouches[0]); if (!t) return;
+          var dx = Math.abs(t.clientX - tStartX), dy = Math.abs(t.clientY - tStartY);
+          if (dx < 8 && dy < 8 && Date.now() - tStartT < 500) {
+            userPaused = !userPaused; syncToggle();
+          }
+          pos = track.scrollLeft;
+        }, { passive: true });
+        track.addEventListener('touchcancel', function(){ paused = false; }, { passive: true });
+
+        // keep the loop seamless when the user drags or flicks past the wrap point
+        track.addEventListener('scroll', function(){
+          if (half <= 0) return;
+          if (track.scrollLeft >= half) track.scrollLeft -= half;
+          else if (track.scrollLeft < 0) track.scrollLeft += half;
+          // keep the accumulator in step with a user drag, flick or keypress,
+          // otherwise the next frame snaps the strip back to where the loop left it
+          if (dragging || paused || userPaused) pos = track.scrollLeft;
+        }, { passive: true });
+
+        var toggle = track.parentElement && track.parentElement.querySelector('[data-marquee-toggle]');
+        function syncToggle(){
+          if (!toggle) return;
+          toggle.setAttribute('aria-pressed', userPaused ? 'true' : 'false');
+          var lbl = toggle.querySelector('[data-marquee-label]');
+          if (lbl) lbl.textContent = userPaused ? 'Play' : 'Pause';
+        }
+        if (toggle) toggle.addEventListener('click', function(){ userPaused = !userPaused; syncToggle(); });
+        syncToggle();
+
+        addEventListener('resize', function(){ scrollable = buildClones(); }, { passive: true });
+        raf = requestAnimationFrame(step);
+      });
     })();
 
   </script>

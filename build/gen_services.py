@@ -375,7 +375,7 @@ build(
         ("Invisalign or braces: how do we choose?",
          "At your consultation we will walk through both honestly for your specific bite. Some cases do beautifully with Invisalign; others are better and faster with braces. We charge the same for both, so the recommendation is about your teeth rather than our margin."),
         ("How long does Invisalign take?",
-         "Most full plans run 12 to 24 months and express cases considerably less. You will get a realistic timeline at your consultation rather than a vague guess, and we will keep you updated as you progress. Wear time is the biggest single factor."),
+         "Treatment length depends on what your bite needs, so you will get a realistic timeline for your own case at your consultation rather than a range that may not apply to you. Express cases finish considerably sooner. With aligners, wear time is the biggest single factor."),
         ("Can teenagers use Invisalign?",
          "Yes. Invisalign Teen is built for it, with wear indicators and replacement allowances for the aligners that inevitably get lost. Whether it suits your teenager depends on the bite and honestly on how reliably they will wear them, which we will talk through together."),
     ],
