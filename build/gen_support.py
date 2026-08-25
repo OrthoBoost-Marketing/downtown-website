@@ -1,0 +1,269 @@
+"""Financing, FAQ and contact pages."""
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import chrome as C
+from common import TICK, PHONE, phero, cta_band, faq_rows, fill, faq_schema
+
+# ==================================================================== FINANCING
+# FINANCIAL-AND-FAQ-PAGE-SPEC: commercial-query H1, the monthly anchor repeated and
+# always tethered to "your exact figure comes from the free consultation", the
+# four-paragraph insurance explainer, and a payment-specific testimonial.
+FIN_FAQS = [
+    ("How much do braces cost in downtown Vancouver?",
+     "Most treatment here starts at $1,000 down and about $220 a month with 0% in-house financing. Simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so your exact figure comes from your free consultation, in writing, before you commit to anything."),
+    ("Do you charge more for Invisalign than braces?",
+     "No. Braces and Invisalign are priced the same here, deliberately, so the recommendation you get is about your bite rather than our margin. It is the simplest way to know the clinical advice you are hearing is actually clinical."),
+    ("Is the financing really 0% interest?",
+     "Yes. It is arranged in-house rather than through a third-party lender, so there is no interest and no credit application to a finance company. $1,000 down, then a monthly amount agreed before treatment starts."),
+    ("Do you bill my insurance directly?",
+     "Yes, we bill your plan directly rather than handing you paperwork to chase. Bring your plan details to the consultation and we will confirm your orthodontic coverage during the visit, so the numbers you hear on the day are real ones."),
+    ("What if I do not have insurance?",
+     "Most of our patients pay through the in-house plan and a good share have no orthodontic coverage at all. $1,000 down and about $220 a month at 0% interest is the same offer either way. Insurance reduces what you pay; it is not what makes treatment possible."),
+    ("Are there ways to pay less?",
+     "Two. Pay in full and save 5%, or save $450 by starting the same day as your consultation. There is also $1,000 off full treatment for braces or Invisalign. We apply whatever you qualify for and show it on the written plan."),
+]
+fin_rows, fin_schema = faq_rows(FIN_FAQS)
+
+FIN_BODY = phero(
+    "Pricing &amp; financing", "Pricing",
+    "Braces payment plans in <em>downtown Vancouver.</em>",
+    "$1,000 down, from about $220 a month at 0% in-house interest, insurance billed directly, and "
+    "your full cost in writing before you decide. No asterisks.",
+) + fill("""
+  <section class="bg-petrol-deep text-white tw-block">
+    <div class="wrap" style="padding-top:clamp(60px,8vw,104px);">
+      <div class="sec-head reveal" style="margin-bottom:clamp(30px,4vw,44px);">
+        <h2 class="h2" style="color:#fff;">The whole arrangement, <em style="color:var(--teal);">in four numbers.</em></h2>
+        <p style="color:rgba(255,255,255,.72);">Your exact figure comes from your free consultation.
+          These are the terms it gets built on.</p>
+      </div>
+    </div>
+    <div class="wrap grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 md:gap-x-10">
+      <div class="reveal text-center md:text-left">
+        <div class="count leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="1000" data-prefix="$">0</div>
+        <div class="mt-2.5 text-sm font-medium text-white/65">down, and that&rsquo;s all to start</div>
+      </div>
+      <div class="reveal d1 text-center md:text-left">
+        <div class="count leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="220" data-prefix="$" data-suffix="/mo">0</div>
+        <div class="mt-2.5 text-sm font-medium text-white/65">braces from, on a monthly plan</div>
+      </div>
+      <div class="reveal d2 text-center md:text-left">
+        <div class="count leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="0" data-suffix="%">0</div>
+        <div class="mt-2.5 text-sm font-medium text-white/65">interest, financed in-house</div>
+      </div>
+      <div class="reveal d3 text-center md:text-left">
+        <div class="count leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="100" data-suffix="%">0</div>
+        <div class="mt-2.5 text-sm font-medium text-white/65">of your insurance billed directly</div>
+      </div>
+    </div>
+    <div class="wrap reveal" style="padding-bottom:clamp(60px,8vw,104px);">
+      <div class="hero-actions" style="margin-top:clamp(34px,5vw,52px);align-items:center;">
+        <a class="btn btn-primary" href="/appointment-request">Get your exact price, free <span class="arr">&rarr;</span></a>
+        <span class="text-sm font-medium text-white/55">Pay in full and save 5%, or save $450 when you start the same day.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">(What is included)</span>
+        <h2 class="h2">What the monthly figure <em>actually covers.</em></h2>
+        <p>Your exact figure comes from your free consultation. Whatever it turns out to be, this is
+          what sits inside it.</p>
+      </div>
+      <ul class="checks reveal d1" style="max-width:760px;">
+        <li>__TICK__<span><b>Every appointment with Dr. Daher.</b> A certified specialist at each
+          adjustment, not a rotating cast.</span></li>
+        <li>__TICK__<span><b>Digital scans and records.</b> No impression trays, and no separate
+          imaging invoice.</span></li>
+        <li>__TICK__<span><b>Braces or Invisalign at the same price.</b> Choose on clinical grounds
+          rather than on cost.</span></li>
+        <li>__TICK__<span><b>Refinement to finish it properly.</b> If the result needs extra work to
+          be right, that is part of the plan.</span></li>
+        <li>__TICK__<span><b>Clear retainers and a retention plan</b> at the end, checked by
+          Dr. Daher himself.</span></li>
+        <li>__TICK__<span><b>Your full cost in writing</b> before anything begins. No surprise fees
+          at the end.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" style="background:var(--surface);">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">(Insurance)</span>
+        <h2 class="h2">How dental insurance <em>actually works here.</em></h2>
+      </div>
+      <div class="prose reveal d1">
+        <h3>A benefit is not a payment plan</h3>
+        <p>Orthodontic coverage is usually a lifetime maximum: a fixed pot your plan will put toward
+          treatment across your whole life, not a percentage of every visit. It is worth knowing
+          that number before you start, because it changes what the monthly figure looks like rather
+          than whether treatment is possible at all.</p>
+        <h3>We file it for you</h3>
+        <p>We bill your plan directly instead of handing you forms to submit and chase. Bring your
+          plan details to the free consultation and we will confirm your orthodontic coverage during
+          the visit, so the figures on your written plan already account for it.</p>
+        <h3>In network, out of network</h3>
+        <p>Most plans that include orthodontics will contribute here. What differs between plans is
+          how much and how quickly, not whether you can be treated. We will tell you what your
+          specific plan does before you commit, including if the honest answer is that it contributes
+          very little.</p>
+        <h3>And if you have no coverage at all</h3>
+        <p>A good share of our patients have none. The in-house plan is the same either way:
+          $1,000 down, about $220 a month, 0% interest. Insurance lowers what you pay. It is not the
+          thing that makes treatment affordable.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap" style="max-width:760px;">
+      <div class="reveal">
+        <span class="eyebrow">(In their words)</span>
+        <p class="slot">Placeholder: a review about the plan or the price goes here, quoted verbatim
+          with attribution. The spec asks specifically for a payment-related quote, and no
+          client-approved quotes are on file yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block faq" style="background:var(--surface);">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">(Money questions)</span>
+        <h2 class="h2">What people ask <em>about paying for it.</em></h2>
+      </div>
+      <div class="faq-list reveal d1">__ROWS__
+      </div>
+    </div>
+  </section>
+""", rows=fin_rows) + cta_band(
+    "Get your exact price, <em>free.</em>",
+    "One visit, a digital scan, and a written plan with the full cost on it. No obligation to start.",
+    "$1,000 down, from $220/mo at 0% in-house financing. Insurance billed directly.")
+
+C.write("financing.html", C.page(
+    title="Braces Payment Plans in Downtown Vancouver | 0% Financing | Downtown Orthodontics",
+    desc="Braces and Invisalign payment plans in downtown Vancouver: $1,000 down, from $220/mo at 0% in-house interest, insurance billed directly. Your exact price in writing at a free consultation.",
+    slug="financing", body=FIN_BODY,
+    schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "mainEntity": [\n%s\n  ]\n}' % fin_schema))
+
+# ==================================================================== FAQ
+FAQS = [
+    ("How much does orthodontic treatment cost in downtown Vancouver?",
+     "Most treatment starts at $1,000 down and about $220 a month with 0% in-house financing, and we bill your insurance directly. Simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so you get your exact price in writing at your free consultation."),
+    ("When should our child first see an orthodontist?",
+     "Around age seven. Most children will not need anything done yet, but an early check lets Dr. Daher see how the jaw is growing and catch anything worth watching while it is still easy to influence. That first visit is always free."),
+    ("I am 40. Is it too late for me?",
+     "Not at all. A good share of our patients are downtown professionals, and bone responds to the same forces at forty as at fourteen. Invisalign keeps it discreet enough that most people will not notice a thing, until they see the result."),
+    ("Who will actually be treating us?",
+     "Dr. Daher, from your first visit to your last. He is a certified specialist in orthodontics with over 30 years in practice, and you will see the same doctor and the same small team throughout, with no rotating faces and no handoffs."),
+    ("Braces or Invisalign: how do we choose?",
+     "At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. We charge the same for both, so the recommendation you get is about your bite, not our margin."),
+    ("How long does treatment usually take?",
+     "Most full plans run 12 to 24 months, and simpler express cases considerably less. That is the point of the Quick 6 Fix. You will get a realistic timeline at your consultation rather than a vague guess, and we will keep you updated as you progress."),
+    ("What about retainers when we are done?",
+     "Every plan finishes with clear retainers and a retention plan, because teeth drift if you let them. Dr. Daher checks your retention himself, and if an old retainer has stopped fitting, we can help with that too."),
+    ("What if we move partway through treatment?",
+     "It happens, and we make it painless. We will prepare your records and help transfer your care to a trusted orthodontist near your new home, with your treatment plan fully documented so nothing has to be worked out twice."),
+    ("Do we need a referral from our dentist?",
+     "No. You can book a free consultation directly and most of our patients do. If your dentist has referred you, bring anything they sent and Dr. Daher will factor it in, but it is not a requirement."),
+    ("Do you treat complex cases other offices have declined?",
+     "Regularly. Referred cases and bites that have already been turned down elsewhere are a normal part of the week here. Dr. Daher's rule is the least treatment that gets the right result, which often means finding an approach somebody else did not."),
+]
+faq_html_rows, faq_schema = faq_rows(FAQS)
+
+FAQ_BODY = phero(
+    "Questions", "Common questions",
+    "The things families <em>ask us first.</em>",
+    "Cost, timing, whether your child is too young, whether you are too old, and what happens if "
+    "life moves you partway through treatment.",
+) + fill("""
+  <section class="block faq">
+    <div class="wrap">
+      <div class="faq-list reveal">__ROWS__
+      </div>
+    </div>
+  </section>
+""", rows=faq_html_rows) + cta_band(
+    "Still have a question? <em>Ask it in person.</em>",
+    "The free consultation exists for exactly this: a specialist&rsquo;s answer on your own bite, with "
+    "no obligation attached.",
+    "Free consultation. No referral needed.")
+
+C.write("faq.html", C.page(
+    title="Orthodontic FAQ | Braces, Invisalign &amp; Cost Questions | Downtown Orthodontics",
+    desc="Answers on braces and Invisalign cost in downtown Vancouver, when children should first be seen, treatment length, retainers, referrals and transfers. From specialist Dr. Sam Daher.",
+    slug="faq", body=FAQ_BODY,
+    schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "mainEntity": [\n%s\n  ]\n}' % faq_schema))
+
+# ==================================================================== CONTACT
+CONTACT_BODY = phero(
+    "Visit us", "Visit",
+    "In the heart of <em>downtown Vancouver.</em>",
+    "840 West Hastings Street, by Canada Place and a short walk from the office towers. Free "
+    "consultations, and no referral needed.",
+) + fill("""
+  <section class="block">
+    <div class="wrap">
+      <div class="reqgrid">
+        <div class="reveal">
+          <span class="eyebrow">(Where and when)</span>
+          <h2 class="h2">Downtown Orthodontics.</h2>
+          <ul class="checks" style="margin-top:var(--sp-6);">
+            <li>__TICK__<span><b>840 W Hastings St</b><br />Vancouver, BC V6C 1C8<br />
+              <a class="tlink" href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">Open in Maps &rarr;</a></span></li>
+            <li>__TICK__<span><b>Monday</b> 10:00 to 18:00<br /><b>Tuesday</b> 08:00 to 15:00<br />
+              <b>Wednesday</b> 08:00 to 16:30<br /><b>Thursday</b> 08:00 to 15:00<br />
+              <span style="color:var(--ink-faint);">Friday to Sunday, closed</span></span></li>
+            <li>__TICK__<span><b>By Canada Place</b>, across from the Terminal City Club and down
+              the street from the Vancouver Club.</span></li>
+          </ul>
+          <p class="promise" style="margin-top:var(--sp-7);">Call the practice</p>
+          <a class="big-tel" href="tel:+16046623290">__PHONE__ (604) 662-3290</a>
+        </div>
+        <div class="formcard reveal d1">
+          <h2>Send us a message</h2>
+          <form method="post" action="" novalidate>
+            <div class="fgrid">
+              <div class="field">
+                <label for="c-first">First name</label>
+                <input id="c-first" name="first_name" type="text" autocomplete="given-name" required />
+              </div>
+              <div class="field">
+                <label for="c-last">Last name</label>
+                <input id="c-last" name="last_name" type="text" autocomplete="family-name" required />
+              </div>
+              <div class="field">
+                <label for="c-phone">Phone</label>
+                <input id="c-phone" name="phone" type="tel" autocomplete="tel" required />
+              </div>
+              <div class="field">
+                <label for="c-email">Email</label>
+                <input id="c-email" name="email" type="email" autocomplete="email" required />
+              </div>
+              <div class="field wide">
+                <label for="c-msg">How can we help?</label>
+                <textarea id="c-msg" name="message" rows="4" style="min-height:96px;min-width:0;width:100%;font-family:var(--font);font-size:16px;color:var(--ink);background:var(--bg);border:var(--border) solid var(--line);border-radius:var(--radius-btn);padding:var(--sp-3) var(--sp-4);"></textarea>
+              </div>
+            </div>
+            <input type="hidden" name="page" value="contact" />
+            <button class="btn btn-primary" type="submit">Send message <span class="arr">&rarr;</span></button>
+          </form>
+          <p class="microline">General enquiries only. Please do not send health information here:
+            Dr. Daher covers anything clinical with you in person. To book, use the
+            <a class="tlink" href="/appointment-request">free consultation request</a>.</p>
+          <!-- The general-inquiry message box is the ONE permitted textarea (build-site rules). -->
+          <!-- NOT WIRED YET: no GHL webhook URL on file. -->
+        </div>
+      </div>
+    </div>
+  </section>
+""")
+
+C.write("contact.html", C.page(
+    title="Contact Downtown Orthodontics | 840 W Hastings St, Vancouver",
+    desc="Downtown Orthodontics, 840 W Hastings St, Vancouver BC. Call (604) 662-3290, Monday to Thursday. Free consultations with specialist orthodontist Dr. Sam Daher, no referral needed.",
+    slug="contact", body=CONTACT_BODY))
