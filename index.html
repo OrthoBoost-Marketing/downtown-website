@@ -221,6 +221,7 @@
     --fs-2xs: .68rem;  --fs-xs: .74rem;  --fs-sm: .82rem;  --fs-base: .92rem;
     --fs-md: .98rem;   --fs-lg: 1.04rem; --fs-xl: 1.12rem; --fs-2xl: 1.18rem;
     --fs-3xl: 1.5rem;  /* card and step headings, the one step above --fs-2xl */
+    --fs-figure: clamp(2.4rem,5vw,3.4rem);  /* the financing counters, the largest figures on the page */
     --fs-display-sm: clamp(1.5rem, 2.6vw, 2rem);
     --fs-display-md: clamp(2rem, 3vw, 2.6rem);
     --fs-display-lg: clamp(2.15rem, 4vw, 3.4rem);
@@ -1126,7 +1127,7 @@
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Align scientific advisory board</span>
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Founder, Daher Aligner Institute</span>
         </div>
-        <p style="margin:0 0 26px;font-size:.92rem;"><a class="tlink" href="#credentials" style="color:var(--teal);">See the full record &rarr;</a></p>
+        <p style="margin:0 0 26px;font-size:var(--fs-base);"><a class="tlink" href="#credentials" style="color:var(--teal);">See the full record &rarr;</a></p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#book">Book with Dr. Daher <span class="arr">&rarr;</span></a>
         </div>
@@ -1204,19 +1205,19 @@
     </div>
     <div class="wrap grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 md:gap-x-10">
       <div class="reveal text-center md:text-left">
-        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:clamp(2.4rem,5vw,3.4rem)" data-count="1000" data-prefix="$">0</div>
+        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="1000" data-prefix="$">0</div>
         <div class="mt-2.5 text-sm font-medium text-white/65">down, and that's all to start</div>
       </div>
       <div class="reveal d1 text-center md:text-left">
-        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:clamp(2.4rem,5vw,3.4rem)" data-count="220" data-prefix="$" data-suffix="/mo">0</div>
+        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="220" data-prefix="$" data-suffix="/mo">0</div>
         <div class="mt-2.5 text-sm font-medium text-white/65">braces from, on a monthly plan</div>
       </div>
       <div class="reveal d2 text-center md:text-left">
-        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:clamp(2.4rem,5vw,3.4rem)" data-count="0" data-suffix="%">0</div>
+        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="0" data-suffix="%">0</div>
         <div class="mt-2.5 text-sm font-medium text-white/65">interest, financed in-house</div>
       </div>
       <div class="reveal d3 text-center md:text-left">
-        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:clamp(2.4rem,5vw,3.4rem)" data-count="100" data-suffix="%">0</div>
+        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="100" data-suffix="%">0</div>
         <div class="mt-2.5 text-sm font-medium text-white/65">of your insurance billed directly</div>
       </div>
     </div>
@@ -1242,7 +1243,7 @@
           <div class="relative flex h-full flex-col justify-end">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" class="mb-auto text-teal"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c0-3.3 3.1-5 7-5s7 1.7 7 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
             <h3 class="mt-6 text-2xl font-bold tracking-tight">One specialist, start to finish.</h3>
-            <p class="mt-3 text-white/75" style="font-size:.98rem;">Dr. Daher plans and supervises every case himself, from your first scan to your final reveal. Never a rotating cast of faces.</p>
+            <p class="mt-3 text-white/75" style="font-size:var(--fs-md);">Dr. Daher plans and supervises every case himself, from your first scan to your final reveal. Never a rotating cast of faces.</p>
           </div>
         </div>
         <div class="reveal d1 rounded-brand border border-line bg-white p-7 shadow-soft">
@@ -1276,7 +1277,7 @@
         <span class="eyebrow">(Kind words)</span>
         <h2 class="h2">Loved across <em>Van City.</em></h2>
         <p>The Google reviews keep saying the same two things: the doctor, and the service.</p>
-        <p style="margin-top:10px;font-size:.82rem;color:var(--ink-faint);font-style:italic;">Mockup note: quotes below are placeholders matching real review themes, pending client-approved reviews.</p>
+        <p style="margin-top:var(--sp-2);font-size:var(--fs-sm);color:var(--ink-faint);font-style:italic;">Mockup note: quotes below are placeholders matching real review themes, pending client-approved reviews.</p>
         <!-- PROOF TODO (brief §8): add the Neera Arora endorsement as a featured card here once the client-approved quote lands. The prior build omitted it as unconfirmed; it is now a named proof element. Also swap in real Google reviews + credentials/awards. -->
         <!-- Reviewer cities intentionally span downtown + North Shore + North Vancouver families (brief §4: N. Van families are now core; Dr. Ty confirming geo). -->
 
