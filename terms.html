@@ -717,6 +717,93 @@
   .foot-hours { display: block; color: var(--on-deep-faint); font-size: var(--fs-sm);
     padding: 3px 0; font-variant-numeric: tabular-nums; }
 
+  /* ---------- REVIEWS PAGE (pages/REVIEWS-PAGE-SPEC) ----------
+     Lives in the shared stylesheet rather than in a page-local <style> so the
+     one-stylesheet-sliced-verbatim invariant the generators depend on still holds. */
+
+  /* aggregate band: rating + count + the outbound Google link */
+  .rv-agg { background: var(--surface); border-block: var(--border) solid var(--line); }
+  .rv-agg .inner { display: flex; flex-wrap: wrap; align-items: baseline;
+    gap: var(--sp-4) var(--sp-8); justify-content: center; text-align: center; }
+  .rv-agg .score { font-family: var(--font-display); font-weight: var(--fw-display);
+    font-size: var(--fs-figure); line-height: 1; letter-spacing: -.03em; color: var(--petrol); }
+  .rv-agg .meta { font-size: var(--fs-lg); color: var(--ink-soft); }
+  .rv-agg .meta a { color: var(--petrol); font-weight: 600; }
+
+  /* skim layer: Google's own review topics, stated as data, non-interactive */
+  .rv-topics { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center;
+    margin-top: var(--sp-7); }
+  /* DIRECT children only. A bare `.rv-topics span` also matched the label and the
+     chips' own inner span, which drew a pill around the label and a second pill inside
+     every chip. */
+  .rv-topics > span { display: inline-flex; align-items: baseline; gap: 7px;
+    border: var(--border) solid var(--line); border-radius: 999px;
+    padding: 7px 15px; font-size: var(--fs-sm); color: var(--ink-soft); background: var(--bg); }
+  .rv-topics b { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+  .rv-topics > span.lbl { display: block; width: 100%; text-align: center;
+    font-size: var(--fs-2xs); letter-spacing: var(--track-label); text-transform: uppercase;
+    color: var(--ink-faint); background: none; border: 0; border-radius: 0;
+    padding: 0; margin-bottom: var(--sp-2); }
+
+  /* one-liner skim marquee. Same .mq component and controller as the homepage, so it
+     pauses on tap/hover/focus, drags on desktop and mobile, and every line sits in the
+     static HTML for crawlers. */
+  .mq-liners .liner { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 11px;
+    background: var(--bg); border: var(--border) solid var(--line);
+    border-radius: var(--radius-lg); padding: 14px 20px; box-shadow: var(--shadow-soft);
+    font-size: var(--fs-md); color: var(--ink); max-width: 44ch; }
+  .mq-liners .liner cite { font-style: normal; font-size: var(--fs-sm);
+    color: var(--ink-faint); white-space: nowrap; }
+
+  /* spotlight: the single most narrative review, promoted out of the wall */
+  .rv-spot { background: var(--petrol-deep); }
+  .rv-spot .inner { max-width: 900px; margin-inline: auto; }
+  .rv-spot .eyebrow { color: var(--on-deep-faint); }
+  .rv-spot blockquote { margin: 0; color: #fff; font-family: var(--font-display);
+    font-weight: var(--fw-display); font-size: clamp(1.15rem, 2.1vw, 1.5rem);
+    line-height: 1.5; letter-spacing: -.01em; }
+  .rv-spot figcaption { margin-top: var(--sp-7); display: flex; align-items: center;
+    gap: 13px; color: var(--on-deep-soft); }
+  .rv-spot .ava { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%;
+    background: var(--teal); color: var(--ink-on-teal); display: grid; place-items: center;
+    font-weight: 700; }
+  .rv-spot .who b { display: block; color: #fff; font-weight: 600; }
+  .rv-spot .who span { display: block; font-size: var(--fs-sm); color: var(--on-deep-faint); }
+
+  /* the wall: masonry, not an equal-height grid */
+  .rv-wall { column-count: 3; column-gap: var(--sp-6); }
+  .rv-wall .rc { break-inside: avoid; margin-bottom: var(--sp-6); }
+  @media (max-width: 980px) { .rv-wall { column-count: 2; } }
+  @media (max-width: 640px) { .rv-wall { column-count: 1; } }
+
+  .rc { background: var(--bg); border: var(--border) solid var(--line);
+    border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-soft); }
+  .rc .rc-top { display: flex; align-items: center; justify-content: space-between;
+    gap: var(--sp-4); margin-bottom: var(--sp-4); }
+  /* Gold at 3.63:1 on white. The obvious #d9a02b sits at 2.33:1, which fails the 3:1
+     non-text contrast minimum, and these stars carry meaning (role=img + label). */
+  .rc .stars { display: inline-flex; gap: 2px; color: #b07d10; }
+  .rc .gmark { flex: 0 0 auto; opacity: .75; }
+  .rc blockquote { margin: 0; font-size: var(--fs-md); line-height: 1.6; color: var(--ink); }
+  .rc figcaption { margin-top: var(--sp-5); display: flex; align-items: center; gap: 11px; }
+  .rc .ava { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--petrol); color: #fff; display: grid; place-items: center;
+    font-weight: 700; font-size: var(--fs-sm); }
+  .rc .who b { display: block; font-weight: 600; font-size: var(--fs-base); color: var(--ink); }
+  .rc .who span { display: block; font-size: var(--fs-xs); color: var(--ink-faint); }
+  .rc .chip { display: inline-block; margin-top: var(--sp-4); font-size: var(--fs-2xs);
+    letter-spacing: var(--track-label); text-transform: uppercase; color: var(--ink-faint);
+    border: var(--border) solid var(--line); border-radius: 999px; padding: 4px 10px; }
+  .rc[hidden] { display: none; }
+
+  .rv-more { display: flex; justify-content: center; margin-top: var(--sp-8); }
+  .rv-more button { min-height: var(--tap); }
+
+  /* bridge sentence: catches the reader at peak trust and feeds the money pages */
+  .rv-bridge { max-width: 720px; margin-inline: auto; text-align: center;
+    font-size: var(--fs-xl); color: var(--ink-soft); }
+  .rv-bridge a { color: var(--petrol); font-weight: 600; }
+
   /* ---------- AUTHORITY LOGOS (.authbar) — Section 07, added 2026-08-25 ----------
      AUTHORITY-LOGOS-SPEC: 4 to 7 marks on one line under a quiet label, muted to a
      single tone, wrapping to two rows on mobile at >=28px tall. Explicitly NOT a
@@ -1017,6 +1104,7 @@
           <div class="menu" role="menu">
             <a href="/dr-sam-daher"><b>Meet Dr. Daher</b><span>30+ years, and the full record</span></a>
             <a href="/why-choose-us"><b>Why the specialist</b><span>Not a dental office doing aligners</span></a>
+            <a href="/reviews"><b>Patient reviews</b><span>28 five-star reviews, in full</span></a>
           </div>
         </div>
         <a href="/financing">Pricing</a>
@@ -1114,7 +1202,7 @@
                URLs exist on the Notion client record. Restore when Maya supplies them. -->
         </div>
         <div class="foot-col"><h4>Treatments</h4><a href="/braces">Braces, clear &amp; metal</a><a href="/early-orthodontics">Kids &amp; early care</a><a href="/invisalign">Invisalign &amp; Quick 6 Fix</a><a href="/retainers">Retainers &amp; aftercare</a></div>
-        <div class="foot-col"><h4>Practice</h4><a href="/dr-sam-daher">Meet Dr. Daher</a><a href="/why-choose-us">Why the specialist</a><a href="/#how">How it works</a><a href="/contact">Visit us</a><a href="/faq">Questions</a></div>
+        <div class="foot-col"><h4>Practice</h4><a href="/dr-sam-daher">Meet Dr. Daher</a><a href="/why-choose-us">Why the specialist</a><a href="/reviews">Patient reviews</a><a href="/#how">How it works</a><a href="/contact">Visit us</a><a href="/faq">Questions</a></div>
         <div class="foot-col"><h4>Visit</h4><a href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">840 W Hastings St, Vancouver</a><a href="tel:+16046623290">(604) 662-3290</a><a href="https://downtownorthodontics.ca">downtownorthodontics.ca</a><span class="foot-hours">Mon 10:00&ndash;18:00 &middot; Tue 08:00&ndash;15:00</span><span class="foot-hours">Wed 08:00&ndash;16:30 &middot; Thu 08:00&ndash;15:00</span><span class="foot-hours">Friday to Sunday, closed</span></div>
       </div>
       <div class="foot-base">

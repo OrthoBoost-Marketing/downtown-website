@@ -375,10 +375,97 @@ so an un-overridden capture shows blank bands. Delete the `__sec-*.html` files a
 - **F 12** the before-and-after section still shows two gradient panels behind a handle, with
   a sub promising a transformation it cannot deliver. Blocked on consented cases.
 
+## The reviews page, 2026-08-26 (17th page)
+
+`REVIEWS-PAGE-SPEC`. The brief had derived *no reviews page* from "review count unknown and
+no quotes"; both halves were false, so the page now exists with **28 reviews**, inside the
+spec's 24 to 30 band for a high-volume practice.
+
+### Every review is a verified five-star review, and here is how that was established
+
+Google's review panel **exposes no accessible rating markup at all**: no `aria-label`, no
+`title`, no schema, no numeric class. The stars are pure SVG with a grey base layer and no
+readable gold overlay, so per-review ratings cannot be scraped. Reading them by eye, card by
+card, would have cost dozens of screenshots.
+
+What worked: **sort the panel by "Lowest rating" and read the ordered author list.** In that
+order the transition to five-star lands exactly at "S Ismail", so the 28 authors before it
+are the complete non-five-star set for this profile. That list is recorded in the header of
+`build/reviews_data.py` and it is the reason **Atlas Hanen (4-star) was dropped** from the
+candidates. Thirteen of the kept reviews were also spot-checked visually.
+
+Do not add a review to that file without establishing its rating the same way.
+
+### Harvesting notes, because this will be done again for other clients
+
+- The panel is **virtualised**. Only 8 to 11 reviews exist in the DOM at a time.
+- **Programmatic scrolling does not load more.** `scrollTop = scrollHeight`, synthetic
+  `wheel` events and synthetic `scroll` events all leave the count unchanged. Only real
+  input events do it: `computer` scroll actions at coordinates over the panel. Maps'
+  own reviews pane refused to load past 8 by any method and had to be abandoned; the
+  **Google *search* review dialog** (`#lrd=<hex>:<hex>,1,,,,`) is the one that paginates.
+- Expand every truncated body by clicking each visible `More` first, then read
+  `innerText` and strip the owner responses. Owner replies otherwise land inside the
+  review text.
+- Extract and stash results **immediately**. The user's tab closed twice mid-harvest and
+  took the in-page working set with it.
+- The tool's JS output is capped at roughly 1 kB, so long review bodies have to be pulled
+  in slices; returning raw `outerHTML` is blocked outright as cookie-adjacent data.
+
+### Schema: the one rule two of three reference sites get wrong
+
+`Dentist` node **only**. No `AggregateRating`, no `Review` objects, anywhere on the page.
+Marking up third-party reviews on your own site is self-serving, ineligible for rich
+results, and a manual-action risk. The 4.4 is displayed prominently and marked up nowhere.
+
+### Anatomy as built
+
+Hero &rarr; aggregate band &rarr; skim layer &rarr; spotlight &rarr; masonry wall &rarr;
+bridge &rarr; CTA band.
+
+- **Skim layer** is a marquee of eight one-liners, permitted under the site's three house
+  conditions and built from the homepage's own `.mq` component and shared controller, so it
+  inherits tap/hover/focus pause, desktop and mobile dragging, and `touch-action: pan-x
+  pan-y`. Every fragment also appears in full in a card below, so the marquee asserts
+  nothing the wall does not. The seamless loop comes from **JS-injected `aria-hidden`
+  clones**, so crawlers see each line exactly once.
+- **Topic chips are Google's own review topics with Google's own counts**, read off the
+  profile. Not our categories, and not editable without re-reading the profile.
+- **Spotlight** is Sally Karimi: told by various professionals that jaw surgery was the only
+  option, treated with Invisalign instead. It is the strongest proof on the profile for the
+  conservative-treatment claim the rest of the site makes. Framed as one patient's account,
+  because that is what it is.
+- **Wall** is masonry via `column-count`, first 9 rendered and the other 18 shipped with
+  `hidden` plus ~20 lines of vanilla load-more that only reveals nodes already in the
+  document. Never JS-injected: that keeps all 28 crawlable and the page CLS-safe.
+
+### Three defects caught while building it
+
+1. **The homepage rating was already on the page.** A `.rating-line` block has displayed
+   "4.4 out of 5, from 160 Google reviews" with the canonical `cid` link since 24 August.
+   The 26 August audit finding claimed the rating "appears only in an HTML comment", which
+   was **wrong**, and the rating eyebrow added on the strength of it made the score appear
+   twice, then three times once the door's count line landed. Eyebrow reverted to a label,
+   count line dropped. The rating now appears **once** in that section.
+2. **`.rv-topics span` was too broad**, so it drew a pill around the section label and a
+   second pill inside every chip. Scoped to `> span`.
+3. **Star gold at `#d9a02b` is 2.33:1 on white**, under the 3:1 non-text minimum, and these
+   stars carry meaning (`role="img"` with a label). Darkened to `#b07d10`, 3.63:1.
+
+### Wiring
+
+`HEADER-SPEC` rule 4 reserves a Why-Us slot for Reviews when the reviews are strong, so
+the dropdown now carries it, and the footer Practice column does too. The homepage reviews
+door points at `/reviews` rather than straight to Google; the reviews page carries the
+outbound `cid` link itself.
+
+Page CSS lives in the **shared stylesheet**, not a page-local `<style>`, so the
+one-stylesheet-sliced-verbatim invariant the generators depend on still holds.
+
 ## Still open at launch
 
-- **Five of the fourteen kit-conformance findings** (F 06, 07, 09, 10, 12 above):
-  two need a Dr. Ty ruling, two need Maya, one needs reviews harvested.
+- **Four of the fourteen kit-conformance findings** (F 06, 07, 10, 12 above): two need
+  a Dr. Ty ruling, two need Maya. **F 09 is closed:** the reviews page ships with 28.
 - Wire the forms (GHL + leads backup), then set the confirmation page as the conversion
   goal in Ads, GA4 and Meta.
 - Drop `noindex` and the `robots.txt` Disallow **together**, and only at launch. Utility

@@ -153,14 +153,16 @@ domain: downtownorthodontics.ca · dns controlled by: CloudFlare (registrar per 
 - [x] terms.html
 - [x] accessibility.html
 - [x] 404.html
+- [x] reviews.html
 
 Flat filenames at the root, served extensionless: `vercel.json` sets `cleanUrls: true`, so `braces.html` resolves at `/braces`. **Every internal link must be written extensionless from the start.** Retrofitting clean URLs touched every file on Siouxland.
 
-Derived from the skill's own rules: single doctor → no doctor hub · single office → no location pages · review count unknown and no quotes → **no reviews page** · client supplies no team content → **no team page** · affordability-led money story → **financing page yes**.
+Derived from the skill's own rules: single doctor → no doctor hub · single office → no location pages · client supplies no team content → **no team page** · affordability-led money story → **financing page yes**.
+> **REVISED 2026-08-26.** The original derivation read "review count unknown and no quotes → no reviews page". Both halves stopped being true on 2026-08-24: the profile is 4.4 from 160. `REVIEWS-PAGE-SPEC` sizes a high-volume practice at 24 to 30 reviews, so **reviews.html ships with 28**, all verified five-star and quoted verbatim.
 One deliberate deviation: a **standalone FAQ page** ships even though the practice is not education-heavy, because eight client-voiced Q&As already exist and are already in the homepage `FAQPage` schema, and the client's own Notion sitemap asks for `/faq`.
 
 ## Open questions / assumptions
-- ~~TBD — review quotes and the rating/count.~~ **RESOLVED 2026-08-24:** 4.4 from 160, twelve quotes live. Per-page quote assignment for the service, appointment and financing forms is still open.
+- ~~TBD — review quotes and the rating/count.~~ **RESOLVED 2026-08-24, extended 2026-08-26:** 4.4 from 160. Twenty-eight verified five-star reviews are now harvested verbatim into `build/reviews_data.py`, which also records the full non-five-star exclusion list and how it was established. Per-page quote assignment for the service, appointment and financing forms is still open, and `reviews_data.py` is the source to draw them from.
 - **TBD — GHL webhook URL.** Blocks form wiring and the leads backup.
 - **TBD — founding year.** Never write one; "30+ years" is the safe form.
 - ~~TBD — treatment duration.~~ **RESOLVED 2026-08-24:** softened everywhere. No duration range is published; every answer now points at the consultation for a case-specific timeline.
