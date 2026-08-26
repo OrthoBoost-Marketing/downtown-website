@@ -1240,14 +1240,6 @@
 
     // Testimonial marquee — duplicate each column once so the vertical loop is seamless
 
-    // Before/After slider — the (invisible) range input drives the --ba clip position
-    document.querySelectorAll('.ba').forEach(ba => {
-      const range = ba.querySelector('.ba-range');
-      if (!range) return;
-      const set = () => ba.style.setProperty('--ba', range.value + '%');
-      range.addEventListener('input', set);
-      set();
-    });
 
     // Count-up stats — animate each number once its band scrolls into view
     (function(){
@@ -1306,33 +1298,6 @@
       upd();
     })();
 
-    // ===== Before/After — one-time "drag me" hint when it enters view =====
-    if (!reduce) (function(){
-      const ba = document.querySelector('.ba');
-      if (!ba) return;
-      const range = ba.querySelector('.ba-range');
-      const hint = new IntersectionObserver((es) => es.forEach(e => {
-        if (!e.isIntersecting) return;
-        hint.disconnect();
-        const apply = v => { ba.style.setProperty('--ba', v + '%'); if (range) range.value = v; };
-        if (AN) { // anime path: one continuous eased sweep through the keyframes
-          const o = { v: 50 };
-          AN.animate(o, { v: [{ to: 66 }, { to: 36 }, { to: 50 }], duration: 1600,
-            ease: 'inOutQuad', onUpdate: () => apply(o.v) });
-          return;
-        }
-        const pts = [50, 66, 36, 50], t0 = performance.now(), dur = 1500;
-        (function tick(now){
-          const p = Math.min(1, (now - t0) / dur);
-          const seg = p * (pts.length - 1), i = Math.min(Math.floor(seg), pts.length - 2), f = seg - i;
-          const s = f * f * (3 - 2 * f);
-          const v = pts[i] + (pts[i + 1] - pts[i]) * s;
-          apply(v);
-          if (p < 1) requestAnimationFrame(tick);
-        })(t0);
-      }), { threshold: .55 });
-      hint.observe(ba);
-    })();
 
     // ===== (HOW IT WORKS) sticky-scroll journey — activate the step whose panel is centered =====
     (function(){

@@ -517,6 +517,46 @@ section. Options, cheapest first:
 - **Full reorder**, which additionally merges the two zigzag rows into a contiguous block
   and moves `#ready` ahead of the authority bar. Most conformant, largest change.
 
+## Homepage trimmed and partly reordered (2026-08-26, Jules)
+
+**Two block moves toward the kit order.** Nothing inside either section changed.
+
+- `#doctor` → directly after the trust bar (kit position 4). "Who will actually treat you"
+  now lands before anything is asked of the reader.
+- `#paths` (services grid) → directly after `#reviews` (kit position 9). The page makes its
+  case before it hands over a directory.
+
+Kit-consecutive pairs respected went **3 of 10 to 5 of 10**, and positions 1 to 4 now match
+the kit exactly. The coarse "in relative order" count stays 9 of 13, because the remaining
+inversions are the ones only a full reorder fixes: the authority bar sits ahead of the
+zigzag, and zigzag row 2 trails after the services grid.
+
+`#same-doctor` lost its `--surface` inline background and takes `--bg`, so reviews, paths
+and same-doctor do not run three identical tints in a row.
+
+**Photo consequence of the doctor move, flagged in the markup and not solved:** the hero
+uses `dt-7.jpg` and the doctor section uses `dt-6.jpg`, near-identical frames from the same
+shoot. Four sections used to separate them; now they are adjacent and read as a duplicate.
+Shuffling the existing set does not fix it, because `img-3127.jpg` is the only other
+Dr. Daher shot and it carries the adults service card. **Fix with the Aug 12 shoot:** one
+more portrait in different surroundings, or a doctor-with-patient frame for the hero, which
+is `HERO-SPEC`'s first-priority subject anyway.
+
+**Before-and-after section removed** (audit F 12). Two gradient placeholder panels behind a
+drag handle, a sub promising "the kind of transformation we create", and a caption admitting
+they were placeholders. It mapped to no kit section type. Its slider driver and its
+"drag me" hint IIFE came out of the script block too: both guarded on the element existing,
+so they were harmless, but dead code that looks live is how a section gets reintroduced.
+
+**Mid-page CTA band removed** (`#ready`, added earlier the same day for audit F 11). The
+closing band before the footer is now the only CTA band on the page. `CTA-BAND-SPEC` treats
+the mid-page slot as the default and the bottom one as the optional repeat, so running only
+the bottom band is a deliberate deviation, recorded here.
+
+Verified after both removals: no console errors, script and section tags balanced, brace and
+paren counts balanced in the sliced script block, and all 17 pages clean at 390 and 1440
+with zero overflow, zero clipped elements and zero sections under 40px.
+
 ## Still open at launch
 
 - **Four of the fourteen kit-conformance findings** (F 06, 07, 10, 12 above): two need
