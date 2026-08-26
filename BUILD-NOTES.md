@@ -548,10 +548,17 @@ they were placeholders. It mapped to no kit section type. Its slider driver and 
 "drag me" hint IIFE came out of the script block too: both guarded on the element existing,
 so they were harmless, but dead code that looks live is how a section gets reintroduced.
 
-**Mid-page CTA band removed** (`#ready`, added earlier the same day for audit F 11). The
-closing band before the footer is now the only CTA band on the page. `CTA-BAND-SPEC` treats
-the mid-page slot as the default and the bottom one as the optional repeat, so running only
-the bottom band is a deliberate deviation, recorded here.
+**One CTA band, and it moved to the mid-page slot.** `#ready`, the dark band added earlier
+the same day for audit F 11, was removed, and the existing closing band (`#book`) was moved
+up from before the footer into `CTA-BAND-SPEC`'s default slot directly after the USP zigzag.
+The page now ends on the locations map.
+
+Jules's call, made with the trade-off stated: there is no closing ask before the footer. Two
+things already in place soften it, and both were measured rather than assumed: **two real
+booking links still follow the band** (one in the locations card, one further down) and the
+**mobile sticky bar** carries Call, Book and Directions on every screen. The spec's optional
+"repeat near page bottom" is therefore unused; running a single band in the default slot is
+conformant, and it is the bottom-of-page repeat that is now absent by choice.
 
 Verified after both removals: no console errors, script and section tags balanced, brace and
 paren counts balanced in the sliced script block, and all 17 pages clean at 390 and 1440
