@@ -110,6 +110,55 @@ because five solid stars next to a 4.4 misrepresents it.
 Per-page quote slots on the service, appointment and financing pages are **still visible
 placeholders** — each wants a topic-matched quote, and assigning them is a content decision.
 
+## Nav follows HEADER-SPEC (restructured 2026-08-25)
+
+Five top-level items, which is the spec shape `Services / Why / Resources / Locations`
+adapted for a single-office affordability practice:
+
+**Treatments ▾** (the four money pages) · **Why us ▾** (Meet Dr. Daher, Why the specialist)
+· **Pricing** · **Resources ▾** (Common questions, How it works, Contact us) ·
+**Our address** · one `tel:` · one primary CTA.
+
+What was wrong before, and why each move follows a rule:
+
+- **`/why-choose-us` was orphaned**, linked from nowhere on the site. Rule 4 makes the
+  Why-Us dropdown mandatory and puts **Meet the Doctor** in it as non-negotiable, the
+  second most-visited page. Both now live there, and Why choose us is also in the footer.
+- **The FAQ was inside the services dropdown.** Rule 3 says that dropdown is money pages
+  only; rule 5 puts patient-utility items in Resources. The FAQ, How it works and Contact
+  moved there.
+- **"Visit" became "Our address"** anchoring the homepage map section, which is what rule 8
+  specifies for a single location. A `Locations ▾` dropdown is for multi-office only.
+- **Pricing keeps its promoted top-level slot** under rule 9, because this practice is
+  positioned on affordability.
+- "Treatments" is kept over "Services": nav label wording is explicitly in the spec's
+  avatar flex layer, and it is the word the client's own site and Maya use.
+
+Verified: 5 top-level items, exactly one `tel:`, exactly one primary CTA, zero social
+icons, and the mobile drawer mirrors the desktop nav.
+
+## Reviews are curated, not just real
+
+Nine kept from the profile, down from twelve. Each one earns its place by proving a
+specific claim the site makes, and generic praise was dropped however glowing, because
+"so kind" and "fantastic staff" prove nothing a competitor could not also claim.
+
+| Review | What it proves |
+|---|---|
+| **Lomish Bhangu** — turned down by one orthodontist, another had no real solution | "Complex and referred cases welcome". **The strongest proof on the whole profile.** |
+| **Kim Patara** — original Invisalign in 2007, teeth have not shifted | Retention, and a result nobody else can claim |
+| **Iryna Ponomarenko** — facial and lip proportions, respected preferences | Specialist planning, not a discount aligner mill |
+| **Riaz Meghji** — "well worth the investment" | Handles the price objection |
+| **S Ismail** — walks you through the plan, answers thoroughly | Clear treatment plan |
+| **SassySips** — retainers, appointment the same day she called | Service speed, and retainer replacement |
+| **Fiona Deng** — "Both of my kids like him a lot!" | Kids and family |
+| **Dante Foreman** — scan, in and out quickly, info sent over | The free first visit |
+| **Skyla W** — finished Invisalign, process explained clearly | Completed treatment |
+
+Do not pad this back out for the sake of a longer loop. The section lede was rewritten to
+match what these reviews actually say, rather than the generic "the doctor and the
+service" line that suited the placeholders.
+
 ## Placeholders on the site, all visible
 
 The brief lists these as `TBD`, so they ship as marked placeholders rather than invented
