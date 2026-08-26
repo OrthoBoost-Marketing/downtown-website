@@ -137,7 +137,12 @@ What was wrong before, and why each move follows a rule:
 Verified: 5 top-level items, exactly one `tel:`, exactly one primary CTA, zero social
 icons, and the mobile drawer mirrors the desktop nav.
 
-## Homepage sections now match Dr. Ty's called-for order (2026-08-25)
+## Homepage now has every section Dr. Ty calls for (2026-08-25)
+
+> **Heading corrected 2026-08-26.** This previously read "now match Dr. Ty's called-for
+> **order**", which was an overclaim: the work below added the missing section *types*, and
+> never touched sequence. The homepage does **not** run in the kit's order. See
+> "Homepage section order does not match the kit" below for the actual diff.
 
 The kit's homepage order is header → hero → trust bar → meet the doctor → **USP zigzag** →
 CTA band → **authority logos** → reviews → services grid → locations → footer. Two of
@@ -461,6 +466,56 @@ outbound `cid` link itself.
 
 Page CSS lives in the **shared stylesheet**, not a page-local `<style>`, so the
 one-stylesheet-sliced-verbatim invariant the generators depend on still holds.
+
+## Homepage section order does not match the kit (open, 2026-08-26)
+
+Measured, not assumed. The 26 August conformance audit laid its ledger out *in* kit order
+and checked each section's **presence**; it never checked **position**. It should have.
+
+| # | In `index.html` | Kit type | Kit wants it at |
+|---|---|---|---|
+| 1 | `header` | header | 1 |
+| 2 | `#top` | hero | 2 |
+| 3 | creds marquee | trust bar | 3 |
+| 4 | `#paths` | **services grid** | **9** |
+| 5 | `#doctor` | **meet the doctor** | **4** |
+| 6 | `#credentials .authbar` | **authority logos** | **7** |
+| 7 | `#financing` | **USP zigzag** | **5** |
+| 8 | `#reviews` | reviews | 8 |
+| 9 | `#same-doctor` | **USP zigzag** (row 2) | **5** |
+| 10 | `#ready` | **CTA band** | **6** |
+| 11 | `#visit` | locations | 10 |
+| 12 | `#book` | CTA band, the permitted repeat | 6 |
+| 13 | `footer` | footer | 11 |
+
+**Nine of thirteen are in correct relative order.** The frame is right: header, hero and
+trust bar open the page, and locations, closing band and footer close it. The middle is
+shuffled, in three ways:
+
+1. **The services grid is five slots too early.** It sits at 4, directly after the trust
+   bar, where the kit puts it at 9, after reviews. This is the largest single displacement,
+   and it changes what the page is: an audience directory up front rather than after the
+   proof has been made.
+2. **Meet the doctor falls after the services grid** rather than immediately after the
+   trust bar, so the "who will treat you" answer arrives later than the kit intends.
+3. **The CTA band, authority logos and reviews are interleaved.** Kit: zigzag → CTA band →
+   authority logos → reviews. As built: authority logos → zigzag row 1 → reviews → zigzag
+   row 2 → CTA band. The **zigzag is also not contiguous**: its two rows straddle reviews.
+
+Five further sections sit between these and belong to no kit type (`#how`, `#results`,
+`#why-specialist`, the bento, `#faq`). The kit does not ban extras, and they are not the
+reason the order diverges.
+
+**Not fixed, because reordering the homepage is exactly the "significant layout change"
+that was ruled out on 2026-08-25.** It is a sequencing decision, not a defect in any single
+section. Options, cheapest first:
+
+- **Leave it**, and record the deviation. The page reads well and every section is present.
+- **Two moves** buy most of the conformance: `#paths` down to after `#reviews`, and
+  `#doctor` up to directly after the trust bar. That fixes displacements 1 and 2 and leaves
+  everything else alone.
+- **Full reorder**, which additionally merges the two zigzag rows into a contiguous block
+  and moves `#ready` ahead of the authority bar. Most conformant, largest change.
 
 ## Still open at launch
 
