@@ -137,6 +137,57 @@ What was wrong before, and why each move follows a rule:
 Verified: 5 top-level items, exactly one `tel:`, exactly one primary CTA, zero social
 icons, and the mobile drawer mirrors the desktop nav.
 
+## Homepage sections now match Dr. Ty's called-for order (2026-08-25)
+
+The kit's homepage order is header → hero → trust bar → meet the doctor → **USP zigzag** →
+CTA band → **authority logos** → reviews → services grid → locations → footer. Two of
+those were missing and two existing sections were doing jobs the kit does not ask for.
+
+**Authority logo bar added** inside the credentials section, per `AUTHORITY-LOGOS-SPEC`.
+Four cells, one quiet label, muted to a single tone, wrapping to 2 columns at 390px with
+marks at 30px. **Not a marquee**: rule 6 bans a scroller in this section and carousels are
+in its banned list, so the site's marquee allowance does not extend here.
+
+Only genuinely held credentials appear, each cell naming the actual relationship:
+
+| Cell | Treatment | Relationship |
+|---|---|---|
+| Invisalign | Official Align file, muted to one tone at 85% | Scientific advisory board, top 1% provider |
+| McGill University | Type only | Alma mater, McCutcheon award |
+| Université de Montréal | Type only | Former associate professor |
+| University of the Pacific | Type only | Former associate professor |
+
+University marks stay **type only** deliberately: institutional logos are portal-gated and
+cropping or recolouring them breaks the institutions' own brand standards.
+
+**Marks deliberately absent, pending one confirmation from Maya:** an AAO or Canadian
+Association of Orthodontists membership mark, Royal College of Dentists of Canada
+certification, and **the Invisalign provider tier**. The practice's own Instagram bio says
+"Blue Diamond" and its TikTok says "Platinum+", which contradict each other, and neither
+came from the client. A Blue Diamond award is also visible on the shelf in the photo used
+on the pricing row, so this is worth simply asking about.
+
+**Two sections converted into the USP zigzag**, which the spec makes mandatory content for
+an affordability avatar and which the homepage did not have:
+
+- **"Specialist care, genuinely affordable"** was a four-counter animated band, which is a
+  trust-bar pattern rather than a zigzag row. It is now the **pricing row** in the bulleted
+  variant (the BrightWay pattern), with a real photo and a contextual text link to
+  `/financing`. Never a button: booking lives in the header, hero and CTA band. The
+  animated counters still live on `/financing`, which is where the money story belongs.
+- **"What families ask first"** was a second FAQ block that duplicated the accordion below
+  it, and it **attributed its questions to invented people** ("Sarah, from Yaletown,
+  asks…"), which is a Tier 1 problem nobody had caught. It is now the **objection-killer
+  row**, "Affordable never means an assembly line", running as the photo-free centred band
+  variant the spec permits rather than reusing a third photograph or touching stock.
+
+**"Accepting new patients" removed from the nav**, as asked.
+
+The trust-bar requirement is satisfied by the hero chips, which `TRUST-BAR-SPEC` names as
+an approved alternate placement. Worth knowing: the credentials marquee under the hero runs
+8 items with tick icons, where that spec wants 3 to 5 cells and typography only. It is left
+alone because the marquee is wanted, but it is a departure.
+
 ## Reviews are curated, not just real
 
 Nine kept from the profile, down from twelve. Each one earns its place by proving a

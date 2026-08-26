@@ -660,6 +660,43 @@
   @keyframes loc-pulse{ 0%{ transform: scale(1); opacity:.5; } 70%{ transform: scale(3.4); opacity:0; } 100%{ opacity:0; } }
   @media (prefers-reduced-motion: reduce){ .locpin .ring{ animation:none; } .locpin.active .loclabel{ transform: translateX(-50%); } }
 
+  /* ---------- AUTHORITY LOGOS (.authbar) — Section 07, added 2026-08-25 ----------
+     AUTHORITY-LOGOS-SPEC: 4 to 7 marks on one line under a quiet label, muted to a
+     single tone, wrapping to two rows on mobile at >=28px tall. Explicitly NOT a
+     marquee or scroller here: rule 6 bans one in this section, and carousels are in
+     its banned list, so the site's marquee allowance does not extend to this band.
+     Only genuinely held credentials appear. The Invisalign mark is the official
+     Align file muted to one tone at 85%; the three university marks are TYPE ONLY
+     because institutional logos are portal-gated and altering them breaks their own
+     brand standards. Each cell names the actual relationship so no mark asserts
+     something vague. */
+  .authbar { border-top: var(--border) solid var(--line); padding-top: var(--sp-7); margin-top: var(--sp-9); }
+  .authbar .lbl { display: block; font-size: var(--fs-2xs); letter-spacing: var(--track-label);
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: var(--sp-6); }
+  /* align-items:start, not end: bottom-aligning cells whose descriptors run to
+     different line counts pushed the marks themselves out of line with each other. */
+  .authgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-7) var(--sp-8);
+    align-items: start; }
+  .authcell { display: flex; flex-direction: column; gap: var(--sp-3); align-items: flex-start; }
+  .authcell .mark { display: flex; align-items: center; height: 34px; }
+  .authcell .mark img { height: 30px; width: auto; }
+  .authcell .wordmark { font-family: var(--font-display); font-weight: var(--fw-medium);
+    font-size: var(--fs-lg); letter-spacing: -.01em; color: var(--petrol); line-height: 1.1; }
+  .authcell .rel { font-size: var(--fs-sm); color: var(--ink-faint); }
+  @media (max-width: 880px) { .authgrid { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---------- USP ZIGZAG (Section 05) ----------
+     Two rows, alternating sides and band tints. Row 2 runs photo-free as the centred
+     band variant the spec permits, rather than reusing a third photo or touching stock. */
+  .uspz .wrap { }
+  .uspz-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,4vw,60px); align-items: center; }
+  .uspz-row h2 { margin-bottom: var(--sp-5); }
+  .uspz-row p { color: var(--ink-soft); font-size: var(--fs-lg); margin: 0 0 var(--sp-4); }
+  .uspz-row .flip { order: -1; }
+  .uspz-centre { max-width: 780px; margin-inline: auto; text-align: center; }
+  .uspz-centre .checks { display: inline-grid; text-align: left; margin-inline: auto; }
+  @media (max-width: 900px) { .uspz-row { grid-template-columns: 1fr; } .uspz-row .flip { order: 0; } }
+
   /* ---------- MARQUEE (.mq) — reusable, 2026-08-24 ----------
      Marquees are permitted on this site provided all three hold, per Jules:
        1. tap / click / hover / focus pauses the scroll,
@@ -937,7 +974,6 @@
         <a href="/#visit">Our address</a>
       </nav>
       <div class="nav-right">
-        <span class="nav-badge"><span class="dot"></span> Accepting new patients</span>
         <a class="nav-tel" href="tel:+16046623290" aria-label="Call Downtown Orthodontics at 604 662 3290"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z" fill="currentColor"/></svg><span class="tel-txt">(604) 662-3290</span></a>
         <a class="btn btn-primary" href="/appointment-request"><span class="cta-lg">Book a free consultation</span><span class="cta-sm">Book free consult</span></a>
       </div>

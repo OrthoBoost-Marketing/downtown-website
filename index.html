@@ -795,6 +795,43 @@
   @keyframes loc-pulse{ 0%{ transform: scale(1); opacity:.5; } 70%{ transform: scale(3.4); opacity:0; } 100%{ opacity:0; } }
   @media (prefers-reduced-motion: reduce){ .locpin .ring{ animation:none; } .locpin.active .loclabel{ transform: translateX(-50%); } }
 
+  /* ---------- AUTHORITY LOGOS (.authbar) — Section 07, added 2026-08-25 ----------
+     AUTHORITY-LOGOS-SPEC: 4 to 7 marks on one line under a quiet label, muted to a
+     single tone, wrapping to two rows on mobile at >=28px tall. Explicitly NOT a
+     marquee or scroller here: rule 6 bans one in this section, and carousels are in
+     its banned list, so the site's marquee allowance does not extend to this band.
+     Only genuinely held credentials appear. The Invisalign mark is the official
+     Align file muted to one tone at 85%; the three university marks are TYPE ONLY
+     because institutional logos are portal-gated and altering them breaks their own
+     brand standards. Each cell names the actual relationship so no mark asserts
+     something vague. */
+  .authbar { border-top: var(--border) solid var(--line); padding-top: var(--sp-7); margin-top: var(--sp-9); }
+  .authbar .lbl { display: block; font-size: var(--fs-2xs); letter-spacing: var(--track-label);
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: var(--sp-6); }
+  /* align-items:start, not end: bottom-aligning cells whose descriptors run to
+     different line counts pushed the marks themselves out of line with each other. */
+  .authgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-7) var(--sp-8);
+    align-items: start; }
+  .authcell { display: flex; flex-direction: column; gap: var(--sp-3); align-items: flex-start; }
+  .authcell .mark { display: flex; align-items: center; height: 34px; }
+  .authcell .mark img { height: 30px; width: auto; }
+  .authcell .wordmark { font-family: var(--font-display); font-weight: var(--fw-medium);
+    font-size: var(--fs-lg); letter-spacing: -.01em; color: var(--petrol); line-height: 1.1; }
+  .authcell .rel { font-size: var(--fs-sm); color: var(--ink-faint); }
+  @media (max-width: 880px) { .authgrid { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---------- USP ZIGZAG (Section 05) ----------
+     Two rows, alternating sides and band tints. Row 2 runs photo-free as the centred
+     band variant the spec permits, rather than reusing a third photo or touching stock. */
+  .uspz .wrap { }
+  .uspz-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,4vw,60px); align-items: center; }
+  .uspz-row h2 { margin-bottom: var(--sp-5); }
+  .uspz-row p { color: var(--ink-soft); font-size: var(--fs-lg); margin: 0 0 var(--sp-4); }
+  .uspz-row .flip { order: -1; }
+  .uspz-centre { max-width: 780px; margin-inline: auto; text-align: center; }
+  .uspz-centre .checks { display: inline-grid; text-align: left; margin-inline: auto; }
+  @media (max-width: 900px) { .uspz-row { grid-template-columns: 1fr; } .uspz-row .flip { order: 0; } }
+
   /* ---------- MARQUEE (.mq) — reusable, 2026-08-24 ----------
      Marquees are permitted on this site provided all three hold, per Jules:
        1. tap / click / hover / focus pauses the scroll,
@@ -1072,7 +1109,6 @@
         <a href="/#visit">Our address</a>
       </nav>
       <div class="nav-right">
-        <span class="nav-badge"><span class="dot"></span> Accepting new patients</span>
         <a class="nav-tel" href="tel:+16046623290" aria-label="Call Downtown Orthodontics at 604 662 3290"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z" fill="currentColor"/></svg><span class="tel-txt">(604) 662-3290</span></a>
         <a class="btn btn-primary" href="/appointment-request"><span class="cta-lg">Book a free consultation</span><span class="cta-sm">Book free consult</span></a>
       </div>
@@ -1322,6 +1358,36 @@
         <div class="ci reveal d1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>McGill&rsquo;s Dr. James McCutcheon award</b><span>Recognised by his alma mater.</span></div></div>
         <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Top 1% of Invisalign providers globally</b><span>And the top provider worldwide from 2009 to 2011.</span></div></div>
       </div>
+
+      <div class="authbar reveal">
+        <span class="lbl">Where the credentials come from</span>
+        <div class="authgrid">
+          <div class="authcell">
+            <span class="mark"><img src="assets/authority/invisalign.png" alt="Invisalign, by Align Technology" /></span>
+            <span class="rel">Scientific advisory board, and a top 1% provider globally</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">McGill University</span></span>
+            <span class="rel">Alma mater, and the Dr. James McCutcheon award</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">Universit&eacute; de Montr&eacute;al</span></span>
+            <span class="rel">Former associate professor</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">University of the Pacific</span></span>
+            <span class="rel">Former associate professor</span>
+          </div>
+        </div>
+        <!-- FLAG: only genuinely held, client-confirmed credentials appear here.
+             Marks that would strengthen this band but are NOT confirmed to us, so are
+             deliberately absent: the AAO or Canadian Association of Orthodontists
+             membership mark, Royal College of Dentists of Canada certification, and the
+             Invisalign provider TIER. The practice's own Instagram bio says "Blue Diamond"
+             and TikTok says "Platinum+", which contradict each other and neither came from
+             the client, so no tier is claimed. One written confirmation from Maya adds any
+             of these. -->
+      </div>
     </div>
   </section>
 
@@ -1354,35 +1420,33 @@
   </section>
 
   <!-- (WITHIN REACH) — affordability/financing module (brief §8): the offer, stated once, in full -->
-  <section class="bg-petrol-deep text-white tw-block" id="financing">
-    <div class="wrap" style="padding-top:clamp(60px,8vw,104px);">
-      <div class="sec-head reveal" style="margin-bottom:clamp(30px,4vw,44px);">
-        <h2 class="h2" style="color:#fff;">Specialist care, <em style="color:var(--teal);">genuinely affordable.</em></h2>
-        <p style="color:rgba(255,255,255,.72);">Expert treatment shouldn't be a luxury purchase. Here's the whole arrangement, no asterisks.</p>
-      </div>
-    </div>
-    <div class="wrap grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 md:gap-x-10">
-      <div class="reveal text-center md:text-left">
-        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="1000" data-prefix="$">0</div>
-        <div class="mt-2.5 text-sm font-medium text-white/65">down, and that's all to start</div>
-      </div>
-      <div class="reveal d1 text-center md:text-left">
-        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="220" data-prefix="$" data-suffix="/mo">0</div>
-        <div class="mt-2.5 text-sm font-medium text-white/65">braces from, on a monthly plan</div>
-      </div>
-      <div class="reveal d2 text-center md:text-left">
-        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="0" data-suffix="%">0</div>
-        <div class="mt-2.5 text-sm font-medium text-white/65">interest, financed in-house</div>
-      </div>
-      <div class="reveal d3 text-center md:text-left">
-        <div class="count font-extrabold leading-none tracking-tight text-teal" style="font-size:var(--fs-figure)" data-count="100" data-suffix="%">0</div>
-        <div class="mt-2.5 text-sm font-medium text-white/65">of your insurance billed directly</div>
-      </div>
-    </div>
-    <div class="wrap reveal" style="padding-bottom:clamp(60px,8vw,104px);">
-      <div class="hero-actions" style="margin-top:clamp(34px,5vw,52px);align-items:center;">
-        <a class="btn btn-primary" href="/appointment-request">Get your exact price, free <span class="arr">&rarr;</span></a>
-        <span class="text-sm font-medium text-white/55">Your full cost in writing at a free consultation. Pay in full and save 5%, or save $450 when you start the same day.</span>
+  <!-- USP ZIGZAG row 1 of 2 (Section 05). A pricing row is MANDATORY for an
+       affordability avatar, and the homepage had none: this slot previously held a
+       four-counter band, which is a trust-bar pattern rather than a zigzag row. Bulleted
+       variant, per the spec, because the specifics are the point. Contextual text link,
+       never a button: booking lives in the header, hero and CTA band. -->
+  <section class="block uspz" id="financing">
+    <div class="wrap">
+      <div class="uspz-row">
+        <div class="reveal">
+          <span class="eyebrow">(What it costs)</span>
+          <h2 class="h2">Specialist care, <em>genuinely affordable.</em></h2>
+          <p>Expert treatment should not be a luxury purchase, so the whole arrangement is
+            published rather than quoted behind a phone call.</p>
+          <ul class="checks">
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>$1,000 down, then about $220 a month</b> at 0% interest,
+              financed in-house rather than through a lender.</span></li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Braces and Invisalign priced the same,</b> so the
+              recommendation is about your bite and not our margin.</span></li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Your insurance billed directly,</b> and your full cost in
+              writing before you commit to anything.</span></li>
+          </ul>
+          <p style="margin-top:var(--sp-6);">
+            <a class="tlink" href="/financing">See exactly what you&rsquo;ll pay <span class="arr">&rarr;</span></a></p>
+        </div>
+        <div class="reveal d1">
+          <div class="hero-frame"><img src="assets/photos/used-3.jpg" alt="Dr. Daher going through a treatment plan and its cost at his consultation desk" /></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1516,27 +1580,28 @@
   </section>
 
   <!-- (REAL QUESTIONS) — conversational FAQ -->
-  <section class="block qa" id="qa">
+  <!-- USP ZIGZAG row 2 of 2. The objection-killer, which is the BrightWay pattern:
+       affordable must not read as assembly line. Runs photo-free as the centred band
+       variant the spec permits, rather than reusing a third photograph or touching stock.
+       This slot previously held a second FAQ block, which duplicated the accordion below
+       it and attributed its questions to invented people ("Sarah, from Yaletown, asks"). -->
+  <section class="block uspz" style="background:var(--surface);" id="same-doctor">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <h2 class="h2">What families <em>ask first.</em></h2>
-      </div>
-      <div class="qa-grid">
-        <div class="qcard reveal">
-          <div class="asker"><span class="ava">S</span><span>Sarah, from Yaletown, asks&hellip;</span></div>
-          <p class="q">How much does treatment cost?</p>
-          <p class="a">Every bite is different, so you get your exact price in writing at your free consultation. Most treatment starts at $1,000 down and about $220 a month with 0% in-house financing, and we bill your insurance directly. Simple Invisalign Express cases run a $4,299 flat rate.</p>
-        </div>
-        <div class="qcard reveal d1">
-          <div class="asker"><span class="ava">P</span><span>The Patel family asks&hellip;</span></div>
-          <p class="q">When should our child first see an orthodontist?</p>
-          <p class="a">Around age seven. Most kids won't need anything done yet, but an early check lets Dr. Daher catch anything worth watching, and that first visit is always free.</p>
-        </div>
-        <div class="qcard reveal d2">
-          <div class="asker"><span class="ava">M</span><span>Marcus, from Coal Harbour, asks&hellip;</span></div>
-          <p class="q">I'm 40. Is it too late for me?</p>
-          <p class="a">Not at all. A good share of our patients are downtown professionals, and Invisalign keeps it discreet enough that most people won't notice a thing, until they see the result.</p>
-        </div>
+      <div class="uspz-centre reveal">
+        <span class="eyebrow">(No compromise)</span>
+        <h2 class="h2">Affordable never means <em>an assembly line.</em></h2>
+        <p>The price is lower than people expect for a specialist. What comes with it is not.</p>
+        <ul class="checks">
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>The same doctor at every single visit.</b> Dr. Daher diagnoses,
+            plans and adjusts every case himself. No rotating faces, no handoffs, and nobody
+            re-reading your history back to you.</span></li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Refinement is covered until the finish is right.</b> A finished
+            case means a healthy bite, not a bite that photographs well from the front.</span></li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Conservative by conviction.</b> No unnecessary extractions and no
+            surgery a patient does not need, which has been the rule here for thirty years.</span></li>
+        </ul>
+        <p style="margin-top:var(--sp-7);">
+          <a class="tlink" href="/why-choose-us">Why the specialist, not the shortcut <span class="arr">&rarr;</span></a></p>
       </div>
     </div>
   </section>
