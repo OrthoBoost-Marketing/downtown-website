@@ -48,7 +48,7 @@
     {
       "@type": "Question",
       "name": "Braces or Invisalign: how do we choose?",
-      "acceptedAnswer": { "@type": "Answer", "text": "At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. We charge the same for both, so the recommendation you get is about your bite, not our margin." }
+      "acceptedAnswer": { "@type": "Answer", "text": "At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. Dr. Daher plans and adjusts both himself, so the recommendation you get is about your bite, not our margin." }
     },
     {
       "@type": "Question",
@@ -1117,7 +1117,10 @@
     font-weight: var(--fw-display); font-size: var(--fs-display-md);
     letter-spacing: -.02em; line-height: 1.08; color: var(--ink); }
   .credo-lead .cl-v { margin: var(--sp-3) 0 0; font-size: var(--fs-base); color: var(--ink-soft); }
-  .credo-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--sp-8);
+  /* 3 columns: the 6 ruled items make two rows of three, which sits under the three
+     lead cards as an even 3x3 for the section. Was 1fr 1fr with 7 items, so the last
+     row held a single item beside a gap. */
+  .credo-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 var(--sp-7);
     border-top: var(--border) solid var(--line); }
   .credo-list .ci { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-3);
     align-items: start; padding: var(--sp-5) 0; border-bottom: var(--border) solid var(--line); }
@@ -1126,6 +1129,12 @@
     letter-spacing: -.01em; color: var(--ink); }
   .credo-list .ci span { display: block; margin-top: var(--sp-1); font-size: var(--fs-base);
     color: var(--ink-soft); }
+  /* 3 columns needs an intermediate step: three ruled items with an icon and a two-line
+     sub are cramped below ~1100px, and dropping straight from 3 to 1 at 880 leaves a
+     visibly tight band in between. */
+  @media (max-width: 1100px){
+    .credo-list { grid-template-columns: 1fr 1fr; }
+  }
   @media (max-width: 880px){
     .credo-lead { grid-template-columns: 1fr; }
     .credo-list { grid-template-columns: 1fr; }
@@ -1151,7 +1160,7 @@
         <div class="has-menu">
           <button type="button" aria-haspopup="true">Treatments <svg class="caret" width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <div class="menu" role="menu">
-            <a href="/braces"><b>Braces, clear &amp; metal</b><span>Priced the same as Invisalign</span></a>
+            <a href="/braces"><b>Braces, clear &amp; metal</b><span>Metal and clear options</span></a>
             <a href="/early-orthodontics"><b>Kids &amp; early care</b><span>Free growth checks from age 7</span></a>
             <a href="/invisalign"><b>Invisalign &amp; Quick 6 Fix</b><span>Express cases from $4,299 flat</span></a>
             <a href="/retainers"><b>Retainers &amp; aftercare</b><span>Keeping your result for good</span></a>
@@ -1220,7 +1229,7 @@
         </details>
         <details class="f">
           <summary>Braces or Invisalign: how do we choose?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
-          <div class="ans"><p>At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. We charge the same for both, so the recommendation you get is about your bite, not our margin.</p></div>
+          <div class="ans"><p>At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. Dr. Daher plans and adjusts both himself, so the recommendation you get is about your bite, not our margin.</p></div>
         </details>
         <details class="f">
           <summary>How long does treatment usually take?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>

@@ -60,12 +60,12 @@ def card(name, when, chip, text, hidden):
 # Eight short verbatim fragments, each already present in a full card below, so nothing
 # here is a claim the wall does not also carry.
 LINERS = [
-    ("Dr. Daher gave me hope when I really needed it.", "Lomish Bhangu"),
+    ("Dr. Daher gave me hope when I really needed it&hellip;", "Lomish Bhangu"),
     ("He did my original Invisalign in 2007 and teeth have not shifted.", "Kim Patara"),
-    ("My biggest regret is that I didn&rsquo;t come across his excellent clinic sooner.", "Alex Bobylev"),
-    ("Well worth the investment.", "Riaz Meghji"),
-    ("I&rsquo;ve never felt rushed or pressured to finish my treatment quicker.", "Vee L"),
-    ("Got an appointment the same day I called.", "SassySips"),
+    ("&hellip;my biggest regret is that I didn&rsquo;t come across his excellent clinic sooner.", "Alex Bobylev"),
+    ("&hellip;an outstanding result that was well worth the investment.", "Riaz Meghji"),
+    ("&hellip;I&rsquo;ve never felt rushed or pressured to finish my treatment quicker.", "Vee L"),
+    ("&hellip;got an appointment the same day I called.", "SassySips"),
     ("Both of my kids like him a lot!", "Fiona Deng"),
     ("I always looked forward to going to my ortho appointments (which is crazy!)", "Jayden Dinh"),
 ]

@@ -4,14 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Braces in Downtown Vancouver | Metal &amp; Clear | Downtown Orthodontics</title>
-<meta name="description" content="Metal and clear braces in downtown Vancouver, planned and adjusted by specialist orthodontist Dr. Sam Daher. Priced the same as Invisalign. $1,000 down, from $220/mo at 0%." />
+<meta name="description" content="Metal and clear braces in downtown Vancouver, planned and adjusted by specialist orthodontist Dr. Sam Daher. $1,000 down, from $220/mo at 0% in-house." />
 <meta name="robots" content="noindex, nofollow" />
 <link rel="canonical" href="https://downtownorthodontics.ca/braces" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Downtown Orthodontics" />
 <meta property="og:locale" content="en_CA" />
 <meta property="og:title" content="Braces in Downtown Vancouver | Metal &amp; Clear | Downtown Orthodontics" />
-<meta property="og:description" content="Metal and clear braces in downtown Vancouver, planned and adjusted by specialist orthodontist Dr. Sam Daher. Priced the same as Invisalign. $1,000 down, from $220/mo at 0%." />
+<meta property="og:description" content="Metal and clear braces in downtown Vancouver, planned and adjusted by specialist orthodontist Dr. Sam Daher. $1,000 down, from $220/mo at 0% in-house." />
 <meta property="og:url" content="https://downtownorthodontics.ca/braces" />
 <meta property="og:image" content="https://downtownorthodontics.ca/assets/photos/used-2.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -1110,7 +1110,10 @@
     font-weight: var(--fw-display); font-size: var(--fs-display-md);
     letter-spacing: -.02em; line-height: 1.08; color: var(--ink); }
   .credo-lead .cl-v { margin: var(--sp-3) 0 0; font-size: var(--fs-base); color: var(--ink-soft); }
-  .credo-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--sp-8);
+  /* 3 columns: the 6 ruled items make two rows of three, which sits under the three
+     lead cards as an even 3x3 for the section. Was 1fr 1fr with 7 items, so the last
+     row held a single item beside a gap. */
+  .credo-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 var(--sp-7);
     border-top: var(--border) solid var(--line); }
   .credo-list .ci { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-3);
     align-items: start; padding: var(--sp-5) 0; border-bottom: var(--border) solid var(--line); }
@@ -1119,6 +1122,12 @@
     letter-spacing: -.01em; color: var(--ink); }
   .credo-list .ci span { display: block; margin-top: var(--sp-1); font-size: var(--fs-base);
     color: var(--ink-soft); }
+  /* 3 columns needs an intermediate step: three ruled items with an icon and a two-line
+     sub are cramped below ~1100px, and dropping straight from 3 to 1 at 880 leaves a
+     visibly tight band in between. */
+  @media (max-width: 1100px){
+    .credo-list { grid-template-columns: 1fr 1fr; }
+  }
   @media (max-width: 880px){
     .credo-lead { grid-template-columns: 1fr; }
     .credo-list { grid-template-columns: 1fr; }
@@ -1144,7 +1153,7 @@
         <div class="has-menu">
           <button type="button" aria-haspopup="true">Treatments <svg class="caret" width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <div class="menu" role="menu">
-            <a href="/braces"><b>Braces, clear &amp; metal</b><span>Priced the same as Invisalign</span></a>
+            <a href="/braces"><b>Braces, clear &amp; metal</b><span>Metal and clear options</span></a>
             <a href="/early-orthodontics"><b>Kids &amp; early care</b><span>Free growth checks from age 7</span></a>
             <a href="/invisalign"><b>Invisalign &amp; Quick 6 Fix</b><span>Express cases from $4,299 flat</span></a>
             <a href="/retainers"><b>Retainers &amp; aftercare</b><span>Keeping your result for good</span></a>
@@ -1189,11 +1198,11 @@
           <a class="btn btn-primary" href="#request">Request a call back <span class="arr">&rarr;</span></a>
           <a class="btn btn-outline" href="tel:+16046623290"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z" fill="currentColor"/></svg> (604) 662-3290</a>
         </div>
-        <div class="hero-cred"><span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Priced the same as Invisalign</span><span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Adjusted by Dr. Daher himself</span><span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Free consultation</span></div>
+        <div class="hero-cred"><span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Clear and metal options</span><span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Adjusted by Dr. Daher himself</span><span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Free consultation</span></div>
       </div>
       <div class="hero-figure">
         <div class="hero-frame">
-          <img class="hshot" src="assets/photos/used-2.jpg" alt="A Downtown Orthodontics clinician scanning a patient chairside before braces treatment" / fetchpriority="high" width="1600" height="2400">
+          <img class="hshot" src="assets/photos/used-2.jpg" alt="A Downtown Orthodontics clinician scanning a patient chairside before braces treatment" width="1600" height="2400" fetchpriority="high">
         </div>
       </div>
     </div>
@@ -1205,7 +1214,7 @@
         <div class="reveal">
           <span class="eyebrow">(Why you're here)</span>
           <h2 class="h2">Braces are still the right answer <em>more often than people expect.</em></h2>
-          <p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">Most people arrive assuming aligners are the modern choice and braces are what they had to put up with as a teenager. For a lot of bites that is backwards. Braces move teeth the orthodontist controls directly, which makes them faster and more predictable on rotations, deep bites and anything that needs real mechanics.</p><p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">So the honest answer depends on your bite, not on fashion. We charge the same for braces and Invisalign here, which means nobody at this practice has a financial reason to steer you toward one.</p>
+          <p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">Most people arrive assuming aligners are the modern choice and braces are what they had to put up with as a teenager. For a lot of bites that is backwards. Braces move teeth the orthodontist controls directly, which makes them faster and more predictable on rotations, deep bites and anything that needs real mechanics.</p><p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">So the honest answer depends on your bite, not on fashion. Dr. Daher plans it braces and Invisalign here, which means nobody at this practice has a financial reason to steer you toward one.</p>
           <p style="margin-top:var(--sp-6);"><a class="tlink" href="/#how">See how a first visit works <span class="arr">&rarr;</span></a></p>
         </div>
 
@@ -1222,7 +1231,7 @@
           <ul class="checks"><li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Clear or metal.</b> Ceramic brackets if you would rather they were discreet, traditional metal if you would rather they were quick and sturdy.</span></li><li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>The same price as Invisalign.</b> No premium for choosing the option that suits your bite better.</span></li><li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Digital scans, no impression trays.</b> Your records are captured in a few minutes.</span></li><li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Dr. Daher at every adjustment.</b> A certified specialist, not a rotating cast.</span></li><li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Refinement covered.</b> If the finish needs extra work to be right, we see it through.</span></li><li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Clear retainers to hold it.</b> Every plan finishes with a retention plan.</span></li></ul>
           <p style="margin-top:var(--sp-6);"><a class="tlink" href="/financing">See the full pricing and financing <span class="arr">&rarr;</span></a></p>
         </div>
-      <div class="photo-side reveal d1"><div class="hero-frame"><img src="assets/photos/used-3.jpg" alt="Dr. Daher explaining a braces treatment plan at his consultation desk" / loading="lazy" decoding="async" width="1600" height="2400"></div></div>
+      <div class="photo-side reveal d1"><div class="hero-frame"><img src="assets/photos/used-3.jpg" alt="Dr. Daher explaining a braces treatment plan at his consultation desk" width="1600" height="2400" loading="lazy" decoding="async"></div></div>
       </div>
     </div>
   </section>
@@ -1233,7 +1242,7 @@
         <div class="reveal">
           <span class="eyebrow">(What to expect)</span>
           <h2 class="h2">Appointments that <em>fit around a working day.</em></h2>
-          <p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">The practice is two minutes from Canada Place, so adjustments fit into a lunch break or a school run rather than costing you an afternoon. You see the same small team each time, so nobody has to re-read your history back to you.</p><p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">And you will know what is happening. Dr. Daher explains what he is doing and why, in plain language, at every visit.</p>
+          <p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">The practice is by Canada Place, so adjustments fit into a lunch break or a school run rather than costing you an afternoon. You see the same small team each time, so nobody has to re-read your history back to you.</p><p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">And you will know what is happening. Dr. Daher explains what he is doing and why, in plain language, at every visit.</p>
           <p style="margin-top:var(--sp-6);"><a class="tlink" href="#request">Request a call back <span class="arr">&rarr;</span></a></p>
         </div>
 
@@ -1244,12 +1253,12 @@
   <section class="block doc">
     <div class="wrap doc-grid">
       <div class="doc-photo reveal">
-        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Daher, orthodontist at Downtown Orthodontics" / loading="lazy" decoding="async" width="1600" height="2400"></div>
+        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Daher, orthodontist at Downtown Orthodontics" width="1600" height="2400" loading="lazy" decoding="async"></div>
       </div>
       <div class="reveal d1">
         <h2 class="h2">One specialist, <em>start to finish.</em></h2>
-        <p class="bio">Dr. Daher has planned orthodontic treatment for over 30 years and leads the
-          only specialist orthodontic practice in downtown Vancouver. He opened the world&rsquo;s
+        <p class="bio">Dr. Daher has planned orthodontic treatment for over 30 years and leads a
+          specialist orthodontic practice in downtown Vancouver. He opened the world&rsquo;s
           first Invisalign-only practice in 2009, has taught in 142 cities across six continents,
           and still sits on Align Technology&rsquo;s scientific advisory board.</p>
         <div class="doc-creds">

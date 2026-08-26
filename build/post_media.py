@@ -11,9 +11,18 @@ Two jobs, both idempotent:
   2. fetchpriority="high" on that preloaded hero image, so the browser does not queue it
      behind the stylesheet.
 
-Image width/height come from the kit's own script and are NOT duplicated here:
+RUN THIS LAST. Order matters:
 
+    for g in gen_appointment gen_services gen_rest gen_support gen_utility gen_reviews; do
+        python build/$g.py
+    done
     python "$KIT/plugin/skills/static-site-deploy/scripts/add_img_dims.py" .
+    python build/post_media.py        # <- last, because it repairs
+
+Image width/height come from the kit's own script and are NOT duplicated here. That script
+has the same stray-solidus defect this one used to have (its line 113,
+`new[:-1].rstrip() + width/height`), and it is not our file to patch, so post_media runs
+after it and repairs the output. Reverse the order and 28 malformed tags come back.
 
 Safe here because index.html sets `img { max-width: 100%; height: auto; }`, so the
 attributes act as a pure aspect-ratio hint and cannot distort anything.
@@ -33,6 +42,9 @@ HREF = re.compile(r"""\bhref\s*=\s*["']([^"']+)["']""", re.I)
 HAS_LOADING = re.compile(r"\bloading\s*=", re.I)
 HAS_DECODING = re.compile(r"\bdecoding\s*=", re.I)
 HAS_FETCHPRI = re.compile(r"\bfetchpriority\s*=", re.I)
+# A solidus sitting BETWEEN attributes instead of at the end of the tag. Any tool
+# that does `tag[:-1] + ' attr="v">'` on a self-closed <img /> leaves one behind.
+SLASH_MID = re.compile(r"\s*/\s+(?=[A-Za-z-]+\s*=)")
 
 
 def eager_srcs(html):
@@ -49,7 +61,7 @@ def process(path):
     html = io.open(path, encoding="utf-8").read()
     before = html
     eager = eager_srcs(html)
-    counts = {"lazy": 0, "eager": 0, "iframe": 0}
+    counts = {"lazy": 0, "eager": 0, "iframe": 0, "repaired": 0}
 
     def fix_img(m):
         tag = m.group(0)
@@ -60,7 +72,7 @@ def process(path):
         if is_eager:
             # Never lazy. Give the LCP image an explicit high priority.
             if src in eager and not HAS_FETCHPRI.search(tag):
-                tag = tag[:-1].rstrip() + ' fetchpriority="high">'
+                tag = tag[:-1].rstrip().rstrip("/").rstrip() + ' fetchpriority="high">'
                 counts["eager"] += 1
             return tag
 
@@ -72,17 +84,36 @@ def process(path):
         if not add:
             return tag
         counts["lazy"] += 1
-        return tag[:-1].rstrip() + add + ">"
+        # rstrip the solidus too: a self-closed <img ... /> would otherwise put the
+        # new attributes AFTER the "/", which is invalid even though browsers recover.
+        return tag[:-1].rstrip().rstrip("/").rstrip() + add + ">"
 
     def fix_iframe(m):
         tag = m.group(0)
         if HAS_LOADING.search(tag):
             return tag
         counts["iframe"] += 1
-        return tag[:-1].rstrip() + ' loading="lazy">'
+        return tag[:-1].rstrip().rstrip("/").rstrip() + ' loading="lazy">'
+
+    def repair(m):
+        """Move a stray solidus back to the end of the tag.
+
+        Any tool that does `tag[:-1] + ' attr="v">'` on a self-closed <img /> leaves the
+        solidus sitting mid-tag: `<img src="x" / width="880">`. Browsers recover, so it is
+        invisible, but it is invalid and it lands on the LCP element. The kit's own
+        add_img_dims.py does this too, which is why this repair exists rather than just a
+        fix at our injection sites.
+        """
+        tag = m.group(0)
+        if not SLASH_MID.search(tag):
+            return tag
+        counts["repaired"] += 1
+        return SLASH_MID.sub(" ", tag)
 
     html = IMG.sub(fix_img, html)
     html = IFRAME.sub(fix_iframe, html)
+    html = IMG.sub(repair, html)
+    html = IFRAME.sub(repair, html)
 
     if html != before:
         io.open(path, "w", encoding="utf-8", newline="").write(html)
@@ -93,7 +124,7 @@ def main():
     pages = sorted(ROOT.glob("*.html"))
     if not pages:
         sys.exit("no .html files found in %s" % ROOT)
-    total = {"lazy": 0, "eager": 0, "iframe": 0}
+    total = {"lazy": 0, "eager": 0, "iframe": 0, "repaired": 0}
     for p in pages:
         c = process(p)
         for k in total:

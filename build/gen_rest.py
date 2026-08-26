@@ -44,7 +44,7 @@ DOC_BODY = phero(
         <h2 class="h2">Orthodontics is <em>the only thing he does.</em></h2>
         <p style="color:var(--ink-soft);font-size:var(--fs-xl);margin-top:var(--sp-5);">
           Dr. Daher is a certified specialist in orthodontics and has planned treatment for over
-          thirty years. Downtown Orthodontics is the only specialist orthodontic practice in
+          thirty years. Downtown Orthodontics is a specialist orthodontic practice in
           downtown Vancouver, which means moving teeth is not something fitted in between fillings
           and cleanings here. It is the whole job.</p>
         <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">
@@ -136,9 +136,9 @@ C.write("dr-sam-daher.html", C.page(
 # WHY-PAGE-SPEC: no form. Six USPs as a grid, then deep-dives on the top three.
 # CTA cadence hero -> one mid-page -> closing band.
 USPS = [
-    ("The only specialist downtown",
-     "Orthodontics is a separate specialty after dental school, and Downtown Orthodontics is the "
-     "only specialist practice in the downtown core. Everything here is planned by one."),
+    ("A certified specialist downtown",
+     "Orthodontics is a separate specialty after dental school, and Downtown Orthodontics is a "
+     "specialist orthodontic practice in the downtown core. Everything here is planned by one."),
     ("Braces and Invisalign cost the same",
      "Deliberately. When both options carry the same price, the recommendation you get is about "
      "your bite rather than the practice&rsquo;s margin."),
@@ -151,7 +151,7 @@ USPS = [
     ("$220 a month at 0% in-house",
      "$1,000 down, financing arranged in-house at no interest, insurance billed directly, and your "
      "full cost in writing before you commit."),
-    ("Two minutes from Canada Place",
+    ("By Canada Place",
      "Close enough to the office towers that adjustments fit into a lunch break, and close enough "
      "to transit that a school run works."),
 ]
@@ -188,7 +188,7 @@ WHY_BODY = phero(
       </div>
       <div class="compare reveal">
         <div class="ch old">Aligners sold on the side</div>
-        <div class="ch new">The only specialist downtown</div>
+        <div class="ch new">A certified specialist downtown</div>
         <div class="cc old">Fitted between fillings and cleanings</div>
         <div class="cc new">%(tick)s A certified specialist at every visit</div>
         <div class="cc old">One tool for every problem</div>
@@ -232,7 +232,7 @@ WHY_BODY = phero(
       <div class="reqgrid reveal">
         <div class="hero-frame" style="order:-1;"><img src="assets/photos/used-3.jpg" alt="Dr. Daher explaining a treatment plan at his consultation desk" /></div>
         <div>
-          <h3 style="font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">The price is the same either way</h3>
+          <h3 style="font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">A specialist plans it either way</h3>
           <p style="color:var(--ink-soft);font-size:var(--fs-md);">Most practices charge more for
             clear aligners than for braces, which quietly puts a thumb on the scale of every
             recommendation. Here they cost the same. It removes the incentive, and it is the single
@@ -281,9 +281,9 @@ WHY_BODY = phero(
     "One free visit tells you <em>everything.</em>",
     "A digital scan, a specialist&rsquo;s read on your bite, honest options and your exact price in "
     "writing. Then you decide.",
-    "Free consultation. No referral needed. Braces and Invisalign priced the same.")
+    "Free consultation. No referral needed. Clear and metal braces, and Invisalign.")
 
 C.write("why-choose-us.html", C.page(
     title="Why Choose a Specialist Orthodontist | Downtown Vancouver | Downtown Orthodontics",
-    desc="Why see downtown Vancouver's only specialist orthodontist instead of a dental office selling aligners on the side. Braces and Invisalign priced the same, conservative treatment, 30+ years.",
+    desc="Why see a certified specialist orthodontist in downtown Vancouver instead of a dental office selling aligners on the side. Conservative treatment, 30+ years.",
     slug="why-choose-us", body=WHY_BODY))

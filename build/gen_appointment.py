@@ -75,8 +75,8 @@ BODY = """
           <p class="crumb"><a href="/">Home</a><span>&middot;</span>Free consultation</p>
           <span class="eyebrow">Free consult &middot; Downtown Vancouver</span>
           <h1>Schedule your <em>free consult.</em></h1>
-          <p class="sub">One visit with Dr. Daher, downtown Vancouver&rsquo;s only specialist
-            orthodontist. You will leave knowing exactly what your bite needs, what it costs,
+          <p class="sub">One visit with Dr. Daher, a certified specialist in
+            orthodontics. You will leave knowing exactly what your bite needs, what it costs,
             and whether to start now or wait.</p>
           <ul class="checks">
             <li>%(tick)s<span><b>The consultation is free</b>, including the digital scan and
@@ -89,7 +89,7 @@ BODY = """
           <div class="hero-cred" style="margin-top:var(--sp-7);">
             <span>%(tick)s 900 patients treated</span>
             <span>%(tick)s 30+ years, one specialist</span>
-            <span>%(tick)s Two minutes from Canada Place</span>
+            <span>%(tick)s By Canada Place</span>
           </div>
           <p class="promise" style="margin-top:var(--sp-6);">Rather talk to someone now?</p>
           <a class="big-tel" href="tel:+16046623290"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z" fill="currentColor"/></svg> (604) 662-3290</a>
@@ -116,7 +116,7 @@ BODY = """
           <h3>A specialist reads your bite</h3>
           <p>Dr. Daher explains what is actually happening in plain language, which options
             genuinely suit it, and where braces and Invisalign differ for your case. Both are
-            priced the same here, so the recommendation is about your bite.</p>
+            planned by a specialist here, so the recommendation is about your bite.</p>
         </li>
         <li>
           <h3>Your plan and your price, in writing</h3>
@@ -153,7 +153,7 @@ SCHEMA = """{
 
 C.write("appointment-request.html", C.page(
     title="Book a Free Orthodontic Consultation | Downtown Orthodontics Vancouver",
-    desc="Book a free consultation with Dr. Sam Daher, downtown Vancouver's only specialist orthodontist. Digital scan, honest options and your exact price in writing. No referral needed.",
+    desc="Book a free consultation with Dr. Sam Daher, a certified specialist in orthodontics in downtown Vancouver. Digital scan, honest options and your exact price in writing. No referral needed.",
     slug="appointment-request",
     body=BODY,
     schema=SCHEMA,

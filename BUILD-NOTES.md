@@ -203,13 +203,20 @@ specific claim the site makes, and generic praise was dropped however glowing, b
 |---|---|
 | **Lomish Bhangu** — turned down by one orthodontist, another had no real solution | "Complex and referred cases welcome". **The strongest proof on the whole profile.** |
 | **Kim Patara** — original Invisalign in 2007, teeth have not shifted | Retention, and a result nobody else can claim |
-| **Iryna Ponomarenko** — facial and lip proportions, respected preferences | Specialist planning, not a discount aligner mill |
+| **Alex Bobylev** — repairing work done at a regular dentist, quicker and with less discomfort | Specialist versus general dentist, the site's central wedge |
 | **Riaz Meghji** — "well worth the investment" | Handles the price objection |
 | **S Ismail** — walks you through the plan, answers thoroughly | Clear treatment plan |
 | **SassySips** — retainers, appointment the same day she called | Service speed, and retainer replacement |
 | **Fiona Deng** — "Both of my kids like him a lot!" | Kids and family |
 | **Dante Foreman** — scan, in and out quickly, info sent over | The free first visit |
-| **Skyla W** — finished Invisalign, process explained clearly | Completed treatment |
+| **Jayden Dinh** — happiest with the results, looked forward to the appointments | Completed treatment |
+
+**Swapped 2026-08-26 (Tier 1 truth pass).** Iryna Ponomarenko and Skyla W were dropped
+and replaced with Alex Bobylev and Jayden Dinh. Neither of the originals appears in
+`build/reviews_data.py`, which is the recorded harvest and the only place verbatim text
+plus a verified rating is stored, so their wording could not be checked word for word.
+Every quote on the site now resolves to that file. Do not re-add a quote that is not in
+it; harvest it into `reviews_data.py` first.
 
 Do not pad this back out for the sake of a longer loop. The section lede was rewritten to
 match what these reviews actually say, rather than the generic "the doctor and the
@@ -227,8 +234,7 @@ content. Each renders in the dashed `.slot` style so nobody mistakes it for copy
    before credentials: the origin, what shaped the conservative approach, and 60 words on
    life outside the practice. None is on file, and this build does not invent biography.
 3. **Team introductions**, on `/why-choose-us`.
-4. **Before/after cases**, on the homepage, still on-brand placeholder panels.
-5. **Legal pages** carry a standing "sample text, not legal advice" notice and bracketed
+4. **Legal pages** carry a standing "sample text, not legal advice" notice and bracketed
    `[TO CONFIRM]` items. They need the practice's counsel and its own answers on
    processors, retention periods and cancellation policy.
 

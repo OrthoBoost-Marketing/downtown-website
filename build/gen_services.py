@@ -99,8 +99,8 @@ DOCTOR_BAND = """
       </div>
       <div class="reveal d1">
         <h2 class="h2">One specialist, <em>start to finish.</em></h2>
-        <p class="bio">Dr. Daher has planned orthodontic treatment for over 30 years and leads the
-          only specialist orthodontic practice in downtown Vancouver. He opened the world&rsquo;s
+        <p class="bio">Dr. Daher has planned orthodontic treatment for over 30 years and leads a
+          specialist orthodontic practice in downtown Vancouver. He opened the world&rsquo;s
           first Invisalign-only practice in 2009, has taught in 142 cities across six continents,
           and still sits on Align Technology&rsquo;s scientific advisory board.</p>
         <div class="doc-creds">
@@ -245,14 +245,14 @@ def build(slug, title, desc, h, rows, faqs, form_preselect, quote_note, service_
 build(
     slug="braces",
     title="Braces in Downtown Vancouver | Metal &amp; Clear | Downtown Orthodontics",
-    desc="Metal and clear braces in downtown Vancouver, planned and adjusted by specialist orthodontist Dr. Sam Daher. Priced the same as Invisalign. $1,000 down, from $220/mo at 0%.",
+    desc="Metal and clear braces in downtown Vancouver, planned and adjusted by specialist orthodontist Dr. Sam Daher. $1,000 down, from $220/mo at 0% in-house.",
     h=hero(
         eyebrow="Braces &middot; Downtown Vancouver",
         h1="Braces in downtown Vancouver.",
         sub="Metal and clear braces planned and adjusted by a certified specialist, not fitted in "
             "between fillings. $1,000 down, from $220 a month at 0% in-house interest, and priced "
             "exactly the same as Invisalign.",
-        chips=["Priced the same as Invisalign", "Adjusted by Dr. Daher himself", "Free consultation"],
+        chips=["Clear and metal options", "Adjusted by Dr. Daher himself", "Free consultation"],
         photo="assets/photos/used-2.jpg",
         alt="A Downtown Orthodontics clinician scanning a patient chairside before braces treatment"),
     rows=[
@@ -263,7 +263,7 @@ build(
              "had to put up with as a teenager. For a lot of bites that is backwards. Braces move "
              "teeth the orthodontist controls directly, which makes them faster and more predictable "
              "on rotations, deep bites and anything that needs real mechanics.",
-             "So the honest answer depends on your bite, not on fashion. We charge the same for "
+             "So the honest answer depends on your bite, not on fashion. Dr. Daher plans it "
              "braces and Invisalign here, which means nobody at this practice has a financial "
              "reason to steer you toward one."],
          "link": "/#how", "link_text": "See how a first visit works",
@@ -285,7 +285,7 @@ build(
         {"eyebrow": "(What to expect)",
          "h2": "Appointments that <em>fit around a working day.</em>",
          "paras": [
-             "The practice is two minutes from Canada Place, so adjustments fit into a lunch break "
+             "The practice is by Canada Place, so adjustments fit into a lunch break "
              "or a school run rather than costing you an afternoon. You see the same small team "
              "each time, so nobody has to re-read your history back to you.",
              "And you will know what is happening. Dr. Daher explains what he is doing and why, in "
@@ -347,7 +347,7 @@ build(
              "orthodontist, not sent away to a lab technician.",
              "<b>Quick 6 Fix at $4,299 flat.</b> For mild crowding, small gaps and teeth that "
              "shifted after earlier treatment, with candidacy confirmed free.",
-             "<b>The same price as braces.</b> So the recommendation is about your bite.",
+             "<b>Planned by a specialist.</b> So the recommendation is about your bite.",
              "<b>Digital scans, no impression trays.</b> A few minutes, and you see the plan on screen.",
              "<b>Refinement covered.</b> Extra aligners to finish it properly are part of the plan.",
              "<b>Clear retainers at the end.</b> With a retention plan Dr. Daher checks himself."],
@@ -359,7 +359,7 @@ build(
          "paras": [
              "Aligners come out to eat and to brush, and go back in for the other twenty-two hours. "
              "Most of our adult patients tell colleagues nothing and nobody asks. Appointments are "
-             "short and sit two minutes from Canada Place, so they fit before work or over lunch.",
+             "short and the practice sits by Canada Place, so they fit before work or over lunch.",
              "The part people underestimate is wear time. Dr. Daher will be straight with you about "
              "it at the consultation, because aligners only work as well as they are worn."],
          "link": "#request", "link_text": "Request a call back",
@@ -373,7 +373,7 @@ build(
         ("Why see an orthodontist instead of my dentist for Invisalign?",
          "Because the aligners are the same and the planning is not. Deciding how teeth should move, in what order, and what to do when one does not track is the specialty. Dr. Daher opened the world's first Invisalign-only practice in 2009 and sits on Align Technology's scientific advisory board."),
         ("Invisalign or braces: how do we choose?",
-         "At your consultation we will walk through both honestly for your specific bite. Some cases do beautifully with Invisalign; others are better and faster with braces. We charge the same for both, so the recommendation is about your teeth rather than our margin."),
+         "At your consultation we will walk through both honestly for your specific bite. Some cases do beautifully with Invisalign; others are better and faster with braces. Dr. Daher plans and adjusts both himself, so the recommendation is about your teeth rather than our margin."),
         ("How long does Invisalign take?",
          "Treatment length depends on what your bite needs, so you will get a realistic timeline for your own case at your consultation rather than a range that may not apply to you. Express cases finish considerably sooner. With aligners, wear time is the biggest single factor."),
         ("Can teenagers use Invisalign?",
@@ -501,7 +501,7 @@ build(
          "photo": "assets/photos/used-3.jpg",
          "alt": "Dr. Daher reviewing a retention plan at his consultation desk"},
         {"eyebrow": "(What to expect)",
-         "h2": "Short visits, <em>two minutes from Canada Place.</em>",
+         "h2": "Short visits, <em>by Canada Place.</em>",
          "paras": [
              "Retainer checks are quick, and the practice sits close enough to the office towers "
              "that they fit into a lunch break. Bring the retainer you have, even if it has not "
