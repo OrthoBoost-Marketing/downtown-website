@@ -255,9 +255,130 @@ button; and desktop header nav text links measure 28–31px but collapse into th
 mobile widths, where the 44px touch rule applies. The heuristic held again: a finding on
 nearly every page is the check, not the site.
 
+## Kit conformance audit, 2026-08-26 — nine fixes
+
+Audited the homepage section by section against every `*-SPEC.md` in the kit (pulled to
+`26b6370` first; the two new commits touched the deploy and forms skills, not the section
+specs). Ten of the kit's eleven homepage sections were present, one was missing, and seven
+of the present ones carried at least one deviation. Fourteen findings, nine closed here.
+
+### F 01 — the services grid was an audience grid
+
+"Three ways to begin" looked like Section 09 but was not one: its H3s were unsearchable
+("The smile you finally make time for") and **all three cards pointed at
+`/appointment-request`**, so `/braces`, `/invisalign`, `/early-orthodontics` and
+`/retainers` had **no link from the homepage body at all** — only the nav dropdown and the
+footer. Those four are each a keyword's SEO hub and an ad campaign's landing page.
+
+Each card now opens its service page and leads with the searchable name. The layout did not
+change. It stays at **three cards** because the spec allows 3, 6 or 9 and bans 4, so
+`/retainers` — lowest demand of the four — is linked from the retainer FAQ answer instead.
+
+### F 02 — the FAQ had no cost question, and the schema did not mirror the page
+
+A cost + city question is mandatory and hiding it is named under Banned. Five questions ran
+and none was about money, on an affordability-positioned practice.
+
+Separately, and worse: **the FAQPage JSON-LD carried eight questions while five were
+visible.** Cost, "age seven" and "I'm 40" were marked up but appeared nowhere on the page,
+which is a structured-data mismatch. The block is now rebuilt from the six visible Q&As, in
+order. The two that are not homepage content live properly on `/faq`, which has its own node.
+
+### F 03 / F 04 — hours and directions
+
+Hours were shipping in `openingHoursSpecification` only. They are client-confirmed, so they
+now render in the locations card and the footer, identical in all three places. And **Get
+directions**, which the spec calls the #1 action in that section, did not exist: booking held
+the solid button for the fifth time on the page. Directions now takes the solid button and
+booking steps down to the outline.
+
+### F 05 — the doctor teaser used the one button its spec bans
+
+Solid `Book with Dr. Daher`, where the spec allows exactly one ghost or outline CTA and lists
+a second solid CTA under Banned. Now a single ghost `More about Dr. Daher` to the bio page;
+the old `See the full record` link came out as the second CTA. A kicker carries the doctor's
+full name, which previously survived only in the image alt.
+
+**Trap:** the first version used `btn-outline`, which `.hero-actions .btn-outline` paints in
+petrol (#313131) — near-black on the `.doc` section's near-black ground, contrast 1.6:1 and
+effectively invisible. `btn-ghost-light` is the existing component for dark grounds. A guard
+rule now catches any outline button dropped into `.doc` or `.ctaband`. This is the same bug
+family as the black-on-black `.btn-primary` found on 2026-08-24.
+
+### F 08 — the rating was in a comment
+
+`4.4 out of 5 from 160 reviews` existed only in a source comment. It now runs as a rating
+eyebrow, **text only, never `AggregateRating`**, with the door beneath the section and the
+count line the spec allows when the count is strong. No `place_id` is on file, so the link is
+the same Maps search URL the footer address uses.
+
+### F 11 — the mid-page CTA band
+
+The spec's default placement, directly after the USP zigzag, was empty; only the closing band
+existed. Two bands now run, which is the maximum. **The first insertion landed in the wrong
+place** because it anchored on a `(REAL QUESTIONS)` comment that was itself a leftover from
+the FAQ-duplicate block converted to a zigzag row on 2026-08-25 — so the comment sat *before*
+`#same-doctor` and put the band mid-zigzag. Both fixed; the orphan comment is gone.
+
+### F 13 — media loading
+
+`build/post_media.py` is the new **last build step** and must run after the generators:
+
+```
+for g in gen_appointment gen_services gen_rest gen_support gen_utility; do python build/$g.py; done
+python build/post_media.py
+python "$KIT/plugin/skills/static-site-deploy/scripts/add_img_dims.py" .
+```
+
+It lazies every image and iframe *except* the page's own preloaded LCP image and the logo,
+and adds `fetchpriority="high"` to that hero. The exemption is driven by each page's
+`<link rel="preload">` rather than eyeballed, because lazy-loading an LCP image delays it.
+`img { height: auto }` was added first, without which the kit's dimension attributes can
+distort images.
+
+**Kit bug worth a PR:** `add_img_dims.py` reports both brand logos as `MISSING` on every
+page. It does not URL-decode `%20`, and the filenames contain a space. The files exist; the
+logos simply get no dimensions, which costs nothing here since both are CSS-sized with
+`width: auto`. Same defect class as the one already logged against `audit-site.mjs`.
+
+### Verification
+
+Twenty-two edits, each asserted to match exactly once before writing. Then 50 static checks
+(section order, schema/page parity, link and asset resolution, button counts, tap targets)
+plus a 16-page browser sweep at 390 and 1440: zero overflow, zero clipped elements, zero
+sections rendering under 40px, footer hours on all 16, one H1 each. The only sweep hit at
+1440 is the known desktop-nav false positive.
+
+Three of the four first-run "failures" were the checking script, not the site: two matched
+the word inside my own explanatory comments, and one demanded `class="revdoor"` where the
+attribute is `"revdoor reveal"`. The fourth was real.
+
+**Screenshot recipe, because two obvious approaches fail here.** A tall-window full-page
+capture makes every `vh` unit resolve against that height, so the hero balloons to thousands
+of pixels and every offset below it is wrong. And a scroll issued from a load handler does
+not reliably land before `--screenshot` fires. `build/section_shots.py` sidesteps both: it
+writes one throwaway page per section that *hides the other sections*, so the target sits
+under the header at a normal 900px viewport. It also disables the entrance states — `.reveal`
+starts at opacity `.01` **with a 5px blur**, and headings animate per word via `.hw` spans,
+so an un-overridden capture shows blank bands. Delete the `__sec-*.html` files afterwards.
+
+### Not fixed, and why
+
+- **F 06** credentials stated three times (marquee, doctor chips, credentials section). The
+  cross-section rule says drop the list from the doctor section; that is a content call on
+  facts the client supplied, so it is proposed rather than done.
+- **F 07** trust bar runs 8 iconed cells against a 3–5 typography-only rule. Jules's marquee
+  ruling settled the scroller and nothing else. Needs a ruling.
+- **F 09** reviews page, now warranted at 160 reviews (spec sizes 24–30 for high volume).
+  Needs ~12 more reviews harvested.
+- **F 10** authority band is 1 logo + 3 wordmarks. Blocked on Maya.
+- **F 12** the before-and-after section still shows two gradient panels behind a handle, with
+  a sub promising a transformation it cannot deliver. Blocked on consented cases.
+
 ## Still open at launch
 
-- The six audit items from the homepage report, unchanged.
+- **Five of the fourteen kit-conformance findings** (F 06, 07, 09, 10, 12 above):
+  two need a Dr. Ty ruling, two need Maya, one needs reviews harvested.
 - Wire the forms (GHL + leads backup), then set the confirmation page as the conversion
   goal in Ads, GA4 and Meta.
 - Drop `noindex` and the `robots.txt` Disallow **together**, and only at launch. Utility
@@ -266,4 +387,4 @@ nearly every page is the check, not the site.
 - Attorney review of the three legal pages.
 - **The stack conflict is still unresolved.** The brief names WordPress + Elementor +
   RankMath Pro; this is static on Vercel; registrar is CloudFlare. Settle before cutover.
-- Three Dr. Ty rulings from the homepage audit.
+- Three Dr. Ty rulings from the homepage audit, plus the trust-bar question (F 07).

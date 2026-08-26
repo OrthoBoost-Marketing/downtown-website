@@ -87,18 +87,8 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "How much does treatment cost?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Every bite is different, so you get your exact price in writing at your free consultation. Most treatment starts at $1,000 down and about $220 a month with 0% in-house financing, and we bill your insurance directly. Simple Invisalign Express cases run a $4,299 flat rate." }
-    },
-    {
-      "@type": "Question",
-      "name": "When should our child first see an orthodontist?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Around age seven. Most kids won't need anything done yet, but an early check lets Dr. Daher catch anything worth watching, and that first visit is always free." }
-    },
-    {
-      "@type": "Question",
-      "name": "I'm 40. Is it too late for me?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Not at all. A good share of our patients are downtown professionals, and Invisalign keeps it discreet enough that most people won't notice a thing, until they see the result." }
+      "name": "How much do braces and Invisalign cost in downtown Vancouver?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Most treatment starts at $1,000 down and about $220 a month, with 0% interest financed in house, and we bill your insurance directly. Braces and Invisalign are priced the same, and simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so you get your exact price in writing at your free consultation, and you can see the full breakdown first." }
     },
     {
       "@type": "Question",
@@ -250,7 +240,7 @@
   html { scroll-behavior: smooth; }
   body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg);
          -webkit-font-smoothing: antialiased; line-height: 1.6; overflow-x: hidden; }
-  img { display: block; max-width: 100%; }
+  img { display: block; max-width: 100%; height: auto; }
   a { color: inherit; }
   .wrap { width: min(100% - 48px, var(--maxw)); margin-inline: auto; }
 
@@ -795,6 +785,63 @@
   @keyframes loc-pulse{ 0%{ transform: scale(1); opacity:.5; } 70%{ transform: scale(3.4); opacity:0; } 100%{ opacity:0; } }
   @media (prefers-reduced-motion: reduce){ .locpin .ring{ animation:none; } .locpin.active .loclabel{ transform: translateX(-50%); } }
 
+  /* ---------- CTA BAND (Section 06) — the mid-page re-ask ----------
+     CTA-BAND-SPEC places this directly after the USP zigzag; the closing band before
+     the footer is the one permitted repeat, so the page runs two, which is the maximum.
+     Full-bleed dark variant, deliberately the strongest colour stop on the page, and
+     the closing band stays light so the two do not read as the same moment twice.
+     NOTE the .btn-primary override: `.hero-actions .btn-primary` paints petrol-deep on
+     white text, which is invisible on a petrol-deep band. Same fix as .doc. */
+  .ctaband { background: var(--petrol-deep); text-align: center; }
+  .ctaband .inner { max-width: 660px; margin-inline: auto; }
+  .ctaband h2 { color: #fff; }
+  .ctaband p { color: var(--on-deep-soft); font-size: var(--fs-xl); max-width: 46ch;
+    margin: var(--sp-5) auto var(--sp-7); }
+  .ctaband .hero-actions { justify-content: center; }
+  .ctaband .hero-actions .btn-primary { background: var(--teal); color: var(--ink-on-teal);
+    box-shadow: var(--shadow-cta); }
+  .ctaband .hero-actions .btn-primary:hover { background: color-mix(in srgb, var(--teal) 86%, #fff); }
+
+  /* Guard: .hero-actions .btn-outline paints near-black text, which disappears on the
+     dark .doc and .ctaband grounds. Any outline button landing there gets the light ghost
+     treatment instead. This is the same class of bug as the black-on-black .btn-primary. */
+  .doc .btn-outline, .ctaband .btn-outline { color: #fff; border-color: rgba(255,255,255,.5); }
+  .doc .btn-outline:hover, .ctaband .btn-outline:hover { background: rgba(255,255,255,.12); border-color: #fff; color: #fff; }
+
+  /* ---------- REVIEWS: rating eyebrow + the door beneath (REVIEWS-SPEC 4 and 5) ----------
+     The rating runs as text only and is never marked up as AggregateRating: Google treats
+     self-hosted markup of third-party reviews as self-serving. Tracking is tightened from
+     the label default because this line is data, not a section label. */
+  .eyebrow.rating { letter-spacing: .12em; font-weight: 600; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums; }
+  .revdoor { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-3) var(--sp-6);
+    margin-top: var(--sp-7); }
+  .revdoor .note { color: var(--ink-faint); font-size: var(--fs-base); }
+  /* The door is a standalone action, not an inline link, so it gets a comfortable
+     touch target rather than the 26px an inline .tlink lays out at. */
+  .revdoor a { min-height: var(--tap); align-items: center; }
+
+  /* ---------- FAQ answers link out (FAQ-SPEC 7) ---------- */
+  .faq .ans a { color: var(--teal-2); font-weight: 600; text-decoration: underline;
+    text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  .faq .ans a:hover { color: var(--petrol); }
+
+  /* ---------- LOCATIONS: hours and the two doors (LOCATIONS-SPEC) ----------
+     Hours are required card contents and were shipping in openingHoursSpecification only.
+     Get directions is the spec's #1 action and takes the solid button; booking steps down
+     to the outline, since the header, hero and both CTA bands already carry it. */
+  .loc-hours { margin-top: var(--sp-6); display: grid; gap: 2px; }
+  .loc-hours .lh-k { font-size: var(--fs-2xs); letter-spacing: var(--track-label);
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+  .loc-hours span { font-size: var(--fs-base); color: var(--ink-soft);
+    font-variant-numeric: tabular-nums; }
+  .loc-hours .lh-closed { color: var(--ink-faint); }
+  .loc-actions { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-top: var(--sp-7); }
+
+  /* ---------- FOOTER hours (FOOTER-SPEC required contents) ---------- */
+  .foot-hours { display: block; color: var(--on-deep-faint); font-size: var(--fs-sm);
+    padding: 3px 0; font-variant-numeric: tabular-nums; }
+
   /* ---------- AUTHORITY LOGOS (.authbar) — Section 07, added 2026-08-25 ----------
      AUTHORITY-LOGOS-SPEC: 4 to 7 marks on one line under a quiet label, muted to a
      single tone, wrapping to two rows on mobile at >=28px tall. Explicitly NOT a
@@ -1139,7 +1186,7 @@
       </div>
       <div class="hero-figure">
         <div class="hero-frame">
-          <img class="hshot" src="assets/photos/dt-7.jpg" alt="Dr. Daher, certified orthodontic specialist, at Downtown Orthodontics" />
+          <img class="hshot" src="assets/photos/dt-7.jpg" alt="Dr. Daher, certified orthodontic specialist, at Downtown Orthodontics" / fetchpriority="high" width="880" height="1320">
         </div>
         <div class="hero-callout">
           <span class="co-eyebrow">In-house financing</span>
@@ -1168,7 +1215,14 @@
   </div>
   </div><!-- /hero-screen -->
 
-  <!-- (THE PATHS) — three ways to begin -->
+  <!-- (THE PATHS) = SERVICES GRID, Section 09. Three cards, because the spec allows
+       3, 6 or 9 only and bans 4. Each H3 leads with the searchable service name and the
+       whole card is a doorway to that service page, which is simultaneously the keyword's
+       SEO hub and the ads landing page; every card pointed at /appointment-request until
+       2026-08-26, so the money pages had no link from the homepage body.
+       /retainers is the fourth money page and deliberately not a fourth card: it is the
+       lowest-demand of the four and a 4-card grid is banned. It is linked instead from the
+       retainer answer in the FAQ below, plus the nav and footer. -->
   <section class="block paths" id="paths">
     <div class="wrap">
       <div class="sec-head reveal">
@@ -1177,20 +1231,20 @@
         <p>Whether it's your smile or your kid's, there's a clear starting point, and the same specialist behind every one.</p>
       </div>
       <div class="paths-grid">
-        <a class="path reveal" href="/appointment-request">
+        <a class="path reveal" href="/early-orthodontics">
           <!-- PHOTO SWAP (Aug 12 shoot): client review 2026-08-24 asked that Dr. Daher not appear touching or hugging child patients; a female provider reads better in the family-facing slots. The three shots of him posed with children were pulled. Brief the shoot for a female provider with a child patient and drop it in here. -->
-          <div class="pic"><img src="assets/photos/used-1.jpg" alt="A member of the Downtown Orthodontics team holding a clear retainer" style="object-position:center 22%;" /></div>
+          <div class="pic"><img src="assets/photos/used-1.jpg" alt="A member of the Downtown Orthodontics team holding a clear retainer" style="object-position:center 22%;" / loading="lazy" decoding="async" width="1600" height="2400"></div>
           <div class="body">
             <div class="lbl">Kids</div>
-            <h3>Start them off <em>right.</em></h3>
+            <h3>Early orthodontics, <em>started right.</em></h3>
             <p>A first growth check around age seven, watched by a specialist. Most kids just need monitoring, and when early treatment helps, an expander or partial braces is timed to the growing jaw.</p>
             <span class="cue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Free growth assessment</span>
-            <span class="go">Book a checkup <span class="arr">&rarr;</span></span>
+            <span class="go">See early orthodontics <span class="arr">&rarr;</span></span>
           </div>
         </a>
-        <a class="path reveal d1" href="/appointment-request">
+        <a class="path reveal d1" href="/braces">
           <!-- PHOTO SWAP (Aug 12 shoot): needs a real teen patient in braces. -->
-          <div class="pic"><img src="assets/photos/used-2.jpg" alt="A Downtown Orthodontics clinician scanning a patient chairside" style="object-position:center 45%;" /></div>
+          <div class="pic"><img src="assets/photos/used-2.jpg" alt="A Downtown Orthodontics clinician scanning a patient chairside" style="object-position:center 45%;" / loading="lazy" decoding="async" width="1600" height="2400"></div>
           <div class="body">
             <div class="lbl">Teens</div>
             <h3>Braces that <em>fit their life.</em></h3>
@@ -1199,14 +1253,14 @@
             <span class="go">Explore braces <span class="arr">&rarr;</span></span>
           </div>
         </a>
-        <a class="path reveal d2" href="/appointment-request">
-          <div class="pic"><img src="assets/photos/img-3127.jpg" alt="Dr. Daher with an adult Invisalign patient at Downtown Orthodontics" style="object-position:center 30%;" /></div>
+        <a class="path reveal d2" href="/invisalign">
+          <div class="pic"><img src="assets/photos/img-3127.jpg" alt="Dr. Daher with an adult Invisalign patient at Downtown Orthodontics" style="object-position:center 30%;" / loading="lazy" decoding="async" width="960" height="1280"></div>
           <div class="body">
             <div class="lbl">Adults</div>
-            <h3>The smile you <em>finally make time for.</em></h3>
+            <h3>Invisalign for the smile you <em>finally make time for.</em></h3>
             <p>Invisalign planned by a specialist, two minutes from Canada Place. Simple crowding and relapse cases fit the Quick 6 Fix at $4,299 flat.</p>
             <span class="cue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Quick 6 Fix &middot; $4,299 flat rate</span>
-            <span class="go">Book Invisalign <span class="arr">&rarr;</span></span>
+            <span class="go">Explore Invisalign <span class="arr">&rarr;</span></span>
           </div>
         </a>
       </div>
@@ -1254,19 +1308,19 @@
       </div>
       <div class="journey-stage" aria-hidden="true">
         <article class="jpanel active">
-          <img src="assets/photos/office-inside.jpg" alt="" style="object-position:center 55%;" />
+          <img src="assets/photos/office-inside.jpg" alt="" style="object-position:center 55%;" / loading="lazy" decoding="async" width="1600" height="1066">
           <div class="cap"><span class="cn">01</span><b>A warm welcome</b></div>
         </article>
         <article class="jpanel">
-          <img src="assets/photos/used-2.jpg" alt="" />
+          <img src="assets/photos/used-2.jpg" alt="" / loading="lazy" decoding="async" width="1600" height="2400">
           <div class="cap"><span class="cn">02</span><b>A quick, comfortable digital scan</b></div>
         </article>
         <article class="jpanel">
-          <img src="assets/photos/used-3.jpg" alt="" style="object-position:center 25%;" />
+          <img src="assets/photos/used-3.jpg" alt="" style="object-position:center 25%;" / loading="lazy" decoding="async" width="1600" height="2400">
           <div class="cap"><span class="cn">03</span><b>Your plan, in plain language</b></div>
         </article>
         <article class="jpanel">
-          <img src="assets/photos/used-1.jpg" alt="" style="object-position:center 20%;" />
+          <img src="assets/photos/used-1.jpg" alt="" style="object-position:center 20%;" / loading="lazy" decoding="async" width="1600" height="2400">
           <div class="cap"><span class="cn">04</span><b>Your confident new smile</b></div>
         </article>
       </div>
@@ -1308,9 +1362,10 @@
   <section class="block doc" id="doctor">
     <div class="wrap doc-grid">
       <div class="doc-photo reveal">
-        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Daher, orthodontist at Downtown Orthodontics" /></div>
+        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Daher, orthodontist at Downtown Orthodontics" / loading="lazy" decoding="async" width="1600" height="2400"></div>
       </div>
       <div class="reveal d1">
+        <span class="eyebrow">(Meet Dr. Sam Daher)</span>
         <h2 class="h2">One specialist, <em>start to finish.</em></h2>
         <p class="bio">Dr. Daher has planned orthodontic treatment for over 30 years, and leads the only specialist orthodontic practice in downtown Vancouver. He opened the world's first Invisalign-only practice in 2009, has taught in 142 cities across six continents, and still sits on Align Technology's scientific advisory board. His patients range from seven-year-olds at their first growth check to adults with cases other offices declined, and his rule hasn't changed: careful diagnosis, honest recommendations, and no unnecessary extractions.</p>
         <div class="doc-creds">
@@ -1321,9 +1376,11 @@
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Align scientific advisory board</span>
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Founder, Daher Aligner Institute</span>
         </div>
-        <p style="margin:0 0 26px;font-size:var(--fs-base);"><a class="tlink" href="#credentials" style="color:var(--teal);">See the full record &rarr;</a></p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="/appointment-request">Book with Dr. Daher <span class="arr">&rarr;</span></a>
+          <!-- ONE outline CTA. The spec bans a solid booking button here, and bans a second
+               CTA, so the old "See the full record" link to #credentials came out too: that
+               section sits immediately below this one anyway. -->
+          <a class="btn btn-ghost-light" href="/dr-sam-daher">More about Dr. Daher <span class="arr">&rarr;</span></a>
         </div>
       </div>
     </div>
@@ -1363,7 +1420,7 @@
         <span class="lbl">Where the credentials come from</span>
         <div class="authgrid">
           <div class="authcell">
-            <span class="mark"><img src="assets/authority/invisalign.png" alt="Invisalign, by Align Technology" /></span>
+            <span class="mark"><img src="assets/authority/invisalign.png" alt="Invisalign, by Align Technology" / loading="lazy" decoding="async" width="364" height="80"></span>
             <span class="rel">Scientific advisory board, and a top 1% provider globally</span>
           </div>
           <div class="authcell">
@@ -1445,7 +1502,7 @@
             <a class="tlink" href="/financing">See exactly what you&rsquo;ll pay <span class="arr">&rarr;</span></a></p>
         </div>
         <div class="reveal d1">
-          <div class="hero-frame"><img src="assets/photos/used-3.jpg" alt="Dr. Daher going through a treatment plan and its cost at his consultation desk" /></div>
+          <div class="hero-frame"><img src="assets/photos/used-3.jpg" alt="Dr. Daher going through a treatment plan and its cost at his consultation desk" / loading="lazy" decoding="async" width="1600" height="2400"></div>
         </div>
       </div>
     </div>
@@ -1460,7 +1517,7 @@
       <!-- bento grid [Tailwind block] -->
       <div class="tw-block i-cards grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:auto-rows-[1fr]">
         <div class="reveal relative overflow-hidden rounded-brand p-8 text-white sm:col-span-2 lg:col-span-1 lg:row-span-2" style="min-height:300px;">
-          <img src="assets/photos/practice.jpg" alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" />
+          <img src="assets/photos/practice.jpg" alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" / loading="lazy" decoding="async" width="1600" height="1200">
           <span class="absolute inset-0" style="background:linear-gradient(180deg, color-mix(in srgb,var(--petrol-deep),transparent 28%), var(--petrol-deep) 94%);"></span>
           <div class="relative flex h-full flex-col justify-end">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" class="mb-auto text-teal"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c0-3.3 3.1-5 7-5s7 1.7 7 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
@@ -1496,12 +1553,14 @@
   <section class="block" style="background:var(--surface);" id="reviews">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="eyebrow">(Kind words)</span>
+        <span class="eyebrow rating">4.4 out of 5 on Google &middot; 160 reviews</span>
         <h2 class="h2">Loved across <em>Van City.</em></h2>
         <p>Cases other offices turned down, results still holding years later, and a specialist who
           explains the whole plan before anything starts. In patients&rsquo; own words.</p>
-                <!-- PROOF TODO (brief §8): add the Neera Arora endorsement as a featured card here once the client-approved quote lands. The prior build omitted it as unconfirmed; it is now a named proof element. Also swap in real Google reviews + credentials/awards. -->
-        <!-- Reviewer cities intentionally span downtown + North Shore + North Vancouver families (brief §4: N. Van families are now core; Dr. Ty confirming geo). -->
+        <!-- PROOF TODO (brief §8): the Neera Arora endorsement, as a featured card, once the
+             client-approved quote lands. It is a named proof element and is still the only one
+             outstanding here. Real Google reviews and the real rating are DONE (2026-08-24 and
+             2026-08-26) — do not re-do them. -->
 
       </div>
       <!-- REAL Google reviews, pulled from the practice's profile and quoted verbatim.
@@ -1575,11 +1634,19 @@
           </button>
           <span class="mq-hint">Drag to browse, or tap to pause.</span>
         </div>
+        <!-- The door beneath (REVIEWS-SPEC rule 5). The count line runs because 160 is a
+             genuinely strong count for a single downtown practice; a weak count is omitted
+             rather than dressed up. No place_id is on file, so the link is the same Maps
+             search URL the footer address uses. -->
+        <p class="revdoor reveal">
+          <a class="tlink" href="https://www.google.com/maps/search/?api=1&amp;query=Downtown+Orthodontics+840+W+Hastings+St+Vancouver+BC" target="_blank" rel="noopener">Read more reviews on Google <span class="arr">&rarr;</span></a>
+          <span class="note">160 reviews from downtown Vancouver patients, averaging 4.4 out of 5.</span>
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- (REAL QUESTIONS) — conversational FAQ -->
+
   <!-- USP ZIGZAG row 2 of 2. The objection-killer, which is the BrightWay pattern:
        affordable must not read as assembly line. Runs photo-free as the centred band
        variant the spec permits, rather than reusing a third photograph or touching stock.
@@ -1606,6 +1673,22 @@
     </div>
   </section>
 
+  <!-- CTA BAND, Section 06, in the spec's DEFAULT placement: directly after the USP zigzag.
+       Five lines and no more, one solid button matching the header and hero word for word,
+       and nothing introduced that has not already appeared above. The closing band before
+       the footer is the single permitted repeat. -->
+  <section class="block ctaband" id="ready">
+    <div class="wrap">
+      <div class="inner">
+        <h2 class="h2 reveal">Ready to hear what a specialist <em>would actually do?</em></h2>
+        <p class="reveal">A free consultation in downtown Vancouver, no referral needed, Monday to Thursday.</p>
+        <div class="hero-actions reveal">
+          <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- STANDARD FAQ -->
   <section class="block faq" id="faq">
     <div class="wrap">
@@ -1613,6 +1696,13 @@
         <h2 class="h2">The rest of <em>the picture.</em></h2>
       </div>
       <div class="faq-list reveal">
+        <!-- FAQ-SPEC rule 2: a cost + city question is mandatory and hiding it is banned.
+             It was absent here until 2026-08-26, on an affordability-positioned practice.
+             It runs first because it is the question people actually arrive with. -->
+        <details class="f">
+          <summary>How much do braces and Invisalign cost in downtown Vancouver? <span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></summary>
+          <div class="ans"><p>Most treatment starts at $1,000 down and about $220 a month, with 0% interest financed in house, and we bill your insurance directly. Braces and Invisalign are priced the same, and simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so you get your exact price in writing at your free consultation, and you can <a href="/financing">see the full breakdown first</a>.</p></div>
+        </details>
         <details class="f">
           <summary>Who will actually be treating us? <span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></summary>
           <div class="ans"><p>Dr. Daher, from your first visit to your last. He's a certified specialist in orthodontics with over 30 years in practice, and you'll see the same doctor and the same small team throughout, with no rotating faces and no handoffs.</p></div>
@@ -1627,7 +1717,7 @@
         </details>
         <details class="f">
           <summary>What about retainers when we're done? <span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></summary>
-          <div class="ans"><p>Every plan finishes with clear retainers and a retention plan, because teeth drift if you let them. Dr. Daher checks your retention himself, and if an old retainer has stopped fitting, we can help with that too.</p></div>
+          <div class="ans"><p>Every plan finishes with clear retainers and a retention plan, because teeth drift if you let them. Dr. Daher checks your retention himself, and if an old retainer has stopped fitting, <a href="/retainers">we can help with that too</a>.</p></div>
         </details>
         <details class="f">
           <summary>What if we move partway through treatment? <span class="pm" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></summary>
@@ -1649,12 +1739,23 @@
             <b>840 W Hastings St</b>
             <span>Vancouver, BC V6C 1C8</span>
           </address>
+          <!-- Hours are required card contents. Client-confirmed, and identical to the
+               footer and to openingHoursSpecification in the head. -->
+          <div class="loc-hours">
+            <span class="lh-k">Hours</span>
+            <span>Monday &nbsp;10:00 &ndash; 18:00</span>
+            <span>Tuesday &nbsp;08:00 &ndash; 15:00</span>
+            <span>Wednesday &nbsp;08:00 &ndash; 16:30</span>
+            <span>Thursday &nbsp;08:00 &ndash; 15:00</span>
+            <span class="lh-closed">Friday to Sunday, closed</span>
+          </div>
           <a class="loc-tel" href="tel:+16046623290">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6 3h3l2 5-2.4 1.4a12 12 0 006 6L16 15l5 2v3a2 2 0 01-2 2A16 16 0 013 5a2 2 0 012-2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
             (604) 662-3290
           </a>
           <div class="loc-actions">
-            <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>
+            <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=840+W+Hastings+St%2C+Vancouver%2C+BC+V6C+1C8" target="_blank" rel="noopener">Get directions <span class="arr">&rarr;</span></a>
+            <a class="btn btn-outline" href="/appointment-request">Book a free consultation</a>
           </div>
         </div>
         <div class="loc-map">
@@ -1662,7 +1763,7 @@
             src="https://maps.google.com/maps?q=Downtown%20Orthodontics%2C%20840%20W%20Hastings%20St%2C%20Vancouver%2C%20BC%20V6C%201C8&amp;z=14&amp;output=embed"
             title="Map showing Downtown Orthodontics at 840 W Hastings St, Vancouver"
             referrerpolicy="no-referrer-when-downgrade"
-            style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+            style="position:absolute;inset:0;width:100%;height:100%;border:0" loading="lazy"></iframe>
         </div>
       </div>
     </div>
@@ -1694,7 +1795,7 @@
         </div>
         <div class="foot-col"><h4>Treatments</h4><a href="/braces">Braces, clear &amp; metal</a><a href="/early-orthodontics">Kids &amp; early care</a><a href="/invisalign">Invisalign &amp; Quick 6 Fix</a><a href="/retainers">Retainers &amp; aftercare</a></div>
         <div class="foot-col"><h4>Practice</h4><a href="/dr-sam-daher">Meet Dr. Daher</a><a href="/why-choose-us">Why the specialist</a><a href="/#how">How it works</a><a href="/contact">Visit us</a><a href="/faq">Questions</a></div>
-        <div class="foot-col"><h4>Visit</h4><a href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">840 W Hastings St, Vancouver</a><a href="tel:+16046623290">(604) 662-3290</a><a href="https://downtownorthodontics.ca">downtownorthodontics.ca</a><span class="foot-note">Monday to Thursday</span></div>
+        <div class="foot-col"><h4>Visit</h4><a href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">840 W Hastings St, Vancouver</a><a href="tel:+16046623290">(604) 662-3290</a><a href="https://downtownorthodontics.ca">downtownorthodontics.ca</a><span class="foot-hours">Mon 10:00&ndash;18:00 &middot; Tue 08:00&ndash;15:00</span><span class="foot-hours">Wed 08:00&ndash;16:30 &middot; Thu 08:00&ndash;15:00</span><span class="foot-hours">Friday to Sunday, closed</span></div>
       </div>
       <div class="foot-base">
         <span>© 2026 Downtown Orthodontics. All rights reserved.</span>

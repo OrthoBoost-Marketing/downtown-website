@@ -141,7 +141,7 @@
   html { scroll-behavior: smooth; }
   body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg);
          -webkit-font-smoothing: antialiased; line-height: 1.6; overflow-x: hidden; }
-  img { display: block; max-width: 100%; }
+  img { display: block; max-width: 100%; height: auto; }
   a { color: inherit; }
   .wrap { width: min(100% - 48px, var(--maxw)); margin-inline: auto; }
 
@@ -685,6 +685,63 @@
   @keyframes loc-pulse{ 0%{ transform: scale(1); opacity:.5; } 70%{ transform: scale(3.4); opacity:0; } 100%{ opacity:0; } }
   @media (prefers-reduced-motion: reduce){ .locpin .ring{ animation:none; } .locpin.active .loclabel{ transform: translateX(-50%); } }
 
+  /* ---------- CTA BAND (Section 06) — the mid-page re-ask ----------
+     CTA-BAND-SPEC places this directly after the USP zigzag; the closing band before
+     the footer is the one permitted repeat, so the page runs two, which is the maximum.
+     Full-bleed dark variant, deliberately the strongest colour stop on the page, and
+     the closing band stays light so the two do not read as the same moment twice.
+     NOTE the .btn-primary override: `.hero-actions .btn-primary` paints petrol-deep on
+     white text, which is invisible on a petrol-deep band. Same fix as .doc. */
+  .ctaband { background: var(--petrol-deep); text-align: center; }
+  .ctaband .inner { max-width: 660px; margin-inline: auto; }
+  .ctaband h2 { color: #fff; }
+  .ctaband p { color: var(--on-deep-soft); font-size: var(--fs-xl); max-width: 46ch;
+    margin: var(--sp-5) auto var(--sp-7); }
+  .ctaband .hero-actions { justify-content: center; }
+  .ctaband .hero-actions .btn-primary { background: var(--teal); color: var(--ink-on-teal);
+    box-shadow: var(--shadow-cta); }
+  .ctaband .hero-actions .btn-primary:hover { background: color-mix(in srgb, var(--teal) 86%, #fff); }
+
+  /* Guard: .hero-actions .btn-outline paints near-black text, which disappears on the
+     dark .doc and .ctaband grounds. Any outline button landing there gets the light ghost
+     treatment instead. This is the same class of bug as the black-on-black .btn-primary. */
+  .doc .btn-outline, .ctaband .btn-outline { color: #fff; border-color: rgba(255,255,255,.5); }
+  .doc .btn-outline:hover, .ctaband .btn-outline:hover { background: rgba(255,255,255,.12); border-color: #fff; color: #fff; }
+
+  /* ---------- REVIEWS: rating eyebrow + the door beneath (REVIEWS-SPEC 4 and 5) ----------
+     The rating runs as text only and is never marked up as AggregateRating: Google treats
+     self-hosted markup of third-party reviews as self-serving. Tracking is tightened from
+     the label default because this line is data, not a section label. */
+  .eyebrow.rating { letter-spacing: .12em; font-weight: 600; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums; }
+  .revdoor { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-3) var(--sp-6);
+    margin-top: var(--sp-7); }
+  .revdoor .note { color: var(--ink-faint); font-size: var(--fs-base); }
+  /* The door is a standalone action, not an inline link, so it gets a comfortable
+     touch target rather than the 26px an inline .tlink lays out at. */
+  .revdoor a { min-height: var(--tap); align-items: center; }
+
+  /* ---------- FAQ answers link out (FAQ-SPEC 7) ---------- */
+  .faq .ans a { color: var(--teal-2); font-weight: 600; text-decoration: underline;
+    text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  .faq .ans a:hover { color: var(--petrol); }
+
+  /* ---------- LOCATIONS: hours and the two doors (LOCATIONS-SPEC) ----------
+     Hours are required card contents and were shipping in openingHoursSpecification only.
+     Get directions is the spec's #1 action and takes the solid button; booking steps down
+     to the outline, since the header, hero and both CTA bands already carry it. */
+  .loc-hours { margin-top: var(--sp-6); display: grid; gap: 2px; }
+  .loc-hours .lh-k { font-size: var(--fs-2xs); letter-spacing: var(--track-label);
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+  .loc-hours span { font-size: var(--fs-base); color: var(--ink-soft);
+    font-variant-numeric: tabular-nums; }
+  .loc-hours .lh-closed { color: var(--ink-faint); }
+  .loc-actions { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-top: var(--sp-7); }
+
+  /* ---------- FOOTER hours (FOOTER-SPEC required contents) ---------- */
+  .foot-hours { display: block; color: var(--on-deep-faint); font-size: var(--fs-sm);
+    padding: 3px 0; font-variant-numeric: tabular-nums; }
+
   /* ---------- AUTHORITY LOGOS (.authbar) — Section 07, added 2026-08-25 ----------
      AUTHORITY-LOGOS-SPEC: 4 to 7 marks on one line under a quiet label, muted to a
      single tone, wrapping to two rows on mobile at >=28px tall. Explicitly NOT a
@@ -1025,7 +1082,7 @@
   <section class="block">
     <div class="wrap doc-grid" style="align-items:start;">
       <div class="doc-photo reveal">
-        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Sam Daher, orthodontist at Downtown Orthodontics" /></div>
+        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Sam Daher, orthodontist at Downtown Orthodontics" / fetchpriority="high" width="1600" height="2400"></div>
       </div>
       <div class="reveal d1">
         <span class="eyebrow">(In practice)</span>
@@ -1120,7 +1177,7 @@
         </div>
         <div class="foot-col"><h4>Treatments</h4><a href="/braces">Braces, clear &amp; metal</a><a href="/early-orthodontics">Kids &amp; early care</a><a href="/invisalign">Invisalign &amp; Quick 6 Fix</a><a href="/retainers">Retainers &amp; aftercare</a></div>
         <div class="foot-col"><h4>Practice</h4><a href="/dr-sam-daher">Meet Dr. Daher</a><a href="/why-choose-us">Why the specialist</a><a href="/#how">How it works</a><a href="/contact">Visit us</a><a href="/faq">Questions</a></div>
-        <div class="foot-col"><h4>Visit</h4><a href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">840 W Hastings St, Vancouver</a><a href="tel:+16046623290">(604) 662-3290</a><a href="https://downtownorthodontics.ca">downtownorthodontics.ca</a><span class="foot-note">Monday to Thursday</span></div>
+        <div class="foot-col"><h4>Visit</h4><a href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">840 W Hastings St, Vancouver</a><a href="tel:+16046623290">(604) 662-3290</a><a href="https://downtownorthodontics.ca">downtownorthodontics.ca</a><span class="foot-hours">Mon 10:00&ndash;18:00 &middot; Tue 08:00&ndash;15:00</span><span class="foot-hours">Wed 08:00&ndash;16:30 &middot; Thu 08:00&ndash;15:00</span><span class="foot-hours">Friday to Sunday, closed</span></div>
       </div>
       <div class="foot-base">
         <span>© 2026 Downtown Orthodontics. All rights reserved.</span>
