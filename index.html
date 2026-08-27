@@ -2495,18 +2495,32 @@
           // cut off. Build none. The credentials bar is styled to wrap into a static centred
           // row instead; the reviews strip stays a real draggable overflow region.
           if (reduce) { half = 0; return false; }
-          // A strip narrower than its bar has nothing to scroll, so it would sit
-          // motionless. The credentials bar is four short cells and does exactly that on a
-          // desktop viewport: 731px of text in a 1200px bar. So repeat the set until it is
-          // wider than the bar BEFORE measuring the wrap point. The reviews marquee already
-          // overflows many times over, so this loop never runs for it.
-          var guard = 0;
-          while (track.scrollWidth <= track.clientWidth + 8 && guard++ < 24) {
-            var before = track.scrollWidth;
-            originals.forEach(function(n){ track.appendChild(mkClone(n)); });
-            if (track.scrollWidth <= before) break;    // zero-width content, do not spin
+          // A strip narrower than its bar has nothing to scroll, so it would sit motionless.
+          // The credentials bar is four short cells and does exactly that on a desktop
+          // viewport. So repeat the set until it is wider than the bar BEFORE measuring the
+          // wrap point.
+          //
+          // Measure the REAL content extent, never scrollWidth. scrollWidth is clamped to
+          // clientWidth while the content is narrower than the box, so it reads identical
+          // before and after a clone round, and the no-growth guard below then fires on
+          // exactly the case this loop exists to fix. That is the bug this replaces: at
+          // 2048px the bar reported scrollWidth 2033 == clientWidth 2033 with 1691px of
+          // real content, the guard broke after one round, `scrollable` came back false and
+          // the strip sat still. It only ever worked because 390px and ~750px overflow
+          // after a single round. offsetLeft/offsetWidth are not clamped.
+          function contentWidth(){
+            var kids = track.children;
+            if (!kids.length) return 0;
+            var last = kids[kids.length - 1];
+            return (last.offsetLeft + last.offsetWidth) - kids[0].offsetLeft;
           }
-          if (track.scrollWidth <= track.clientWidth + 8) return false;  // nothing to scroll
+          var guard = 0;
+          while (contentWidth() <= track.clientWidth + 8 && guard++ < 24) {
+            var before = contentWidth();
+            originals.forEach(function(n){ track.appendChild(mkClone(n)); });
+            if (contentWidth() <= before) break;    // zero-width content, do not spin
+          }
+          if (contentWidth() <= track.clientWidth + 8) return false;  // nothing to scroll
           // One period of the loop is everything currently in the track. Mirror it so that
           // scrolling past the period shows identical content.
           var period = [].slice.call(track.children);
