@@ -9,7 +9,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
 import common
-from common import fill, attribution_inputs, wire_form, leads_script
+from common import fill, attribution_inputs, wire_form, leads_script, quote_card
 
 TICK = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
         '<path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
@@ -126,19 +126,20 @@ BODY = """
     </div>
   </section>
 
-  <!-- ONE first-visit quote strip. SPEC wants a verbatim first-visit testimonial;
-       none is on file, so the slot ships visibly empty rather than invented. -->
+  <!-- ONE first-visit quote strip. SPEC wants a verbatim first-visit testimonial.
+       Filled 2026-08-27 from the harvested profile: sanaz hendi, "First visit", a
+       thorough assessment explained plainly, which is exactly what this page asks the
+       reader to book. Not on the homepage marquee. -->
   <section class="block" style="background:var(--surface);">
     <div class="wrap">
       <div class="reveal" style="max-width:760px;">
         <h2 class="eyebrow">(In their words)</h2>
-        <p class="slot">Placeholder: a first-visit review goes here, quoted verbatim from the
-          practice&rsquo;s Google profile with attribution. No client-approved quotes are on file
-          yet, and this build does not invent them.</p>
+        %(quote)s
       </div>
     </div>
   </section>
-""" % {"tick": TICK, "form": FORM} + leads_script()
+""" % {"tick": TICK, "form": FORM,
+       "quote": quote_card(21, "First visit", indent=8)} + leads_script()
 
 SCHEMA = """{
   "@context": "https://schema.org",

@@ -3,7 +3,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
 from common import TICK, PHONE, phero, cta_band, faq_rows, fill, faq_schema
-from common import attribution_inputs, wire_form, leads_script
+from common import attribution_inputs, wire_form, leads_script, quote_card
 
 # ==================================================================== FINANCING
 # FINANCIAL-AND-FAQ-PAGE-SPEC: commercial-query H1, the monthly anchor repeated and
@@ -157,9 +157,7 @@ FIN_BODY = phero(
     <div class="wrap" style="max-width:760px;">
       <div class="reveal">
         <h2 class="eyebrow">(In their words)</h2>
-        <p class="slot">Placeholder: a review about the plan or the price goes here, quoted verbatim
-          with attribution. The spec asks specifically for a payment-related quote, and no
-          client-approved quotes are on file yet.</p>
+        __QUOTE__
       </div>
     </div>
   </section>
@@ -174,7 +172,10 @@ FIN_BODY = phero(
       </div>
     </div>
   </section>
-""", rows=fin_rows) + cta_band(
+""", rows=fin_rows,
+         # Riaz Meghji, "Worth it": the only review on the profile that speaks to
+         # price, so it belongs here even though the homepage marquee also uses it.
+         quote=quote_card(4, "Adult treatment", indent=8)) + cta_band(
     "Get your exact price, <em>free.</em>",
     "One visit, a digital scan, and a written plan with the full cost on it. No obligation to start.",
     "$1,000 down, from $220/mo at 0% in-house financing. Insurance billed directly.")

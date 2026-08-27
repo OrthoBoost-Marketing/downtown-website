@@ -269,6 +269,15 @@
     color: var(--ink-soft); font-weight: 600; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .12em; white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; transition: color .2s; }
   .nav-mid > a:hover, .nav-mid .has-menu:hover > button, .nav-mid .has-menu:focus-within > button { color: var(--ink); }
   .has-menu { position: relative; }
+  /* The menu opens 14px below the button (top: calc(100% + 14px)), and that gap belonged
+     to neither element, so moving the pointer from the button down to the menu crossed a
+     dead strip, :hover dropped, and the dropdown closed before you could reach it. This
+     bridges the gap: an invisible strip that is a child of .has-menu, so hovering it keeps
+     :hover on the parent the whole way down. Only present while open, so it never sits
+     over anything when the menu is closed. */
+  .has-menu::after { content: ""; position: absolute; left: 0; right: 0; top: 100%;
+    height: 16px; display: none; }
+  .has-menu:hover::after, .has-menu:focus-within::after { display: block; }
   .has-menu .caret { flex-shrink: 0; transition: transform .25s var(--e-out); }
   .has-menu:hover .caret, .has-menu:focus-within .caret { transform: rotate(180deg); }
   .menu { position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(8px); z-index: var(--z-dropdown);
@@ -1653,7 +1662,10 @@
           <p class="promise" style="margin-top:var(--sp-6);">Rather just call?</p>
           <a class="big-tel" href="tel:+16046623290"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z" fill="currentColor"/></svg> (604) 662-3290</a>
           <p class="promise">Monday 10&ndash;6, Tuesday and Thursday 8&ndash;3, Wednesday 8&ndash;4:30.</p>
-          <p class="slot" style="margin-top:var(--sp-6);">Placeholder: an Invisalign patient&rsquo;s review goes here, quoted verbatim with attribution. No client-approved quotes are on file yet.</p>
+          <figure class="tcard">
+            <blockquote>&ldquo;Downtown Orthodontics team is very welcoming, starting from the very first visit with Bita. I was ready &amp; excited for treatment and they got me started right away. The team is all friendly. For such an important heath decision, I am confident with my Orthodontist Dr. Daher guiding my Invisalign treatment.&rdquo;</blockquote>
+            <figcaption><span class="ava">C</span><span class="who"><b>Chlo&euml; McCarron</b><span>Invisalign</span></span></figcaption>
+          </figure>
         </div>
         <div class="formcard reveal d1">
           <h3>Request a call back</h3>

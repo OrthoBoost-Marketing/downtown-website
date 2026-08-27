@@ -10,7 +10,7 @@ One service per page. Rows never drift to sibling services.
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
-from common import attribution_inputs, wire_form, leads_script
+from common import attribution_inputs, wire_form, leads_script, quote_card
 
 TICK = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
         '<path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
@@ -41,7 +41,7 @@ def form(slug, preselect, quote_note):
           <p class="promise" style="margin-top:var(--sp-6);">Rather just call?</p>
           <a class="big-tel" href="tel:+16046623290">%(phone)s (604) 662-3290</a>
           <p class="promise">Monday 10&ndash;6, Tuesday and Thursday 8&ndash;3, Wednesday 8&ndash;4:30.</p>
-          <p class="slot" style="margin-top:var(--sp-6);">%(quote_note)s</p>
+          %(quote_note)s
         </div>
         <div class="formcard reveal d1">
           <h3>Request a call back</h3>
@@ -316,8 +316,9 @@ build(
          "Every plan finishes with clear retainers and a retention plan, because teeth drift if you let them. Dr. Daher checks your retention himself. If an old retainer has stopped fitting, we can help with that too."),
     ],
     form_preselect="Braces, metal or clear",
-    quote_note="Placeholder: a braces patient&rsquo;s review goes here, quoted verbatim with "
-               "attribution. No client-approved quotes are on file yet.",
+    # JJ, "Braces off": a finished braces case AND the retention handoff, the pair this
+    # page has to prove. Not on the homepage marquee.
+    quote_note=quote_card(22, "Braces off, and retained"),
     service_name="Braces for kids, teens and adults",
     photo="assets/photos/used-2.jpg",
 )
@@ -390,8 +391,9 @@ build(
          "Yes. Invisalign Teen is built for it, with wear indicators and replacement allowances for the aligners that inevitably get lost. Whether it suits your teenager depends on the bite and honestly on how reliably they will wear them, which we will talk through together."),
     ],
     form_preselect="Invisalign or Quick 6 Fix",
-    quote_note="Placeholder: an Invisalign patient&rsquo;s review goes here, quoted verbatim with "
-               "attribution. No client-approved quotes are on file yet.",
+    # Chloe McCarron, "Invisalign": no waiting to start, and confidence in the
+    # specialist. Not on the homepage marquee.
+    quote_note=quote_card(18, "Invisalign"),
     service_name="Invisalign and Invisalign Teen",
     photo="assets/photos/used-3.jpg",
 )
@@ -464,8 +466,11 @@ build(
          "Often, yes. Invisalign Teen is designed for it. Whether it suits depends on the bite and on how reliably the aligners will actually be worn, and we would rather have that conversation honestly up front than six months in."),
     ],
     form_preselect="Kids' first visit and early care",
-    quote_note="Placeholder: a parent&rsquo;s review goes here, quoted verbatim with attribution. "
-               "No client-approved quotes are on file yet.",
+    # Elizabeth May, "Kids": explains the treatment to the CHILD as well as the adult,
+    # which is this page's whole promise. Not on the homepage marquee.
+    # "Family of", not "Parent of": she brought her NIECE. The caption must not imply a
+    # relationship the review does not state.
+    quote_note=quote_card(11, "Family of a young patient"),
     service_name="Early and interceptive orthodontics for children",
     photo="assets/photos/used-1.jpg",
 )
@@ -539,8 +544,9 @@ build(
          "It depends on the type and whether we need a new scan, so we quote it before making anything rather than publishing a figure that may not match your case. Call the practice and we will tell you what your situation involves."),
     ],
     form_preselect="Retainers and aftercare",
-    quote_note="Placeholder: a retention or relapse patient&rsquo;s review goes here, quoted verbatim "
-               "with attribution. No client-approved quotes are on file yet.",
+    # Roger Singh, "Retention": thirteen years on and still a patient, the retention
+    # claim proved by duration. Not on the homepage marquee.
+    quote_note=quote_card(15, "Retention, thirteen years"),
     service_name="Clear retainers and retention",
     photo="assets/photos/img-3127.jpg",
 )

@@ -229,6 +229,15 @@
     color: var(--ink-soft); font-weight: 600; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .12em; white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; transition: color .2s; }
   .nav-mid > a:hover, .nav-mid .has-menu:hover > button, .nav-mid .has-menu:focus-within > button { color: var(--ink); }
   .has-menu { position: relative; }
+  /* The menu opens 14px below the button (top: calc(100% + 14px)), and that gap belonged
+     to neither element, so moving the pointer from the button down to the menu crossed a
+     dead strip, :hover dropped, and the dropdown closed before you could reach it. This
+     bridges the gap: an invisible strip that is a child of .has-menu, so hovering it keeps
+     :hover on the parent the whole way down. Only present while open, so it never sits
+     over anything when the menu is closed. */
+  .has-menu::after { content: ""; position: absolute; left: 0; right: 0; top: 100%;
+    height: 16px; display: none; }
+  .has-menu:hover::after, .has-menu:focus-within::after { display: block; }
   .has-menu .caret { flex-shrink: 0; transition: transform .25s var(--e-out); }
   .has-menu:hover .caret, .has-menu:focus-within .caret { transform: rotate(180deg); }
   .menu { position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(8px); z-index: var(--z-dropdown);
@@ -1631,15 +1640,18 @@
     </div>
   </section>
 
-  <!-- ONE first-visit quote strip. SPEC wants a verbatim first-visit testimonial;
-       none is on file, so the slot ships visibly empty rather than invented. -->
+  <!-- ONE first-visit quote strip. SPEC wants a verbatim first-visit testimonial.
+       Filled 2026-08-27 from the harvested profile: sanaz hendi, "First visit", a
+       thorough assessment explained plainly, which is exactly what this page asks the
+       reader to book. Not on the homepage marquee. -->
   <section class="block" style="background:var(--surface);">
     <div class="wrap">
       <div class="reveal" style="max-width:760px;">
         <h2 class="eyebrow">(In their words)</h2>
-        <p class="slot">Placeholder: a first-visit review goes here, quoted verbatim from the
-          practice&rsquo;s Google profile with attribution. No client-approved quotes are on file
-          yet, and this build does not invent them.</p>
+        <figure class="tcard">
+          <blockquote>&ldquo;I recently had the pleasure of visiting Downtown Orthodontics, and my experience was exceptional. The office is clean, modern and well designed. The staff is super friendly and helpful. The orthodontics professionals thoroughly assessed my needs and explained the treatment plan in a way that was easy to understand.&rdquo;</blockquote>
+          <figcaption><span class="ava">S</span><span class="who"><b>sanaz hendi</b><span>First visit</span></span></figcaption>
+        </figure>
       </div>
     </div>
   </section>

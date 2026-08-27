@@ -242,3 +242,28 @@ def faq_schema(items):
 def checks(rows):
     return '<ul class="checks">%s</ul>' % "".join(
         fill("<li>__TICK__<span>__R__</span></li>", r=r) for r in rows)
+
+
+def quote_card(idx, role=None, indent=10):
+    """One harvested Google review, rendered as the shared .tcard component.
+
+    `idx` indexes reviews_data.REVIEWS. Text is emitted verbatim: REVIEWS already holds
+    the trimmed-with-ellipsis form and REVIEWS-SPEC rule 2 forbids rewording. `role`
+    overrides the caption's second line, which otherwise uses the review's category chip.
+
+    Reuses .tcard rather than adding a class. The component is already in the shared
+    stylesheet and its width lock is scoped to `.mq-reviews > .tcard`, so a standalone
+    card just fills its container.
+    """
+    from reviews_data import REVIEWS
+    name, _when, cat, text, _job = REVIEWS[idx]
+    initial = re.sub(r"[^A-Za-z]", "", name)[:1].upper() or "?"
+    pad = " " * indent
+    return (
+        '<figure class="tcard">\n'
+        '%(p)s  <blockquote>&ldquo;%(t)s&rdquo;</blockquote>\n'
+        '%(p)s  <figcaption><span class="ava">%(i)s</span><span class="who">'
+        '<b>%(n)s</b><span>%(r)s</span></span></figcaption>\n'
+        '%(p)s</figure>' % {"p": pad, "t": text, "i": initial, "n": name,
+                            "r": role or cat}
+    )
