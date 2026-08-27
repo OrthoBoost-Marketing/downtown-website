@@ -856,15 +856,41 @@
      this track past the card's 284px content box at 390px. The card is overflow:hidden, so
      that sheared 19px off the copy, the hours and the map. Found 2026-08-27. */
   @media (max-width: 900px){ .loc-card{ grid-template-columns: minmax(0,1fr); } }
-  .loc-copy .eyebrow{ margin-bottom: 14px; }
+  /* ---------- desktop: both columns share a top AND a bottom edge ----------
+     Was align-items:center against a fixed 5/4.3 map. Measured at 1440 on 2026-08-27:
+     the copy column ran 859px and the map only 517px, so the map floated in the middle
+     of the card with 171px of dead space above it and about as much below, and the whole
+     right-hand side sat empty beside the phone number and the two buttons. Stretching
+     the map to the column height makes the card read as two deliberate panels.
+     The copy also takes slightly MORE width than the map now: it carries the heading,
+     a paragraph, the address, the hours, the phone number and two CTAs. The map carries
+     none of that and was the wider of the two. */
+  @media (min-width: 901px){
+    .loc-card{ align-items: stretch;
+      grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr); }
+    /* .loc-card .loc-map, not .loc-map: this block sits ABOVE the base .loc-map rule, and
+       at equal specificity the later rule wins. A bare .loc-map lost `aspect-ratio: auto`
+       to the base 5/4.3, which then combined with the explicit height to force the width to
+       831px inside a 395px track. The card is overflow:hidden, so the map was silently
+       clipped. Measured, not read: the source looked correct. */
+    .loc-card .loc-map{ aspect-ratio: auto; height: 100%; min-height: 460px; }
+    /* Deterministic at every desktop width. Left to flex-wrap, this row flipped between
+       side-by-side at 1280 (a 225px button beside a 304px one, visibly ragged) and stacked
+       at 1440 and up, because .wrap caps the card at 1200 while its padding keeps growing
+       with the clamp, so the copy column gets NARROWER as the viewport gets wider. Stack
+       them at one shared width instead, capped so they do not read as full-bleed mobile
+       buttons. */
+    .loc-actions{ flex-direction: column; align-items: flex-start; }
+    .loc-actions .btn{ width: 100%; max-width: 360px; justify-content: center; }
+  }
+  .loc-copy .eyebrow{ margin-bottom: var(--sp-3); }
   .loc-copy p b{ color: var(--teal-2); font-weight: 700; }
-  .loc-addr{ margin-top: 26px; font-style: normal; }
+  .loc-addr{ margin-top: var(--sp-6); font-style: normal; }
   .loc-addr b{ display:block; font-size:var(--fs-lg); font-weight:700; color:var(--ink); letter-spacing:-.01em; }
   .loc-addr span{ display:block; color:var(--ink-soft); font-size:var(--fs-base); margin-top:4px; }
-  .loc-tel{ display:inline-flex; align-items:center; gap:9px; margin-top:16px; font-weight:700; color:var(--petrol); text-decoration:none; transition: color .2s; }
+  .loc-tel{ display:inline-flex; align-items:center; gap:9px; margin-top: var(--sp-4); font-weight:700; color:var(--petrol); text-decoration:none; transition: color .2s; }
   .loc-tel svg{ color: var(--teal-2); }
   .loc-tel:hover{ color: var(--teal-2); }
-  .loc-actions{ margin-top: 28px; }
 
   .loc-map{ position: relative; aspect-ratio: 5/4.3; border-radius: clamp(16px,2vw,24px); overflow: hidden;
     background: linear-gradient(155deg, #f6fafc, #e7eff5); border: var(--border) solid var(--line); }
@@ -1047,10 +1073,17 @@
      because institutional logos are portal-gated and altering them breaks their own
      brand standards. Each cell names the actual relationship so no mark asserts
      something vague. */
-  /* Standalone section since 2026-08-26, so it no longer needs the rule and top margin
-     that separated it from the credentials list it used to sit inside. */
-  .authbar { padding-top: 0; margin-top: 0; }
-  .block.authority { background: var(--surface); }
+  /* Nested back inside the credentials section on Jules's call, 2026-08-27. It therefore
+     needs the separating rule and top margin again: without them the logo band reads as a
+     fourth row of the credentials list rather than as its source attribution.
+     DEVIATION: AUTHORITY-LOGOS-SPEC rule 4 asks for this band further down, "as a section
+     divider, adjacent to reviews", which is where it sat until now. Jules asked for it here
+     instead, so the rule is knowingly overridden, not overlooked.
+     `.block.authority` is gone with the standalone section that carried it. */
+  /* No border-top: every .credo-list .ci already carries a border-bottom, so the list ends
+     with a full-width rule of its own and adding one here drew a visible double rule. The
+     margin alone does the separating. */
+  .authbar { margin-top: var(--sp-9); }
   .authbar .lbl { display: block; font-size: var(--fs-2xs); letter-spacing: var(--track-label);
     text-transform: uppercase; color: var(--ink-faint); margin-bottom: var(--sp-6); }
   /* align-items:start, not end: bottom-aligning cells whose descriptors run to
@@ -1798,6 +1831,37 @@
         <div class="ci reveal d2"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Former associate professor</b><span>University of Montreal and University of the Pacific.</span></div></div>
       </div>
 
+      <div class="authbar reveal">
+
+        <h2 class="lbl">Where the credentials come from</h2>
+        <div class="authgrid">
+          <div class="authcell">
+            <span class="mark"><img src="assets/authority/invisalign.png" alt="Invisalign, by Align Technology" loading="lazy" decoding="async" width="364" height="80"></span>
+            <span class="rel">Scientific advisory board, and a top 1% provider globally</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">McGill University</span></span>
+            <span class="rel">Alma mater, and the Dr. James McCutcheon award</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">Universit&eacute; de Montr&eacute;al</span></span>
+            <span class="rel">Former associate professor</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">University of the Pacific</span></span>
+            <span class="rel">Former associate professor</span>
+          </div>
+        </div>
+        <!-- FLAG: only genuinely held, client-confirmed credentials appear here.
+             Marks that would strengthen this band but are NOT confirmed to us, so are
+             deliberately absent: the AAO or Canadian Association of Orthodontists
+             membership mark, Royal College of Dentists of Canada certification, and the
+             Invisalign provider TIER. The practice's own Instagram bio says "Blue Diamond"
+             and TikTok says "Platinum+", which contradict each other and neither came from
+             the client, so no tier is claimed. One written confirmation from Maya adds any
+             of these. -->
+      </div>
+
     </div>
   </section>
 
@@ -1904,45 +1968,6 @@
     </div>
   </section>
 
-  <!-- AUTHORITY LOGOS, Section 07. Lifted out of the credentials section on 2026-08-26 so
-       it sits where AUTHORITY-LOGOS-SPEC rule 4 asks for it, "further down as a section
-       divider, adjacent to reviews", which is also where the kit's own BrightWay reference
-       build puts it. Deliberately NOT a marquee: rule 6 bans a scroller here and carousels
-       are in its banned list, so this site's marquee allowance does not extend to it. -->
-  <section class="block authority" id="authority">
-    <div class="wrap">
-      <div class="authbar reveal">
-
-        <h2 class="lbl">Where the credentials come from</h2>
-        <div class="authgrid">
-          <div class="authcell">
-            <span class="mark"><img src="assets/authority/invisalign.png" alt="Invisalign, by Align Technology" loading="lazy" decoding="async" width="364" height="80"></span>
-            <span class="rel">Scientific advisory board, and a top 1% provider globally</span>
-          </div>
-          <div class="authcell">
-            <span class="mark"><span class="wordmark">McGill University</span></span>
-            <span class="rel">Alma mater, and the Dr. James McCutcheon award</span>
-          </div>
-          <div class="authcell">
-            <span class="mark"><span class="wordmark">Universit&eacute; de Montr&eacute;al</span></span>
-            <span class="rel">Former associate professor</span>
-          </div>
-          <div class="authcell">
-            <span class="mark"><span class="wordmark">University of the Pacific</span></span>
-            <span class="rel">Former associate professor</span>
-          </div>
-        </div>
-        <!-- FLAG: only genuinely held, client-confirmed credentials appear here.
-             Marks that would strengthen this band but are NOT confirmed to us, so are
-             deliberately absent: the AAO or Canadian Association of Orthodontists
-             membership mark, Royal College of Dentists of Canada certification, and the
-             Invisalign provider TIER. The practice's own Instagram bio says "Blue Diamond"
-             and TikTok says "Platinum+", which contradict each other and neither came from
-             the client, so no tier is claimed. One written confirmation from Maya adds any
-             of these. -->
-      </div>
-    </div>
-  </section>
   <!-- (KIND WORDS) — testimonial wall [Tailwind block] -->
   <section class="block" style="background:var(--surface);" id="reviews">
     <div class="wrap">
