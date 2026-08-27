@@ -51,7 +51,10 @@ __ACTIONS__
 """, cls="phero-narrow" if narrow else "", crumb=crumb, eyebrow=eyebrow, h1=h1, sub=sub, actions=a)
 
 
-def cta_band(head, body, fine):
+def cta_band(head, body, fine, secondary=None):
+    """secondary=(href, label) adds an outline second action for a two-tier close."""
+    sec = ("" if not secondary else
+           '\n          <a class="btn btn-outline" href="%s">%s</a>' % secondary)
     return fill("""
   <section class="block closing">
     <div class="wrap">
@@ -59,13 +62,13 @@ def cta_band(head, body, fine):
         <h2 class="h2 reveal">__HEAD__</h2>
         <p class="reveal">__BODY__</p>
         <div class="hero-actions reveal">
-          <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>
+          <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>__SECONDARY__
         </div>
         <p class="fineprint reveal">__FINE__</p>
       </div>
     </div>
   </section>
-""", head=head, body=body, fine=fine)
+""", head=head, body=body, fine=fine, secondary=sec)
 
 
 def faq_rows(items):

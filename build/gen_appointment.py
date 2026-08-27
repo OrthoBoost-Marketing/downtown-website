@@ -8,6 +8,7 @@ what-happens block, one first-visit quote strip, and NO mid-page or final CTA ba
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
+from common import fill
 
 TICK = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
         '<path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
@@ -132,7 +133,7 @@ BODY = """
   <section class="block" style="background:var(--surface);">
     <div class="wrap">
       <div class="reveal" style="max-width:760px;">
-        <span class="eyebrow">(In their words)</span>
+        <h2 class="eyebrow">(In their words)</h2>
         <p class="slot">Placeholder: a first-visit review goes here, quoted verbatim from the
           practice&rsquo;s Google profile with attribution. No client-approved quotes are on file
           yet, and this build does not invent them.</p>
@@ -160,7 +161,7 @@ C.write("appointment-request.html", C.page(
 ))
 
 # ------------------------------------------------------------------ confirmation
-CONF_BODY = """
+CONF_BODY = fill("""
   <section class="phero" id="top">
     <div class="wrap">
       <div class="phero-narrow reveal">
@@ -239,11 +240,57 @@ CONF_BODY = """
       </div>
     </div>
   </section>
-"""
 
-C.write("appointment-request-confirmation.html", C.page(
+  <!-- "NEED US SOONER?" band. UTILITY-PAGES-SPEC requires phone + hours here,
+       before the footer. Same number and same hours as contact.html. -->
+  <section class="block" style="border-top:var(--border) solid var(--line);">
+    <div class="wrap">
+      <div class="reqgrid">
+        <div class="reveal">
+          <span class="eyebrow">(Need us sooner?)</span>
+          <h2 class="h2">Call the practice <em>directly.</em></h2>
+          <p class="promise">If something has come up, or you would rather not wait for our call,
+            the front desk can book you in over the phone.</p>
+          <a class="big-tel" href="tel:+16046623290">__PHONE__ (604) 662-3290</a>
+        </div>
+        <div class="reveal d1">
+          <ul class="checks" style="margin-top:0;">
+            <li>__TICK__<span><b>Monday</b> 10:00 to 18:00</span></li>
+            <li>__TICK__<span><b>Tuesday</b> 08:00 to 15:00</span></li>
+            <li>__TICK__<span><b>Wednesday</b> 08:00 to 16:30</span></li>
+            <li>__TICK__<span><b>Thursday</b> 08:00 to 15:00</span></li>
+            <li>__TICK__<span style="color:var(--ink-faint);">Friday to Sunday, closed</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+""")
+
+# UTILITY-PAGES-SPEC mobile nuance: the visitor has already converted, so this
+# page's sticky-bar centre segment becomes an explore action instead of "Book".
+# Asserted single replacement on this page's own HTML: the shared bar that the
+# other 16 pages get is untouched.
+_MBAR_BOOK = """    <a class="primary" href="/appointment-request">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Book free consult
+    </a>"""
+_MBAR_EXPLORE = """    <a class="primary" href="/dr-sam-daher">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.8"/><path d="M4.8 20a7.6 7.6 0 0114.4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Meet Dr. Daher
+    </a>"""
+
+_conf = C.page(
     title="Request Received | Downtown Orthodontics",
     desc="Your free consultation request has been received. Dr. Daher's front desk will call you the same business day.",
     slug="appointment-request-confirmation",
     body=CONF_BODY,
-))
+)
+assert _conf.count(_MBAR_BOOK) == 1, "confirmation sticky-bar centre segment not found exactly once"
+_conf = _conf.replace(_MBAR_BOOK, _MBAR_EXPLORE)
+# NB: the HEADER CTA also carries a "Book free consult" short label; that one
+# stays. Only the sticky bar's centre segment changes on this page.
+assert _conf.count(_MBAR_EXPLORE) == 1
+assert _MBAR_BOOK not in _conf
+
+C.write("appointment-request-confirmation.html", _conf)

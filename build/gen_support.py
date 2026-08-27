@@ -77,8 +77,8 @@ FIN_BODY = phero(
           adjustment, not a rotating cast.</span></li>
         <li>__TICK__<span><b>Digital scans and records.</b> No impression trays, and no separate
           imaging invoice.</span></li>
-        <li>__TICK__<span><b>Braces or Invisalign at the same price.</b> Choose on clinical grounds
-          rather than on cost.</span></li>
+        <li>__TICK__<span><b>Your exact figure in writing.</b> Before you commit to anything, for
+          whichever option suits your bite.</span></li>
         <li>__TICK__<span><b>Refinement to finish it properly.</b> If the result needs extra work to
           be right, that is part of the plan.</span></li>
         <li>__TICK__<span><b>Clear retainers and a retention plan</b> at the end, checked by
@@ -118,10 +118,44 @@ FIN_BODY = phero(
     </div>
   </section>
 
+  <!-- NUMBERED PROCESS STEPPER. Spec anatomy puts this between the insurance
+       explainer and the payment testimonial. Same .steps <ol> as the appointment
+       page. Every figure is already published above. -->
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">(How paying for it works)</span>
+        <h2 class="h2">Four steps, <em>and you know the number.</em></h2>
+      </div>
+      <ol class="steps steps-4 reveal d1">
+        <li>
+          <h3>Book the free consultation</h3>
+          <p>No referral, no fee, and no commitment. Bring your insurance details and we will
+            check your orthodontic coverage during the visit.</p>
+        </li>
+        <li>
+          <h3>Get your plan and your exact figure</h3>
+          <p>A digital scan, a specialist&rsquo;s read on your bite, and your full cost in writing
+            before you leave. Not a range: your number.</p>
+        </li>
+        <li>
+          <h3>$1,000 down when you start</h3>
+          <p>That is all treatment takes to begin. Pay in full instead and save 5%, or save $450
+            by starting the same day as your consultation.</p>
+        </li>
+        <li>
+          <h3>Monthly at 0% in-house</h3>
+          <p>From about $220 a month, financed in-house rather than through a lender, so there is
+            no interest and no finance application. We bill your insurance directly.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
   <section class="block">
     <div class="wrap" style="max-width:760px;">
       <div class="reveal">
-        <span class="eyebrow">(In their words)</span>
+        <h2 class="eyebrow">(In their words)</h2>
         <p class="slot">Placeholder: a review about the plan or the price goes here, quoted verbatim
           with attribution. The spec asks specifically for a payment-related quote, and no
           client-approved quotes are on file yet.</p>
@@ -173,7 +207,42 @@ FAQS = [
     ("Do you treat complex cases other offices have declined?",
      "Regularly. Referred cases and bites that have already been turned down elsewhere are a normal part of the week here. Dr. Daher's rule is the least treatment that gets the right result, which often means finding an approach somebody else did not."),
 ]
-faq_html_rows, faq_schema = faq_rows(FAQS)
+# (id, eyebrow, visible h2, short jump label, indices into FAQS)
+FAQ_GROUPS = [
+    ("cost-and-getting-started", "(Money and first steps)",
+     "Cost and <em>getting started.</em>", "Cost &amp; getting started", [0, 8, 3]),
+    ("is-it-right-for-us", "(Who it is for)",
+     "Is orthodontics <em>right for us?</em>", "Is it right for us?", [1, 2, 4, 9]),
+    ("treatment-and-afterwards", "(During and after)",
+     "Treatment, timing <em>and afterwards.</em>", "Treatment &amp; afterwards", [5, 6, 7]),
+]
+# every question used exactly once, none invented, none dropped
+assert sorted(i for g in FAQ_GROUPS for i in g[4]) == list(range(len(FAQS))), "FAQ grouping lost a question"
+assert FAQ_GROUPS[0][4][0] == 0, "the cost+city question must stay first in its group"
+
+# Visible order and schema order are the same list, so they cannot drift.
+FAQ_FLAT = [FAQS[i] for g in FAQ_GROUPS for i in g[4]]
+_, faq_schema = faq_rows(FAQ_FLAT)
+
+faq_jump = '<nav class="faq-jump reveal" aria-label="Question categories">%s</nav>' % "".join(
+    '<a href="#%s">%s</a>' % (g[0], g[3]) for g in FAQ_GROUPS)
+
+faq_groups_html = "".join(
+    fill("""
+  <section class="block faq" id="__ID__"__BG__>
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">__EYEBROW__</span>
+        <h2 class="h2">__H2__</h2>
+      </div>
+      <div class="faq-list reveal d1">__ROWS__
+      </div>
+    </div>
+  </section>
+""", id=g[0], eyebrow=g[1], h2=g[2],
+        bg=' style="background:var(--surface);"' if i % 2 else "",
+        rows=faq_rows([FAQS[j] for j in g[4]])[0])
+    for i, g in enumerate(FAQ_GROUPS))
 
 FAQ_BODY = phero(
     "Questions", "Common questions",
@@ -181,17 +250,18 @@ FAQ_BODY = phero(
     "Cost, timing, whether your child is too young, whether you are too old, and what happens if "
     "life moves you partway through treatment.",
 ) + fill("""
-  <section class="block faq">
+  <section class="block" style="padding-block:var(--sp-7) 0;">
     <div class="wrap">
-      <div class="faq-list reveal">__ROWS__
-      </div>
+      <h2 class="sr-only">Jump to a category</h2>
+      __JUMP__
     </div>
   </section>
-""", rows=faq_html_rows) + cta_band(
+""", jump=faq_jump) + faq_groups_html + cta_band(
     "Still have a question? <em>Ask it in person.</em>",
     "The free consultation exists for exactly this: a specialist&rsquo;s answer on your own bite, with "
     "no obligation attached.",
-    "Free consultation. No referral needed.")
+    "Free consultation. No referral needed.",
+    secondary=("/contact", "Or send us a message"))
 
 C.write("faq.html", C.page(
     title="Orthodontic FAQ | Braces, Invisalign &amp; Cost Questions | Downtown Orthodontics",
@@ -225,7 +295,7 @@ CONTACT_BODY = phero(
           <a class="big-tel" href="tel:+16046623290">__PHONE__ (604) 662-3290</a>
         </div>
         <div class="formcard reveal d1">
-          <h2>Send us a message</h2>
+          <h3>Send us a message</h3>
           <form method="post" action="" novalidate>
             <div class="fgrid">
               <div class="field">
@@ -261,7 +331,31 @@ CONTACT_BODY = phero(
       </div>
     </div>
   </section>
-""")
+
+  <!-- MAP BAND. Same lazy-loaded embed, address and title as the homepage
+       locations section, so there is one map implementation on the site. -->
+  <section class="block" style="background:var(--surface);">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">(On the map)</span>
+        <h2 class="h2">840 West Hastings, <em>by Canada Place.</em></h2>
+        <p>Street level on West Hastings, across from the Terminal City Club. Pay parking is in
+          the building and the Waterfront SkyTrain and SeaBus terminals are a few minutes&rsquo; walk.</p>
+      </div>
+      <div class="loc-map reveal d1" style="aspect-ratio:16/7;">
+        <iframe
+          src="https://maps.google.com/maps?q=Downtown%20Orthodontics%2C%20840%20W%20Hastings%20St%2C%20Vancouver%2C%20BC%20V6C%201C8&amp;z=14&amp;output=embed"
+          title="Map showing Downtown Orthodontics at 840 W Hastings St, Vancouver"
+          referrerpolicy="no-referrer-when-downgrade"
+          style="position:absolute;inset:0;width:100%;height:100%;border:0" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+""") + cta_band(
+    "Ready to <em>book?</em>",
+    "The consultation is free, no referral is needed, and you leave with a digital scan, an honest "
+    "read on your bite and your exact price in writing.",
+    "Monday 10:00 to 18:00 &middot; Tuesday and Thursday 08:00 to 15:00 &middot; Wednesday 08:00 to 16:30.")
 
 C.write("contact.html", C.page(
     title="Contact Downtown Orthodontics | 840 W Hastings St, Vancouver",

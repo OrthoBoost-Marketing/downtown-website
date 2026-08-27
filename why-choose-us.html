@@ -163,6 +163,9 @@
   /* parenthetical caps eyebrow — smaller, wider, quieter */
   .eyebrow { display:block; font-size:var(--fs-2xs); letter-spacing:.38em; text-transform:uppercase; font-weight:500; color: var(--ink-faint); margin-bottom:18px; }
   .eyebrow.on-deep { color: var(--on-deep-faint); }
+  /* TIER 2: an eyebrow line that is genuinely the band's heading ships as <h2>.
+     .eyebrow already overrides the h2 rule on every property except font-family. */
+  h2.eyebrow { font-family: var(--font); line-height: inherit; }
 
   /* buttons — tracked caps, echoing the logo's spaced lockup */
   .btn { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; font-weight: 700;
@@ -475,7 +478,7 @@
   .closing .inner { position: relative; z-index: 1; max-width: 680px; margin-inline: auto; }
   .closing h2 { color: var(--ink); }
   .closing p { color: var(--ink-soft); font-size: var(--fs-xl); max-width: 46ch; margin: 18px auto 30px; }
-  .closing .hero-actions { justify-content: center; }
+  .closing .hero-actions { justify-content: center; flex-wrap: wrap; }
   /* TIER 4: the .closing::before radial glow darkens the ground under this line, which
      dropped --ink-faint to 4.31-4.47:1. --ink-soft clears 4.5:1 on the worst ground. */
   .closing .fineprint { margin-top: 20px; font-size: var(--fs-base); color: var(--ink-soft); }
@@ -973,7 +976,7 @@
   /* the form card */
   .formcard { background: var(--bg); border: var(--border) solid var(--line);
     border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: clamp(22px,2.6vw,32px); }
-  .formcard h2 { font-family: var(--font-display); font-weight: var(--fw-display);
+  .formcard h2, .formcard h3 { font-family: var(--font-display); font-weight: var(--fw-display);
     font-size: var(--fs-display-sm); letter-spacing: -.02em; color: var(--ink); margin: 0 0 var(--sp-5); }
   .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
   .field { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
@@ -1034,6 +1037,51 @@
   @media (max-width: 560px){
     .fgrid { grid-template-columns: 1fr; }
   }
+
+  /* A 4-step .steps <ol> (financing's process stepper). Declared only above the
+     mobile breakpoint so the shared max-width:900px single-column rule still wins
+     on phones - an inline grid-template-columns here would not. */
+  @media (min-width: 901px) { .steps.steps-4 { grid-template-columns: repeat(4, 1fr); } }
+
+  /* FINANCIAL-AND-FAQ-PAGE-SPEC Part 2: grouped categories with jump-links.
+     The flat 10-question list had none. */
+  .faq-jump { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; }
+  .faq-jump a { display: inline-flex; align-items: center; min-height: var(--tap);
+    padding: 0 var(--sp-5); border: var(--border) solid var(--line);
+    border-radius: var(--radius-pill); background: var(--bg); color: var(--ink);
+    font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-decoration: none;
+    transition: background .2s, color .2s, border-color .2s; }
+  .faq-jump a:hover, .faq-jump a:focus-visible { background: var(--tint);
+    color: var(--petrol); border-color: var(--petrol); }
+
+  /* ---------- TIER 2 structure fixes, 2026-08-26 ----------
+     One <h2> per section is the rule. Two bands (the reviews skim marquee and the
+     reviews bridge sentence) have no visible heading to give without inventing copy,
+     so they get a visually-hidden one instead. Standard clip pattern: readable by
+     assistive tech and by crawlers, zero visual footprint. */
+  .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap; border: 0; }
+
+  /* SERVICE-ZIGZAG-SPEC wants text and image to swap sides each row. The DOM stays
+     text-first so mobile stacks correctly (the spec's explicit mobile order) and the
+     photo column is moved to the left column visually. Same idiom as .uspz-row .flip. */
+  .photo-side .hero-frame img { width: 100%; height: 100%; object-fit: cover;
+    object-position: center; display: block; }
+  .reqgrid .flip { order: -1; }
+  @media (max-width: 900px) { .reqgrid .flip { order: 0; } }
+
+  /* DOCTOR-PAGE-SPEC: a 4-chip stat bar under the hero for the credential-scanners,
+     before the story. Facts only, all of them already on the page. */
+  .statbar { display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-5) clamp(18px, 2.4vw, 34px); }
+  .statbar > li { list-style: none; }
+  .statbar .sb-k { display: block; font-family: var(--font-display);
+    font-weight: var(--fw-display); font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    line-height: 1.05; letter-spacing: -.02em; color: var(--petrol); }
+  .statbar .sb-v { display: block; margin-top: var(--sp-2); font-size: var(--fs-base);
+    font-weight: var(--fw-semibold); color: var(--ink-soft); }
+  @media (max-width: 760px) { .statbar { grid-template-columns: repeat(2, 1fr); } }
 
   /* ---------- Gate 4 audit fixes, 2026-08-24 ----------
      Tap targets: 18 of 26 visible targets measured under 44px at 390px, including the
@@ -1364,8 +1412,8 @@
           <p style="margin:0;color:var(--ink-soft);font-size:var(--fs-md);">Orthodontics is a separate specialty after dental school, and Downtown Orthodontics is a specialist orthodontic practice in the downtown core. Everything here is planned by one.</p>
         </div>
         <div class="reveal d1 rounded-brand border border-line bg-white p-7 shadow-soft" style="border-radius:var(--radius-lg);">
-          <h3 style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-3);letter-spacing:-.01em;">Braces and Invisalign cost the same</h3>
-          <p style="margin:0;color:var(--ink-soft);font-size:var(--fs-md);">Deliberately. When both options carry the same price, the recommendation you get is about your bite rather than the practice&rsquo;s margin.</p>
+          <h3 style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-3);letter-spacing:-.01em;">Complex cases other offices decline</h3>
+          <p style="margin:0;color:var(--ink-soft);font-size:var(--fs-md);">Referred and retreatment work is routine here, including bites another orthodontist has already turned down. Thirty years of it, in one pair of hands.</p>
         </div>
         <div class="reveal d2 rounded-brand border border-line bg-white p-7 shadow-soft" style="border-radius:var(--radius-lg);">
           <h3 style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-3);letter-spacing:-.01em;">Conservative by conviction</h3>
@@ -1441,11 +1489,11 @@
       <div class="reqgrid reveal">
         <div class="hero-frame" style="order:-1;"><img src="assets/photos/used-3.jpg" alt="Dr. Daher explaining a treatment plan at his consultation desk" width="1600" height="2400" loading="lazy" decoding="async"></div>
         <div>
-          <h3 style="font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">A specialist plans it either way</h3>
-          <p style="color:var(--ink-soft);font-size:var(--fs-md);">Most practices charge more for
-            clear aligners than for braces, which quietly puts a thumb on the scale of every
-            recommendation. Here they cost the same. It removes the incentive, and it is the single
-            easiest way to know the advice you are getting is clinical.</p>
+          <h2 style="font-family:var(--font);font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">A specialist plans it either way</h2>
+          <p style="color:var(--ink-soft);font-size:var(--fs-md);">A general dental office selling
+            aligners on the side can only recommend the one thing it offers. Dr. Daher plans and
+            adjusts braces and Invisalign himself, so the option you are offered is the one that
+            suits your bite, and you get your exact figure in writing before you commit.</p>
           <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">
             <a class="tlink" href="/financing">See the pricing in full <span class="arr">&rarr;</span></a></p>
         </div>
@@ -1457,7 +1505,7 @@
     <div class="wrap">
       <div class="reqgrid reveal">
         <div>
-          <h3 style="font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">The least treatment that works</h3>
+          <h2 style="font-family:var(--font);font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">The least treatment that works</h2>
           <p style="color:var(--ink-soft);font-size:var(--fs-md);">No unnecessary extractions. No
             surgery a patient does not need. A finished case means a healthy bite, and if getting
             there needs extra refinement, that is included rather than invoiced.</p>

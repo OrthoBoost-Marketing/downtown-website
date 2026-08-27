@@ -93,6 +93,7 @@ __HERO__
        homepage rating line uses. -->
   <section class="block rv-agg" style="padding-block: var(--sp-9);">
     <div class="wrap">
+      <h2 class="h2 reveal" style="text-align:center;margin-bottom:var(--sp-6);">The verdict, <em>in one number.</em></h2>
       <div class="inner reveal">
         <span class="score">__RATING__</span>
         <span class="meta">out of 5, from
@@ -114,6 +115,7 @@ __HERO__
        is also present in full in a card below. -->
   <section class="block" style="padding-block: var(--sp-9) var(--sp-8);">
     <div class="wrap">
+      <h2 class="sr-only">Patient reviews at a glance</h2>
       <div class="mq-wrap reveal">
         <div class="mq mq-liners" data-marquee data-speed="0.3" tabindex="0" role="region"
              aria-label="Short quotes from patient reviews, scrollable. Drag or use the arrow keys.">
@@ -137,7 +139,7 @@ __LINERS__
   <section class="block rv-spot">
     <div class="wrap">
       <figure class="inner reveal">
-        <span class="eyebrow">(One patient&rsquo;s account)</span>
+        <h2 class="eyebrow">(One patient&rsquo;s account)</h2>
         <blockquote>&ldquo;__SPTEXT__&rdquo;</blockquote>
         <figcaption><span class="ava">__SPINI__</span><span class="who"><b>__SPNAME__</b><span>__SPWHEN__ &middot; Google review &middot; __SPCHIP__</span></span></figcaption>
       </figure>
@@ -168,6 +170,7 @@ __LINERS__
   <!-- BRIDGE. Catches the reader at peak trust and feeds the money pages. -->
   <section class="block" style="background:var(--surface); padding-block: var(--sp-9);">
     <div class="wrap">
+      <h2 class="sr-only">Where to go next</h2>
       <p class="rv-bridge reveal">Most of these patients arrived with the same questions you have.
         See <a href="/financing">exactly what treatment costs</a>, read
         <a href="/why-choose-us">why a specialist and not a shortcut</a>, or

@@ -33,6 +33,21 @@ DOC_BODY = phero(
     "Thirty years of moving teeth, a seat on Align Technology&rsquo;s scientific advisory board, "
     "and a rule that has never changed: the least treatment that gets the right result.",
 ) + """
+  <!-- STAT BAR. DOCTOR-PAGE-SPEC wants four chips under the hero for the
+       credential-scanners, ahead of the story. Every figure here is already
+       stated further down this page and in the Physician schema. -->
+  <section class="block" style="padding-block:var(--sp-7);background:var(--surface);border-block:var(--border) solid var(--line);">
+    <div class="wrap">
+      <h2 class="sr-only">Dr. Daher in four numbers</h2>
+      <ul class="statbar reveal">
+        <li><span class="sb-k">30+ years</span><span class="sb-v">planning orthodontic treatment</span></li>
+        <li><span class="sb-k">Certified</span><span class="sb-v">specialist in orthodontics</span></li>
+        <li><span class="sb-k">Align board</span><span class="sb-v">scientific advisory board member</span></li>
+        <li><span class="sb-k">46 countries</span><span class="sb-v">142 cities where he has taught</span></li>
+      </ul>
+    </div>
+  </section>
+
   <!-- WHO HE IS, in the practice's own documented terms -->
   <section class="block">
     <div class="wrap doc-grid" style="align-items:start;">
@@ -139,9 +154,9 @@ USPS = [
     ("A certified specialist downtown",
      "Orthodontics is a separate specialty after dental school, and Downtown Orthodontics is a "
      "specialist orthodontic practice in the downtown core. Everything here is planned by one."),
-    ("Braces and Invisalign cost the same",
-     "Deliberately. When both options carry the same price, the recommendation you get is about "
-     "your bite rather than the practice&rsquo;s margin."),
+    ("Complex cases other offices decline",
+     "Referred and retreatment work is routine here, including bites another orthodontist has "
+     "already turned down. Thirty years of it, in one pair of hands."),
     ("Conservative by conviction",
      "Thirty years in, the rule has not changed: no unnecessary extractions, no surgery a patient "
      "does not need, and the least treatment that gets the right result."),
@@ -232,11 +247,11 @@ WHY_BODY = phero(
       <div class="reqgrid reveal">
         <div class="hero-frame" style="order:-1;"><img src="assets/photos/used-3.jpg" alt="Dr. Daher explaining a treatment plan at his consultation desk" /></div>
         <div>
-          <h3 style="font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">A specialist plans it either way</h3>
-          <p style="color:var(--ink-soft);font-size:var(--fs-md);">Most practices charge more for
-            clear aligners than for braces, which quietly puts a thumb on the scale of every
-            recommendation. Here they cost the same. It removes the incentive, and it is the single
-            easiest way to know the advice you are getting is clinical.</p>
+          <h2 style="font-family:var(--font);font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">A specialist plans it either way</h2>
+          <p style="color:var(--ink-soft);font-size:var(--fs-md);">A general dental office selling
+            aligners on the side can only recommend the one thing it offers. Dr. Daher plans and
+            adjusts braces and Invisalign himself, so the option you are offered is the one that
+            suits your bite, and you get your exact figure in writing before you commit.</p>
           <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">
             <a class="tlink" href="/financing">See the pricing in full <span class="arr">&rarr;</span></a></p>
         </div>
@@ -248,7 +263,7 @@ WHY_BODY = phero(
     <div class="wrap">
       <div class="reqgrid reveal">
         <div>
-          <h3 style="font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">The least treatment that works</h3>
+          <h2 style="font-family:var(--font);font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">The least treatment that works</h2>
           <p style="color:var(--ink-soft);font-size:var(--fs-md);">No unnecessary extractions. No
             surgery a patient does not need. A finished case means a healthy bite, and if getting
             there needs extra refinement, that is included rather than invoiced.</p>

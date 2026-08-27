@@ -182,6 +182,9 @@
   /* parenthetical caps eyebrow — smaller, wider, quieter */
   .eyebrow { display:block; font-size:var(--fs-2xs); letter-spacing:.38em; text-transform:uppercase; font-weight:500; color: var(--ink-faint); margin-bottom:18px; }
   .eyebrow.on-deep { color: var(--on-deep-faint); }
+  /* TIER 2: an eyebrow line that is genuinely the band's heading ships as <h2>.
+     .eyebrow already overrides the h2 rule on every property except font-family. */
+  h2.eyebrow { font-family: var(--font); line-height: inherit; }
 
   /* buttons — tracked caps, echoing the logo's spaced lockup */
   .btn { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; font-weight: 700;
@@ -494,7 +497,7 @@
   .closing .inner { position: relative; z-index: 1; max-width: 680px; margin-inline: auto; }
   .closing h2 { color: var(--ink); }
   .closing p { color: var(--ink-soft); font-size: var(--fs-xl); max-width: 46ch; margin: 18px auto 30px; }
-  .closing .hero-actions { justify-content: center; }
+  .closing .hero-actions { justify-content: center; flex-wrap: wrap; }
   /* TIER 4: the .closing::before radial glow darkens the ground under this line, which
      dropped --ink-faint to 4.31-4.47:1. --ink-soft clears 4.5:1 on the worst ground. */
   .closing .fineprint { margin-top: 20px; font-size: var(--fs-base); color: var(--ink-soft); }
@@ -992,7 +995,7 @@
   /* the form card */
   .formcard { background: var(--bg); border: var(--border) solid var(--line);
     border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: clamp(22px,2.6vw,32px); }
-  .formcard h2 { font-family: var(--font-display); font-weight: var(--fw-display);
+  .formcard h2, .formcard h3 { font-family: var(--font-display); font-weight: var(--fw-display);
     font-size: var(--fs-display-sm); letter-spacing: -.02em; color: var(--ink); margin: 0 0 var(--sp-5); }
   .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
   .field { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
@@ -1053,6 +1056,51 @@
   @media (max-width: 560px){
     .fgrid { grid-template-columns: 1fr; }
   }
+
+  /* A 4-step .steps <ol> (financing's process stepper). Declared only above the
+     mobile breakpoint so the shared max-width:900px single-column rule still wins
+     on phones - an inline grid-template-columns here would not. */
+  @media (min-width: 901px) { .steps.steps-4 { grid-template-columns: repeat(4, 1fr); } }
+
+  /* FINANCIAL-AND-FAQ-PAGE-SPEC Part 2: grouped categories with jump-links.
+     The flat 10-question list had none. */
+  .faq-jump { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; }
+  .faq-jump a { display: inline-flex; align-items: center; min-height: var(--tap);
+    padding: 0 var(--sp-5); border: var(--border) solid var(--line);
+    border-radius: var(--radius-pill); background: var(--bg); color: var(--ink);
+    font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-decoration: none;
+    transition: background .2s, color .2s, border-color .2s; }
+  .faq-jump a:hover, .faq-jump a:focus-visible { background: var(--tint);
+    color: var(--petrol); border-color: var(--petrol); }
+
+  /* ---------- TIER 2 structure fixes, 2026-08-26 ----------
+     One <h2> per section is the rule. Two bands (the reviews skim marquee and the
+     reviews bridge sentence) have no visible heading to give without inventing copy,
+     so they get a visually-hidden one instead. Standard clip pattern: readable by
+     assistive tech and by crawlers, zero visual footprint. */
+  .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap; border: 0; }
+
+  /* SERVICE-ZIGZAG-SPEC wants text and image to swap sides each row. The DOM stays
+     text-first so mobile stacks correctly (the spec's explicit mobile order) and the
+     photo column is moved to the left column visually. Same idiom as .uspz-row .flip. */
+  .photo-side .hero-frame img { width: 100%; height: 100%; object-fit: cover;
+    object-position: center; display: block; }
+  .reqgrid .flip { order: -1; }
+  @media (max-width: 900px) { .reqgrid .flip { order: 0; } }
+
+  /* DOCTOR-PAGE-SPEC: a 4-chip stat bar under the hero for the credential-scanners,
+     before the story. Facts only, all of them already on the page. */
+  .statbar { display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-5) clamp(18px, 2.4vw, 34px); }
+  .statbar > li { list-style: none; }
+  .statbar .sb-k { display: block; font-family: var(--font-display);
+    font-weight: var(--fw-display); font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    line-height: 1.05; letter-spacing: -.02em; color: var(--petrol); }
+  .statbar .sb-v { display: block; margin-top: var(--sp-2); font-size: var(--fs-base);
+    font-weight: var(--fw-semibold); color: var(--ink-soft); }
+  @media (max-width: 760px) { .statbar { grid-template-columns: repeat(2, 1fr); } }
 
   /* ---------- Gate 4 audit fixes, 2026-08-24 ----------
      Tap targets: 18 of 26 visible targets measured under 44px at 390px, including the
@@ -1378,6 +1426,7 @@
        homepage rating line uses. -->
   <section class="block rv-agg" style="padding-block: var(--sp-9);">
     <div class="wrap">
+      <h2 class="h2 reveal" style="text-align:center;margin-bottom:var(--sp-6);">The verdict, <em>in one number.</em></h2>
       <div class="inner reveal">
         <span class="score">4.4</span>
         <span class="meta">out of 5, from
@@ -1399,6 +1448,7 @@
        is also present in full in a card below. -->
   <section class="block" style="padding-block: var(--sp-9) var(--sp-8);">
     <div class="wrap">
+      <h2 class="sr-only">Patient reviews at a glance</h2>
       <div class="mq-wrap reveal">
         <div class="mq mq-liners" data-marquee data-speed="0.3" tabindex="0" role="region"
              aria-label="Short quotes from patient reviews, scrollable. Drag or use the arrow keys.">
@@ -1429,7 +1479,7 @@
   <section class="block rv-spot">
     <div class="wrap">
       <figure class="inner reveal">
-        <span class="eyebrow">(One patient&rsquo;s account)</span>
+        <h2 class="eyebrow">(One patient&rsquo;s account)</h2>
         <blockquote>&ldquo;I came to Dr. Daher with a complex Class III orthodontic case. For years, I had been told by various professionals that jaw surgery was the only way to fix my bite and alignment issues. Needless to say, I was nervous, skeptical, and losing hope. But everything changed the moment I walked into his clinic&hellip; What truly amazed me was that Dr. Daher looked at my case and, with full confidence, said: &ldquo;This is completely doable with Invisalign, no surgery needed.&rdquo; His assurance gave me the confidence I needed, and I signed on that day, one of the best decisions I&rsquo;ve ever made&hellip; It&rsquo;s only been eight months, and although my treatment isn&rsquo;t even finished yet, the results are already absolutely incredible. I never imagined I&rsquo;d see this kind of transformation without surgery, and so quickly!&rdquo;</blockquote>
         <figcaption><span class="ava">S</span><span class="who"><b>Sally Karimi</b><span>a year ago &middot; Google review &middot; Complex case</span></span></figcaption>
       </figure>
@@ -1622,6 +1672,7 @@
   <!-- BRIDGE. Catches the reader at peak trust and feeds the money pages. -->
   <section class="block" style="background:var(--surface); padding-block: var(--sp-9);">
     <div class="wrap">
+      <h2 class="sr-only">Where to go next</h2>
       <p class="rv-bridge reveal">Most of these patients arrived with the same questions you have.
         See <a href="/financing">exactly what treatment costs</a>, read
         <a href="/why-choose-us">why a specialist and not a shortcut</a>, or

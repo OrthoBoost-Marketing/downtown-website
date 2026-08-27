@@ -32,6 +32,16 @@
     },
     {
       "@type": "Question",
+      "name": "Do we need a referral from our dentist?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. You can book a free consultation directly and most of our patients do. If your dentist has referred you, bring anything they sent and Dr. Daher will factor it in, but it is not a requirement." }
+    },
+    {
+      "@type": "Question",
+      "name": "Who will actually be treating us?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Dr. Daher, from your first visit to your last. He is a certified specialist in orthodontics with over 30 years in practice, and you will see the same doctor and the same small team throughout, with no rotating faces and no handoffs." }
+    },
+    {
+      "@type": "Question",
       "name": "When should our child first see an orthodontist?",
       "acceptedAnswer": { "@type": "Answer", "text": "Around age seven. Most children will not need anything done yet, but an early check lets Dr. Daher see how the jaw is growing and catch anything worth watching while it is still easy to influence. That first visit is always free." }
     },
@@ -42,13 +52,13 @@
     },
     {
       "@type": "Question",
-      "name": "Who will actually be treating us?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Dr. Daher, from your first visit to your last. He is a certified specialist in orthodontics with over 30 years in practice, and you will see the same doctor and the same small team throughout, with no rotating faces and no handoffs." }
+      "name": "Braces or Invisalign: how do we choose?",
+      "acceptedAnswer": { "@type": "Answer", "text": "At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. Dr. Daher plans and adjusts both himself, so the recommendation you get is about your bite, not our margin." }
     },
     {
       "@type": "Question",
-      "name": "Braces or Invisalign: how do we choose?",
-      "acceptedAnswer": { "@type": "Answer", "text": "At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. Dr. Daher plans and adjusts both himself, so the recommendation you get is about your bite, not our margin." }
+      "name": "Do you treat complex cases other offices have declined?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Regularly. Referred cases and bites that have already been turned down elsewhere are a normal part of the week here. Dr. Daher's rule is the least treatment that gets the right result, which often means finding an approach somebody else did not." }
     },
     {
       "@type": "Question",
@@ -64,16 +74,6 @@
       "@type": "Question",
       "name": "What if we move partway through treatment?",
       "acceptedAnswer": { "@type": "Answer", "text": "It happens, and we make it painless. We will prepare your records and help transfer your care to a trusted orthodontist near your new home, with your treatment plan fully documented so nothing has to be worked out twice." }
-    },
-    {
-      "@type": "Question",
-      "name": "Do we need a referral from our dentist?",
-      "acceptedAnswer": { "@type": "Answer", "text": "No. You can book a free consultation directly and most of our patients do. If your dentist has referred you, bring anything they sent and Dr. Daher will factor it in, but it is not a requirement." }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you treat complex cases other offices have declined?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Regularly. Referred cases and bites that have already been turned down elsewhere are a normal part of the week here. Dr. Daher's rule is the least treatment that gets the right result, which often means finding an approach somebody else did not." }
     }
   ]
 }
@@ -221,6 +221,9 @@
   /* parenthetical caps eyebrow — smaller, wider, quieter */
   .eyebrow { display:block; font-size:var(--fs-2xs); letter-spacing:.38em; text-transform:uppercase; font-weight:500; color: var(--ink-faint); margin-bottom:18px; }
   .eyebrow.on-deep { color: var(--on-deep-faint); }
+  /* TIER 2: an eyebrow line that is genuinely the band's heading ships as <h2>.
+     .eyebrow already overrides the h2 rule on every property except font-family. */
+  h2.eyebrow { font-family: var(--font); line-height: inherit; }
 
   /* buttons — tracked caps, echoing the logo's spaced lockup */
   .btn { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; font-weight: 700;
@@ -533,7 +536,7 @@
   .closing .inner { position: relative; z-index: 1; max-width: 680px; margin-inline: auto; }
   .closing h2 { color: var(--ink); }
   .closing p { color: var(--ink-soft); font-size: var(--fs-xl); max-width: 46ch; margin: 18px auto 30px; }
-  .closing .hero-actions { justify-content: center; }
+  .closing .hero-actions { justify-content: center; flex-wrap: wrap; }
   /* TIER 4: the .closing::before radial glow darkens the ground under this line, which
      dropped --ink-faint to 4.31-4.47:1. --ink-soft clears 4.5:1 on the worst ground. */
   .closing .fineprint { margin-top: 20px; font-size: var(--fs-base); color: var(--ink-soft); }
@@ -1031,7 +1034,7 @@
   /* the form card */
   .formcard { background: var(--bg); border: var(--border) solid var(--line);
     border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: clamp(22px,2.6vw,32px); }
-  .formcard h2 { font-family: var(--font-display); font-weight: var(--fw-display);
+  .formcard h2, .formcard h3 { font-family: var(--font-display); font-weight: var(--fw-display);
     font-size: var(--fs-display-sm); letter-spacing: -.02em; color: var(--ink); margin: 0 0 var(--sp-5); }
   .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
   .field { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
@@ -1092,6 +1095,51 @@
   @media (max-width: 560px){
     .fgrid { grid-template-columns: 1fr; }
   }
+
+  /* A 4-step .steps <ol> (financing's process stepper). Declared only above the
+     mobile breakpoint so the shared max-width:900px single-column rule still wins
+     on phones - an inline grid-template-columns here would not. */
+  @media (min-width: 901px) { .steps.steps-4 { grid-template-columns: repeat(4, 1fr); } }
+
+  /* FINANCIAL-AND-FAQ-PAGE-SPEC Part 2: grouped categories with jump-links.
+     The flat 10-question list had none. */
+  .faq-jump { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; }
+  .faq-jump a { display: inline-flex; align-items: center; min-height: var(--tap);
+    padding: 0 var(--sp-5); border: var(--border) solid var(--line);
+    border-radius: var(--radius-pill); background: var(--bg); color: var(--ink);
+    font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-decoration: none;
+    transition: background .2s, color .2s, border-color .2s; }
+  .faq-jump a:hover, .faq-jump a:focus-visible { background: var(--tint);
+    color: var(--petrol); border-color: var(--petrol); }
+
+  /* ---------- TIER 2 structure fixes, 2026-08-26 ----------
+     One <h2> per section is the rule. Two bands (the reviews skim marquee and the
+     reviews bridge sentence) have no visible heading to give without inventing copy,
+     so they get a visually-hidden one instead. Standard clip pattern: readable by
+     assistive tech and by crawlers, zero visual footprint. */
+  .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap; border: 0; }
+
+  /* SERVICE-ZIGZAG-SPEC wants text and image to swap sides each row. The DOM stays
+     text-first so mobile stacks correctly (the spec's explicit mobile order) and the
+     photo column is moved to the left column visually. Same idiom as .uspz-row .flip. */
+  .photo-side .hero-frame img { width: 100%; height: 100%; object-fit: cover;
+    object-position: center; display: block; }
+  .reqgrid .flip { order: -1; }
+  @media (max-width: 900px) { .reqgrid .flip { order: 0; } }
+
+  /* DOCTOR-PAGE-SPEC: a 4-chip stat bar under the hero for the credential-scanners,
+     before the story. Facts only, all of them already on the page. */
+  .statbar { display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-5) clamp(18px, 2.4vw, 34px); }
+  .statbar > li { list-style: none; }
+  .statbar .sb-k { display: block; font-family: var(--font-display);
+    font-weight: var(--fw-display); font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    line-height: 1.05; letter-spacing: -.02em; color: var(--petrol); }
+  .statbar .sb-v { display: block; margin-top: var(--sp-2); font-size: var(--fs-base);
+    font-weight: var(--fw-semibold); color: var(--ink-soft); }
+  @media (max-width: 760px) { .statbar { grid-template-columns: repeat(2, 1fr); } }
 
   /* ---------- Gate 4 audit fixes, 2026-08-24 ----------
      Tap targets: 18 of 26 visible targets measured under 44px at 390px, including the
@@ -1410,13 +1458,43 @@
     </div>
   </section>
 
-  <section class="block faq">
+  <section class="block" style="padding-block:var(--sp-7) 0;">
     <div class="wrap">
-      <div class="faq-list reveal">
+      <h2 class="sr-only">Jump to a category</h2>
+      <nav class="faq-jump reveal" aria-label="Question categories"><a href="#cost-and-getting-started">Cost &amp; getting started</a><a href="#is-it-right-for-us">Is it right for us?</a><a href="#treatment-and-afterwards">Treatment &amp; afterwards</a></nav>
+    </div>
+  </section>
+
+  <section class="block faq" id="cost-and-getting-started">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">(Money and first steps)</span>
+        <h2 class="h2">Cost and <em>getting started.</em></h2>
+      </div>
+      <div class="faq-list reveal d1">
         <details class="f">
           <summary>How much does orthodontic treatment cost in downtown Vancouver?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
           <div class="ans"><p>Most treatment starts at $1,000 down and about $220 a month with 0% in-house financing, and we bill your insurance directly. Simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so you get your exact price in writing at your free consultation.</p></div>
         </details>
+        <details class="f">
+          <summary>Do we need a referral from our dentist?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
+          <div class="ans"><p>No. You can book a free consultation directly and most of our patients do. If your dentist has referred you, bring anything they sent and Dr. Daher will factor it in, but it is not a requirement.</p></div>
+        </details>
+        <details class="f">
+          <summary>Who will actually be treating us?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
+          <div class="ans"><p>Dr. Daher, from your first visit to your last. He is a certified specialist in orthodontics with over 30 years in practice, and you will see the same doctor and the same small team throughout, with no rotating faces and no handoffs.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block faq" id="is-it-right-for-us" style="background:var(--surface);">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">(Who it is for)</span>
+        <h2 class="h2">Is orthodontics <em>right for us?</em></h2>
+      </div>
+      <div class="faq-list reveal d1">
         <details class="f">
           <summary>When should our child first see an orthodontist?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
           <div class="ans"><p>Around age seven. Most children will not need anything done yet, but an early check lets Dr. Daher see how the jaw is growing and catch anything worth watching while it is still easy to influence. That first visit is always free.</p></div>
@@ -1426,13 +1504,24 @@
           <div class="ans"><p>Not at all. A good share of our patients are downtown professionals, and bone responds to the same forces at forty as at fourteen. Invisalign keeps it discreet enough that most people will not notice a thing, until they see the result.</p></div>
         </details>
         <details class="f">
-          <summary>Who will actually be treating us?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
-          <div class="ans"><p>Dr. Daher, from your first visit to your last. He is a certified specialist in orthodontics with over 30 years in practice, and you will see the same doctor and the same small team throughout, with no rotating faces and no handoffs.</p></div>
-        </details>
-        <details class="f">
           <summary>Braces or Invisalign: how do we choose?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
           <div class="ans"><p>At your consultation we will walk through both honestly for your specific smile. Some cases do beautifully with Invisalign; others are better and faster with braces. Dr. Daher plans and adjusts both himself, so the recommendation you get is about your bite, not our margin.</p></div>
         </details>
+        <details class="f">
+          <summary>Do you treat complex cases other offices have declined?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
+          <div class="ans"><p>Regularly. Referred cases and bites that have already been turned down elsewhere are a normal part of the week here. Dr. Daher's rule is the least treatment that gets the right result, which often means finding an approach somebody else did not.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="block faq" id="treatment-and-afterwards">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <span class="eyebrow">(During and after)</span>
+        <h2 class="h2">Treatment, timing <em>and afterwards.</em></h2>
+      </div>
+      <div class="faq-list reveal d1">
         <details class="f">
           <summary>How long does treatment usually take?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
           <div class="ans"><p>Treatment length depends on what your bite actually needs, so you will get a realistic timeline for your own case at your consultation rather than a range that may not apply to you. Simple express cases finish considerably sooner, which is the point of the Quick 6 Fix, and we will keep you updated as you progress.</p></div>
@@ -1445,14 +1534,6 @@
           <summary>What if we move partway through treatment?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
           <div class="ans"><p>It happens, and we make it painless. We will prepare your records and help transfer your care to a trusted orthodontist near your new home, with your treatment plan fully documented so nothing has to be worked out twice.</p></div>
         </details>
-        <details class="f">
-          <summary>Do we need a referral from our dentist?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
-          <div class="ans"><p>No. You can book a free consultation directly and most of our patients do. If your dentist has referred you, bring anything they sent and Dr. Daher will factor it in, but it is not a requirement.</p></div>
-        </details>
-        <details class="f">
-          <summary>Do you treat complex cases other offices have declined?<span class="pm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span></summary>
-          <div class="ans"><p>Regularly. Referred cases and bites that have already been turned down elsewhere are a normal part of the week here. Dr. Daher's rule is the least treatment that gets the right result, which often means finding an approach somebody else did not.</p></div>
-        </details>
       </div>
     </div>
   </section>
@@ -1464,6 +1545,7 @@
         <p class="reveal">The free consultation exists for exactly this: a specialist&rsquo;s answer on your own bite, with no obligation attached.</p>
         <div class="hero-actions reveal">
           <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>
+          <a class="btn btn-outline" href="/contact">Or send us a message</a>
         </div>
         <p class="fineprint reveal">Free consultation. No referral needed.</p>
       </div>

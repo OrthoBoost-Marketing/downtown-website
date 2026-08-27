@@ -43,7 +43,7 @@ def form(slug, preselect, quote_note):
           <p class="slot" style="margin-top:var(--sp-6);">%(quote_note)s</p>
         </div>
         <div class="formcard reveal d1">
-          <h2>Request a call back</h2>
+          <h3>Request a call back</h3>
           <form method="post" action="" novalidate>
             <div class="fgrid">
               <div class="field">
@@ -110,7 +110,7 @@ DOCTOR_BAND = """
           <span>%(tick)s Align scientific advisory board</span>
         </div>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="/dr-sam-daher">Meet Dr. Daher <span class="arr">&rarr;</span></a>
+          <a class="btn btn-ghost-light" href="/dr-sam-daher">Meet Dr. Daher <span class="arr">&rarr;</span></a>
         </div>
       </div>
     </div>
@@ -159,8 +159,11 @@ def zigzag(rows):
             content = "".join("<p style=\"color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);\">%s</p>" % p
                               for p in r["paras"])
         if r.get("photo"):
-            figure = ('      <div class="photo-side reveal d1"><div class="hero-frame">'
-                      '<img src="%s" alt="%s" /></div></div>' % (r["photo"], r["alt"]))
+            # mirror -> the photo column moves to the left column on desktop via
+            # .reqgrid .flip { order: -1 }, while the DOM stays text-first for mobile.
+            figure = ('      <div class="photo-side%s reveal d1"><div class="hero-frame">'
+                      '<img src="%s" alt="%s" /></div></div>'
+                      % (" flip" if r.get("mirror") else "", r["photo"], r["alt"]))
             grid = '<div class="reqgrid">'
         else:
             figure = ""
@@ -267,14 +270,16 @@ build(
              "braces and Invisalign here, which means nobody at this practice has a financial "
              "reason to steer you toward one."],
          "link": "/#how", "link_text": "See how a first visit works",
-         "photo": None},
+         "photo": "assets/photos/office-inside.jpg",
+         "alt": "The open treatment area at Downtown Orthodontics, with chairs and chairside screens",
+         "mirror": True},
         {"eyebrow": "(What you get)",
          "h2": "What is actually included.",
          "bullets": [
              "<b>Clear or metal.</b> Ceramic brackets if you would rather they were discreet, "
              "traditional metal if you would rather they were quick and sturdy.",
-             "<b>The same price as Invisalign.</b> No premium for choosing the option that suits "
-             "your bite better.",
+             "<b>Planned by a specialist, not a salesperson.</b> Dr. Daher adjusts them himself, "
+             "so the option you are offered is the one that suits your bite.",
              "<b>Digital scans, no impression trays.</b> Your records are captured in a few minutes.",
              "<b>Dr. Daher at every adjustment.</b> A certified specialist, not a rotating cast.",
              "<b>Refinement covered.</b> If the finish needs extra work to be right, we see it through.",
@@ -339,7 +344,9 @@ build(
              "a finished bite and one that looks straighter from the front. Dr. Daher has been "
              "doing it since Invisalign existed, and taught other clinicians how in 142 cities."],
          "link": "/dr-sam-daher", "link_text": "Read Dr. Daher's record",
-         "photo": None},
+         "photo": "assets/photos/practice.jpg",
+         "alt": "Dr. Daher at the Downtown Orthodontics practice in downtown Vancouver",
+         "mirror": True},
         {"eyebrow": "(What you get)",
          "h2": "What is actually included.",
          "bullets": [
@@ -411,7 +418,9 @@ build(
              "intervention now avoids a much larger one later. Either way you leave knowing, "
              "instead of wondering."],
          "link": "/#how", "link_text": "See how a first visit works",
-         "photo": None},
+         "photo": "assets/photos/used-3.jpg",
+         "alt": "Dr. Daher pointing out a growth pattern on a digital scan at his consultation desk",
+         "mirror": True},
         {"eyebrow": "(What you get)",
          "h2": "What the first visit covers.",
          "bullets": [
@@ -483,7 +492,9 @@ build(
              "Most relapse cases we see are not people whose treatment went wrong. They are people "
              "who stopped wearing a retainer in their twenties and came back a decade later."],
          "link": "/#how", "link_text": "See how a first visit works",
-         "photo": None},
+         "photo": "assets/photos/img-3127.jpg",
+         "alt": "Dr. Daher with an adult patient at Downtown Orthodontics",
+         "mirror": True},
         {"eyebrow": "(What you get)",
          "h2": "What retention actually involves.",
          "bullets": [

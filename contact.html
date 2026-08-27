@@ -163,6 +163,9 @@
   /* parenthetical caps eyebrow — smaller, wider, quieter */
   .eyebrow { display:block; font-size:var(--fs-2xs); letter-spacing:.38em; text-transform:uppercase; font-weight:500; color: var(--ink-faint); margin-bottom:18px; }
   .eyebrow.on-deep { color: var(--on-deep-faint); }
+  /* TIER 2: an eyebrow line that is genuinely the band's heading ships as <h2>.
+     .eyebrow already overrides the h2 rule on every property except font-family. */
+  h2.eyebrow { font-family: var(--font); line-height: inherit; }
 
   /* buttons — tracked caps, echoing the logo's spaced lockup */
   .btn { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; font-weight: 700;
@@ -475,7 +478,7 @@
   .closing .inner { position: relative; z-index: 1; max-width: 680px; margin-inline: auto; }
   .closing h2 { color: var(--ink); }
   .closing p { color: var(--ink-soft); font-size: var(--fs-xl); max-width: 46ch; margin: 18px auto 30px; }
-  .closing .hero-actions { justify-content: center; }
+  .closing .hero-actions { justify-content: center; flex-wrap: wrap; }
   /* TIER 4: the .closing::before radial glow darkens the ground under this line, which
      dropped --ink-faint to 4.31-4.47:1. --ink-soft clears 4.5:1 on the worst ground. */
   .closing .fineprint { margin-top: 20px; font-size: var(--fs-base); color: var(--ink-soft); }
@@ -973,7 +976,7 @@
   /* the form card */
   .formcard { background: var(--bg); border: var(--border) solid var(--line);
     border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: clamp(22px,2.6vw,32px); }
-  .formcard h2 { font-family: var(--font-display); font-weight: var(--fw-display);
+  .formcard h2, .formcard h3 { font-family: var(--font-display); font-weight: var(--fw-display);
     font-size: var(--fs-display-sm); letter-spacing: -.02em; color: var(--ink); margin: 0 0 var(--sp-5); }
   .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
   .field { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
@@ -1034,6 +1037,51 @@
   @media (max-width: 560px){
     .fgrid { grid-template-columns: 1fr; }
   }
+
+  /* A 4-step .steps <ol> (financing's process stepper). Declared only above the
+     mobile breakpoint so the shared max-width:900px single-column rule still wins
+     on phones - an inline grid-template-columns here would not. */
+  @media (min-width: 901px) { .steps.steps-4 { grid-template-columns: repeat(4, 1fr); } }
+
+  /* FINANCIAL-AND-FAQ-PAGE-SPEC Part 2: grouped categories with jump-links.
+     The flat 10-question list had none. */
+  .faq-jump { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; }
+  .faq-jump a { display: inline-flex; align-items: center; min-height: var(--tap);
+    padding: 0 var(--sp-5); border: var(--border) solid var(--line);
+    border-radius: var(--radius-pill); background: var(--bg); color: var(--ink);
+    font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-decoration: none;
+    transition: background .2s, color .2s, border-color .2s; }
+  .faq-jump a:hover, .faq-jump a:focus-visible { background: var(--tint);
+    color: var(--petrol); border-color: var(--petrol); }
+
+  /* ---------- TIER 2 structure fixes, 2026-08-26 ----------
+     One <h2> per section is the rule. Two bands (the reviews skim marquee and the
+     reviews bridge sentence) have no visible heading to give without inventing copy,
+     so they get a visually-hidden one instead. Standard clip pattern: readable by
+     assistive tech and by crawlers, zero visual footprint. */
+  .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap; border: 0; }
+
+  /* SERVICE-ZIGZAG-SPEC wants text and image to swap sides each row. The DOM stays
+     text-first so mobile stacks correctly (the spec's explicit mobile order) and the
+     photo column is moved to the left column visually. Same idiom as .uspz-row .flip. */
+  .photo-side .hero-frame img { width: 100%; height: 100%; object-fit: cover;
+    object-position: center; display: block; }
+  .reqgrid .flip { order: -1; }
+  @media (max-width: 900px) { .reqgrid .flip { order: 0; } }
+
+  /* DOCTOR-PAGE-SPEC: a 4-chip stat bar under the hero for the credential-scanners,
+     before the story. Facts only, all of them already on the page. */
+  .statbar { display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-5) clamp(18px, 2.4vw, 34px); }
+  .statbar > li { list-style: none; }
+  .statbar .sb-k { display: block; font-family: var(--font-display);
+    font-weight: var(--fw-display); font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    line-height: 1.05; letter-spacing: -.02em; color: var(--petrol); }
+  .statbar .sb-v { display: block; margin-top: var(--sp-2); font-size: var(--fs-base);
+    font-weight: var(--fw-semibold); color: var(--ink-soft); }
+  @media (max-width: 760px) { .statbar { grid-template-columns: repeat(2, 1fr); } }
 
   /* ---------- Gate 4 audit fixes, 2026-08-24 ----------
      Tap targets: 18 of 26 visible targets measured under 44px at 390px, including the
@@ -1371,7 +1419,7 @@
           <a class="big-tel" href="tel:+16046623290"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z" fill="currentColor"/></svg> (604) 662-3290</a>
         </div>
         <div class="formcard reveal d1">
-          <h2>Send us a message</h2>
+          <h3>Send us a message</h3>
           <form method="post" action="" novalidate>
             <div class="fgrid">
               <div class="field">
@@ -1404,6 +1452,39 @@
           <!-- The general-inquiry message box is the ONE permitted textarea (build-site rules). -->
           <!-- NOT WIRED YET: no GHL webhook URL on file. -->
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAP BAND. Same lazy-loaded embed, address and title as the homepage
+       locations section, so there is one map implementation on the site. -->
+  <section class="block" style="background:var(--surface);">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">(On the map)</span>
+        <h2 class="h2">840 West Hastings, <em>by Canada Place.</em></h2>
+        <p>Street level on West Hastings, across from the Terminal City Club. Pay parking is in
+          the building and the Waterfront SkyTrain and SeaBus terminals are a few minutes&rsquo; walk.</p>
+      </div>
+      <div class="loc-map reveal d1" style="aspect-ratio:16/7;">
+        <iframe
+          src="https://maps.google.com/maps?q=Downtown%20Orthodontics%2C%20840%20W%20Hastings%20St%2C%20Vancouver%2C%20BC%20V6C%201C8&amp;z=14&amp;output=embed"
+          title="Map showing Downtown Orthodontics at 840 W Hastings St, Vancouver"
+          referrerpolicy="no-referrer-when-downgrade"
+          style="position:absolute;inset:0;width:100%;height:100%;border:0" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="block closing">
+    <div class="wrap">
+      <div class="inner">
+        <h2 class="h2 reveal">Ready to <em>book?</em></h2>
+        <p class="reveal">The consultation is free, no referral is needed, and you leave with a digital scan, an honest read on your bite and your exact price in writing.</p>
+        <div class="hero-actions reveal">
+          <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>
+        </div>
+        <p class="fineprint reveal">Monday 10:00 to 18:00 &middot; Tuesday and Thursday 08:00 to 15:00 &middot; Wednesday 08:00 to 16:30.</p>
       </div>
     </div>
   </section>

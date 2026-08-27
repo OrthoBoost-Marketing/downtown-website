@@ -214,6 +214,9 @@
   /* parenthetical caps eyebrow — smaller, wider, quieter */
   .eyebrow { display:block; font-size:var(--fs-2xs); letter-spacing:.38em; text-transform:uppercase; font-weight:500; color: var(--ink-faint); margin-bottom:18px; }
   .eyebrow.on-deep { color: var(--on-deep-faint); }
+  /* TIER 2: an eyebrow line that is genuinely the band's heading ships as <h2>.
+     .eyebrow already overrides the h2 rule on every property except font-family. */
+  h2.eyebrow { font-family: var(--font); line-height: inherit; }
 
   /* buttons — tracked caps, echoing the logo's spaced lockup */
   .btn { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; font-weight: 700;
@@ -526,7 +529,7 @@
   .closing .inner { position: relative; z-index: 1; max-width: 680px; margin-inline: auto; }
   .closing h2 { color: var(--ink); }
   .closing p { color: var(--ink-soft); font-size: var(--fs-xl); max-width: 46ch; margin: 18px auto 30px; }
-  .closing .hero-actions { justify-content: center; }
+  .closing .hero-actions { justify-content: center; flex-wrap: wrap; }
   /* TIER 4: the .closing::before radial glow darkens the ground under this line, which
      dropped --ink-faint to 4.31-4.47:1. --ink-soft clears 4.5:1 on the worst ground. */
   .closing .fineprint { margin-top: 20px; font-size: var(--fs-base); color: var(--ink-soft); }
@@ -1024,7 +1027,7 @@
   /* the form card */
   .formcard { background: var(--bg); border: var(--border) solid var(--line);
     border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: clamp(22px,2.6vw,32px); }
-  .formcard h2 { font-family: var(--font-display); font-weight: var(--fw-display);
+  .formcard h2, .formcard h3 { font-family: var(--font-display); font-weight: var(--fw-display);
     font-size: var(--fs-display-sm); letter-spacing: -.02em; color: var(--ink); margin: 0 0 var(--sp-5); }
   .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
   .field { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
@@ -1085,6 +1088,51 @@
   @media (max-width: 560px){
     .fgrid { grid-template-columns: 1fr; }
   }
+
+  /* A 4-step .steps <ol> (financing's process stepper). Declared only above the
+     mobile breakpoint so the shared max-width:900px single-column rule still wins
+     on phones - an inline grid-template-columns here would not. */
+  @media (min-width: 901px) { .steps.steps-4 { grid-template-columns: repeat(4, 1fr); } }
+
+  /* FINANCIAL-AND-FAQ-PAGE-SPEC Part 2: grouped categories with jump-links.
+     The flat 10-question list had none. */
+  .faq-jump { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; }
+  .faq-jump a { display: inline-flex; align-items: center; min-height: var(--tap);
+    padding: 0 var(--sp-5); border: var(--border) solid var(--line);
+    border-radius: var(--radius-pill); background: var(--bg); color: var(--ink);
+    font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-decoration: none;
+    transition: background .2s, color .2s, border-color .2s; }
+  .faq-jump a:hover, .faq-jump a:focus-visible { background: var(--tint);
+    color: var(--petrol); border-color: var(--petrol); }
+
+  /* ---------- TIER 2 structure fixes, 2026-08-26 ----------
+     One <h2> per section is the rule. Two bands (the reviews skim marquee and the
+     reviews bridge sentence) have no visible heading to give without inventing copy,
+     so they get a visually-hidden one instead. Standard clip pattern: readable by
+     assistive tech and by crawlers, zero visual footprint. */
+  .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap; border: 0; }
+
+  /* SERVICE-ZIGZAG-SPEC wants text and image to swap sides each row. The DOM stays
+     text-first so mobile stacks correctly (the spec's explicit mobile order) and the
+     photo column is moved to the left column visually. Same idiom as .uspz-row .flip. */
+  .photo-side .hero-frame img { width: 100%; height: 100%; object-fit: cover;
+    object-position: center; display: block; }
+  .reqgrid .flip { order: -1; }
+  @media (max-width: 900px) { .reqgrid .flip { order: 0; } }
+
+  /* DOCTOR-PAGE-SPEC: a 4-chip stat bar under the hero for the credential-scanners,
+     before the story. Facts only, all of them already on the page. */
+  .statbar { display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-5) clamp(18px, 2.4vw, 34px); }
+  .statbar > li { list-style: none; }
+  .statbar .sb-k { display: block; font-family: var(--font-display);
+    font-weight: var(--fw-display); font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    line-height: 1.05; letter-spacing: -.02em; color: var(--petrol); }
+  .statbar .sb-v { display: block; margin-top: var(--sp-2); font-size: var(--fs-base);
+    font-weight: var(--fw-semibold); color: var(--ink-soft); }
+  @media (max-width: 760px) { .statbar { grid-template-columns: repeat(2, 1fr); } }
 
   /* ---------- Gate 4 audit fixes, 2026-08-24 ----------
      Tap targets: 18 of 26 visible targets measured under 44px at 390px, including the
@@ -1412,14 +1460,14 @@
 
   <section class="block">
     <div class="wrap">
-      <div style="max-width:760px;">
+      <div class="reqgrid">
         <div class="reveal">
           <span class="eyebrow">(Why you're here)</span>
           <h2 class="h2">Invisalign is a tool. The result comes from <em>the doctor holding it.</em></h2>
           <p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">Plenty of dental offices now sell aligners between fillings and cleanings. The trays come from the same company either way. What differs is who decides how the teeth should move, how far, in what order, and what to do when a tooth does not track.</p><p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-4);">That is the whole job of an orthodontic specialist, and it is the difference between a finished bite and one that looks straighter from the front. Dr. Daher has been doing it since Invisalign existed, and taught other clinicians how in 142 cities.</p>
           <p style="margin-top:var(--sp-6);"><a class="tlink" href="/dr-sam-daher">Read Dr. Daher's record <span class="arr">&rarr;</span></a></p>
         </div>
-
+      <div class="photo-side flip reveal d1"><div class="hero-frame"><img src="assets/photos/practice.jpg" alt="Dr. Daher at the Downtown Orthodontics practice in downtown Vancouver" width="1600" height="1200" loading="lazy" decoding="async"></div></div>
       </div>
     </div>
   </section>
@@ -1470,7 +1518,7 @@
           <span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Align scientific advisory board</span>
         </div>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="/dr-sam-daher">Meet Dr. Daher <span class="arr">&rarr;</span></a>
+          <a class="btn btn-ghost-light" href="/dr-sam-daher">Meet Dr. Daher <span class="arr">&rarr;</span></a>
         </div>
       </div>
     </div>
@@ -1492,7 +1540,7 @@
           <p class="slot" style="margin-top:var(--sp-6);">Placeholder: an Invisalign patient&rsquo;s review goes here, quoted verbatim with attribution. No client-approved quotes are on file yet.</p>
         </div>
         <div class="formcard reveal d1">
-          <h2>Request a call back</h2>
+          <h3>Request a call back</h3>
           <form method="post" action="" novalidate>
             <div class="fgrid">
               <div class="field">
