@@ -572,7 +572,11 @@
   /* footer */
   footer { background: #010101; color: var(--on-deep-soft); padding: 64px 0 38px; }
   .foot-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 30px 50px; }
-  .foot-brand img { height: 26px; margin-bottom: 16px; }
+  /* width:auto is load-bearing. This img carries width/height ATTRIBUTES from the kit's
+     add_img_dims.py, so pinning only the height lets the width resolve from the 700px
+     attribute and the logo renders at an 8:1 ratio against its natural 2.8:1. It was doing
+     exactly that on mobile until 2026-08-27, via an inline style="height:42px". */
+  .foot-brand img { height: 42px; width: auto; margin-bottom: 16px; }
   .foot-brand p { font-size: var(--fs-base); margin: 0 0 18px; max-width: 32ch; }
   .foot-soc { display: flex; gap: 10px; }
   .foot-soc a { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); display: grid; place-items: center; color: #fff; transition: background .2s, border-color .2s; }
@@ -760,7 +764,11 @@
     border-radius: clamp(24px,3vw,38px); padding: clamp(28px,4vw,58px); box-shadow: var(--shadow-lg); overflow: hidden; }
   .loc-card::after{ content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
     box-shadow: inset 0 1px 0 rgba(255,255,255,.7); }
-  @media (max-width: 900px){ .loc-card{ grid-template-columns: 1fr; } }
+  /* minmax(0,1fr), NOT 1fr. A bare 1fr floors at the track's min-content width, and
+     .loc-actions holds a nowrap uppercase CTA whose min-content is ~303px, which pushed
+     this track past the card's 284px content box at 390px. The card is overflow:hidden, so
+     that sheared 19px off the copy, the hours and the map. Found 2026-08-27. */
+  @media (max-width: 900px){ .loc-card{ grid-template-columns: minmax(0,1fr); } }
   .loc-copy .eyebrow{ margin-bottom: 14px; }
   .loc-copy p b{ color: var(--teal-2); font-weight: 700; }
   .loc-addr{ margin-top: 26px; font-style: normal; }
@@ -832,6 +840,14 @@
     font-variant-numeric: tabular-nums; }
   .loc-hours .lh-closed { color: var(--ink-faint); }
   .loc-actions { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-top: var(--sp-7); }
+  /* Below this width the two CTAs stack and are allowed to wrap. Without it, .btn's
+     white-space:nowrap gives this row a ~303px min-content width, which is wider than the
+     card's content box on a phone and reintroduces the shearing fixed above. */
+  @media (max-width: 560px){
+    .loc-actions { flex-direction: column; align-items: stretch; }
+    .loc-actions .btn { width: 100%; justify-content: center; text-align: center;
+      white-space: normal; padding: 15px 20px; letter-spacing: .12em; line-height: 1.25; }
+  }
 
   /* ---------- FOOTER hours (FOOTER-SPEC required contents) ---------- */
   .foot-hours { display: block; color: var(--on-deep-faint); font-size: var(--fs-sm);
@@ -1673,7 +1689,7 @@
     <div class="wrap">
       <div class="foot-top">
         <div class="foot-brand">
-          <img src="assets/Logo_Full-Light_Downtown%20Orthodontics.png" alt="Downtown Orthodontics" width="700" height="250" style="height:42px;" />
+          <img src="assets/Logo_Full-Light_Downtown%20Orthodontics.png" alt="Downtown Orthodontics" width="700" height="250" />
           <p>Specialist orthodontics for families and professionals in downtown Vancouver. Conservative, patient-first, and honest about it.</p>
           <!-- Social row removed 2026-08-24: all three icons were href="#" and no profile
                URLs exist on the Notion client record. Restore when Maya supplies them. -->
@@ -1944,6 +1960,24 @@
         var scrollable = buildClones();
 
         var paused = false, userPaused = false, dragging = false, raf = null;
+        // A touch fling keeps scrolling AFTER touchend. If the rAF loop resumes immediately it
+        // assigns scrollLeft from its own accumulator and cancels the fling, so a flick barely
+        // moves. `settling` holds the loop while momentum plays out, and the window is extended
+        // by each real scroll event until they stop.
+        var settling = false, settleTimer = null, selfScroll = false;
+        // Driven ONLY by touch events. `dragging` is cleared by pointercancel and `paused` by
+        // pointerleave, and the browser fires both when it takes a touch over for native
+        // panning, so during a real finger drag neither flag is still set and the loop would
+        // otherwise resume and overwrite the pan every frame.
+        var touchActive = false;
+        function beginSettle(ms){
+          settling = true;
+          clearTimeout(settleTimer);
+          settleTimer = setTimeout(function(){
+            settling = false;
+            pos = track.scrollLeft;      // adopt wherever the fling actually ended
+          }, ms || 170);
+        }
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Position is accumulated in JS and assigned whole. Incrementing scrollLeft by
@@ -1959,7 +1993,7 @@
           if (!last) last = ts;
           var dt = Math.min(ts - last, 50) / 1000;
           last = ts;
-          if (!paused && !dragging && !userPaused && !reduce && scrollable) {
+          if (!paused && !dragging && !userPaused && !settling && !touchActive && !reduce && scrollable) {
             pos += speed * dt;
             if (half > 0 && pos >= half) pos -= half;
             track.scrollLeft = pos;
@@ -1969,7 +2003,11 @@
 
         // pause on hover, on focus, and on tap/press (pointerdown covers mouse+touch+pen)
         ['pointerenter','focusin'].forEach(function(ev){ track.addEventListener(ev, function(){ paused = true; }); });
-        ['pointerleave','focusout'].forEach(function(ev){ track.addEventListener(ev, function(){ paused = false; }); });
+        // Not during a touch: the browser fires pointerleave when it takes the gesture over
+        // for native panning, and clearing the hold there is what let the loop fight the finger.
+        ['pointerleave','focusout'].forEach(function(ev){
+          track.addEventListener(ev, function(){ if (!touchActive) paused = false; });
+        });
 
         // drag, one code path for mouse / touch / pen
         var startX = 0, startLeft = 0, moved = 0;
@@ -2006,10 +2044,13 @@
         track.addEventListener('touchstart', function(e){
           var t = e.touches[0]; if (!t) return;
           tStartX = t.clientX; tStartY = t.clientY; tStartT = Date.now();
+          touchActive = true;
           paused = true;                      // hold while a finger is down
         }, { passive: true });
         track.addEventListener('touchend', function(e){
+          touchActive = false;
           paused = false;
+          beginSettle(170);                   // let the fling run before the loop takes back over
           var t = (e.changedTouches && e.changedTouches[0]); if (!t) return;
           var dx = Math.abs(t.clientX - tStartX), dy = Math.abs(t.clientY - tStartY);
           if (dx < 8 && dy < 8 && Date.now() - tStartT < 500) {
@@ -2017,16 +2058,23 @@
           }
           pos = track.scrollLeft;
         }, { passive: true });
-        track.addEventListener('touchcancel', function(){ paused = false; }, { passive: true });
+        track.addEventListener('touchcancel', function(){
+          touchActive = false; paused = false; beginSettle(170);
+        }, { passive: true });
 
         // keep the loop seamless when the user drags or flicks past the wrap point
         track.addEventListener('scroll', function(){
-          if (half <= 0) return;
-          if (track.scrollLeft >= half) track.scrollLeft -= half;
-          else if (track.scrollLeft < 0) track.scrollLeft += half;
+          if (half > 0) {
+            if (track.scrollLeft >= half) { selfScroll = true; track.scrollLeft -= half; }
+            else if (track.scrollLeft < 0) { selfScroll = true; track.scrollLeft += half; }
+          }
           // keep the accumulator in step with a user drag, flick or keypress,
           // otherwise the next frame snaps the strip back to where the loop left it
-          if (dragging || paused || userPaused) pos = track.scrollLeft;
+          if (dragging || paused || userPaused || settling || touchActive) pos = track.scrollLeft;
+          // momentum is still running, so hold the loop off a little longer. Our own wrap
+          // correction above must not extend the window or it would never close.
+          if (settling && !selfScroll) beginSettle(140);
+          selfScroll = false;
         }, { passive: true });
 
         var toggle = track.parentElement && track.parentElement.querySelector('[data-marquee-toggle]');

@@ -818,3 +818,65 @@ Worth writing down, because the first two answers were both wrong:
   declared 48, and confirmed `wrapLandsOnSameContent` on both marquees. Scripts kept in the
   session scratchpad as `measure-marquee.mjs` and `verify-wrap.mjs`.
 
+## Three mobile defects (2026-08-27)
+
+### The footer logo was stretched
+
+The img carries `width="700" height="250"` attributes, added by the kit's
+`add_img_dims.py`, and it also carried an inline `style="height:42px"`. That inline height
+beats both `img{height:auto}` and `.foot-brand img{height:26px}`, but nothing constrained the
+WIDTH, so it resolved from the 700px attribute capped by `max-width:100%`. Measured at 390px:
+342x42, a ratio of 8.14 against the logo's natural 2.8.
+
+**Pinning only the height on an img that has width/height attributes will distort it.** Height
+now lives in the stylesheet next to `width:auto`, and the inline style is gone. Now 118x42,
+ratio 2.8.
+
+### The locations card was sheared, which is why the map looked wrong
+
+The map was a symptom. `.btn` is `white-space:nowrap`, uppercase, `.16em` tracking, 30px side
+padding, so "Book a free consultation" has a min-content width of about 303px. Under 900px the
+card collapses to a single `1fr` track, and **a bare `1fr` floors at min-content**, so that one
+button forced the track to 303.4px inside a 284px content box. `.loc-card` is
+`overflow:hidden`, so 19px was sheared off the right of everything in it: the copy, the hours,
+and the map.
+
+Two changes: the track is `minmax(0,1fr)` so it can match the container, and under 560px the
+two CTAs stack full width with wrapping allowed so nothing in the card has a min-content width
+wider than the card. Track and both children now measure 284px.
+
+**Use `minmax(0,1fr)`, not `1fr`, for any single-column mobile collapse that contains a nowrap
+button.**
+
+### The marquee fought the finger on touch
+
+Two separate bugs, and the second is the subtle one.
+
+**Momentum was cancelled.** `touchend` set `paused = false` immediately, but the browser's fling
+continues after touchend. The loop resumed on the next frame and assigned `scrollLeft` from its
+own accumulator, killing the fling. Fixed with a settle window that holds the loop while
+momentum plays out, extends while scroll events keep arriving, then adopts wherever the fling
+ended. Our own wrap correction is excluded from extending it, or the window would never close.
+
+**The loop overwrote the drag itself.** Neither pause flag survives a touch gesture: when the
+browser takes a touch over for native panning it fires `pointercancel`, which cleared
+`dragging`, and `pointerleave`, which cleared `paused`. Both went false with the finger still
+down, so the loop resumed and overwrote the native pan every frame.
+
+Measured at 390px with synthesized touch, this was stark: with the loop paused a flick dragged
+the strip **129px**; with the loop running the identical flick moved it **13px**.
+
+Fixed with an explicit `touchActive` flag driven only by touchstart/touchend/touchcancel, held
+in the step guard, and `pointerleave` no longer clears the hold during a touch. After the fix
+the same flick drags **130px** with the loop running, matching the paused case.
+
+Verified over CDP with `Emulation.setDeviceMetricsOverride` at a true 390px (headless clamps
+`--window-size` to about 500px, so device-metrics override is the only way) and real
+`Input.dispatchTouchEvent` gestures. Note those coordinates are **viewport** relative: the first
+attempt dispatched at document coordinates, landed off-screen, and measured the marquee's own
+48px/s drift as though it were the drag. Scripts in the session scratchpad:
+`mobile-diag.mjs`, `mobile-verify.mjs`, `touch-test.mjs`, `touch-regress.mjs`.
+
+Regression checked after the hold was added: a vertical swipe over the bar still scrolls the
+page (327px), and a tap still toggles the pause (aria-pressed true, label Play, zero movement).
+
