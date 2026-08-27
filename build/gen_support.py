@@ -182,7 +182,7 @@ C.write("financing.html", C.page(
     title="Braces Payment Plans, Downtown Vancouver | 0% Financing",
     desc="Braces and Invisalign payment plans in downtown Vancouver: $1,000 down, from $220/mo at 0% in-house interest, insurance billed directly.",
     slug="financing", body=FIN_BODY,
-    schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "mainEntity": [\n%s\n  ]\n}' % fin_schema))
+    schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "isPartOf": { "@id": "https://downtownorthodontics.ca/#practice" },\n  "about": { "@id": "https://downtownorthodontics.ca/#practice" },\n  "mainEntity": [\n%s\n  ]\n}' % fin_schema))
 
 # ==================================================================== FAQ
 FAQS = [
@@ -285,7 +285,7 @@ C.write("faq.html", C.page(
     title="Orthodontic FAQ Downtown Vancouver | Braces &amp; Invisalign",
     desc="Answers on braces and Invisalign cost in downtown Vancouver, when children should first be seen, treatment length, retainers and referrals.",
     slug="faq", body=FAQ_BODY,
-    schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "mainEntity": [\n%s\n  ]\n}' % faq_schema))
+    schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "isPartOf": { "@id": "https://downtownorthodontics.ca/#practice" },\n  "about": { "@id": "https://downtownorthodontics.ca/#practice" },\n  "mainEntity": [\n%s\n  ]\n}' % faq_schema))
 
 # ==================================================================== CONTACT
 CONTACT_BODY = phero(

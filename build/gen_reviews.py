@@ -229,16 +229,8 @@ SCHEMA = """{
   "@type": "Dentist",
   "@id": "%(d)s/#practice",
   "name": "Downtown Orthodontics",
-  "telephone": "+1-604-662-3290",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "840 W Hastings St",
-    "addressLocality": "Vancouver",
-    "addressRegion": "BC",
-    "postalCode": "V6C 1C8",
-    "addressCountry": "CA"
-  }
-}""" % {"d": C.DOMAIN}
+  "mainEntityOfPage": { "@id": "%(d)s/reviews" }
+}""" % {"d": C.DOMAIN} % {"d": C.DOMAIN}
 
 C.write("reviews.html", C.page(
     title="Patient Reviews | Downtown Orthodontics, Vancouver, BC",
