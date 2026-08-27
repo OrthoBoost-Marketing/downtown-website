@@ -867,7 +867,10 @@
      because institutional logos are portal-gated and altering them breaks their own
      brand standards. Each cell names the actual relationship so no mark asserts
      something vague. */
-  .authbar { border-top: var(--border) solid var(--line); padding-top: var(--sp-7); margin-top: var(--sp-9); }
+  /* Standalone section since 2026-08-26, so it no longer needs the rule and top margin
+     that separated it from the credentials list it used to sit inside. */
+  .authbar { padding-top: 0; margin-top: 0; }
+  .block.authority { background: var(--surface); }
   .authbar .lbl { display: block; font-size: var(--fs-2xs); letter-spacing: var(--track-label);
     text-transform: uppercase; color: var(--ink-faint); margin-bottom: var(--sp-6); }
   /* align-items:start, not end: bottom-aligning cells whose descriptors run to

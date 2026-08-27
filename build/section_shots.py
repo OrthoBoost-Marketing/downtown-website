@@ -18,8 +18,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SECTIONS = ["paths", "doctor", "credentials", "financing", "reviews", "same-doctor",
-            "ready", "faq", "visit", "book"]
+# Kit spine first, then the sections that map to no kit type. "ready" retired 2026-08-26
+# when the mid-page band was replaced by the moved closing band; "authority" added when
+# the logo bar became its own section.
+SECTIONS = ["top", "doctor", "financing", "same-doctor", "book", "authority",
+            "reviews", "paths", "visit",
+            "how", "credentials", "why-specialist", "faq"]
 
 OVERRIDE = """
 <style id="shot-override">

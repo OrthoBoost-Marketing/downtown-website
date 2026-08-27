@@ -965,7 +965,10 @@
      because institutional logos are portal-gated and altering them breaks their own
      brand standards. Each cell names the actual relationship so no mark asserts
      something vague. */
-  .authbar { border-top: var(--border) solid var(--line); padding-top: var(--sp-7); margin-top: var(--sp-9); }
+  /* Standalone section since 2026-08-26, so it no longer needs the rule and top margin
+     that separated it from the credentials list it used to sit inside. */
+  .authbar { padding-top: 0; margin-top: 0; }
+  .block.authority { background: var(--surface); }
   .authbar .lbl { display: block; font-size: var(--fs-2xs); letter-spacing: var(--track-label);
     text-transform: uppercase; color: var(--ink-faint); margin-bottom: var(--sp-6); }
   /* align-items:start, not end: bottom-aligning cells whose descriptors run to
@@ -1682,35 +1685,6 @@
         <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Top 1% of Invisalign providers globally</b><span>And the top provider worldwide from 2009 to 2011.</span></div></div>
       </div>
 
-      <div class="authbar reveal">
-        <span class="lbl">Where the credentials come from</span>
-        <div class="authgrid">
-          <div class="authcell">
-            <span class="mark"><img src="assets/authority/invisalign.png" alt="Invisalign, by Align Technology" loading="lazy" decoding="async" width="364" height="80"></span>
-            <span class="rel">Scientific advisory board, and a top 1% provider globally</span>
-          </div>
-          <div class="authcell">
-            <span class="mark"><span class="wordmark">McGill University</span></span>
-            <span class="rel">Alma mater, and the Dr. James McCutcheon award</span>
-          </div>
-          <div class="authcell">
-            <span class="mark"><span class="wordmark">Universit&eacute; de Montr&eacute;al</span></span>
-            <span class="rel">Former associate professor</span>
-          </div>
-          <div class="authcell">
-            <span class="mark"><span class="wordmark">University of the Pacific</span></span>
-            <span class="rel">Former associate professor</span>
-          </div>
-        </div>
-        <!-- FLAG: only genuinely held, client-confirmed credentials appear here.
-             Marks that would strengthen this band but are NOT confirmed to us, so are
-             deliberately absent: the AAO or Canadian Association of Orthodontists
-             membership mark, Royal College of Dentists of Canada certification, and the
-             Invisalign provider TIER. The practice's own Instagram bio says "Blue Diamond"
-             and TikTok says "Platinum+", which contradict each other and neither came from
-             the client, so no tier is claimed. One written confirmation from Maya adds any
-             of these. -->
-      </div>
     </div>
   </section>
 
@@ -1773,56 +1747,89 @@
       </div>
     </div>
   </section>
-
-  <!-- (THE DIFFERENCE) — value props -->
-  <section class="block values">
+  <!-- USP ZIGZAG row 2 of 2. The objection-killer, which is the BrightWay pattern:
+       affordable must not read as assembly line. Runs photo-free as the centred band
+       variant the spec permits, rather than reusing a third photograph or touching stock.
+       This slot previously held a second FAQ block, which duplicated the accordion below
+       it and attributed its questions to invented people ("Sarah, from Yaletown, asks"). -->
+  <section class="block uspz" id="same-doctor">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <h2 class="h2">Thirty years a specialist, and <em>he still plans every case himself.</em></h2>
+      <div class="uspz-centre reveal">
+        <span class="eyebrow">(No compromise)</span>
+        <h2 class="h2">Affordable never means <em>an assembly line.</em></h2>
+        <p>The price is lower than people expect for a specialist. What comes with it is not.</p>
+        <ul class="checks">
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>The same doctor at every single visit.</b> Dr. Daher diagnoses,
+            plans and adjusts every case himself. No rotating faces, no handoffs, and nobody
+            re-reading your history back to you.</span></li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Refinement is covered until the finish is right.</b> A finished
+            case means a healthy bite, not a bite that photographs well from the front.</span></li>
+          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Conservative by conviction.</b> No unnecessary extractions and no
+            surgery a patient does not need, which has been the rule here for thirty years.</span></li>
+        </ul>
+        <p style="margin-top:var(--sp-7);">
+          <a class="tlink" href="/why-choose-us">Why the specialist, not the shortcut <span class="arr">&rarr;</span></a></p>
       </div>
-      <!-- bento grid [Tailwind block].
-       PHOTO BUDGET, deliberate: the homepage has 11 image slots and the client has
-       delivered 8 photographs, 6 of which are committed to content slots (hero,
-       doctor, zigzag, three service cards). That leaves 2 unused photos for 5
-       DECORATIVE slots, so some repetition is arithmetically forced until the Aug 12
-       shoot lands. What is avoidable, and is avoided: no photo repeats WITHIN the
-       decorative set, and no photo appears more than twice on the page. This card
-       reuses the preloaded hero frame because its gradient scrim renders it as
-       texture and the bytes are already paid for. -->
-      <div class="tw-block i-cards grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:auto-rows-[1fr]">
-        <div class="reveal relative overflow-hidden rounded-brand p-8 text-white sm:col-span-2 lg:col-span-1 lg:row-span-2" style="min-height:300px;">
-          <img src="assets/photos/w880/dt-7.jpg" alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" width="880" height="660" fetchpriority="high">
-          <span class="absolute inset-0" style="background:linear-gradient(180deg, color-mix(in srgb,var(--petrol-deep),transparent 28%), var(--petrol-deep) 94%);"></span>
-          <div class="relative flex h-full flex-col justify-end">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" class="mb-auto text-teal"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c0-3.3 3.1-5 7-5s7 1.7 7 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            <h3 class="mt-6 tracking-tight" style="font-size:var(--fs-3xl);font-weight:var(--fw-semibold);">First scan to final reveal.</h3>
-            <p class="mt-3 text-white/75" style="font-size:var(--fs-md);">The same certified specialist at every appointment: your diagnosis, your plan, and each adjustment along the way. Never a rotating cast of faces.</p>
-          </div>
+    </div>
+  </section>
+  <!-- MOVED 2026-08-26 (Jules): this is the site's ONE CTA band, and it now sits in
+       CTA-BAND-SPEC's default slot, directly after the USP zigzag, instead of before the
+       footer. The page therefore ends on the locations map with no closing ask. That was a
+       deliberate call, and it is softened by two things that were already there: the
+       locations card carries its own booking button, and the mobile sticky bar (Call, Book,
+       Directions) is present on every screen. -->
+  <section class="block closing" id="book">
+    <div class="wrap">
+      <div class="inner">
+        <h2 class="h2 reveal">Start with a conversation, <em>not a commitment.</em></h2>
+        <p class="reveal">A free consultation with Dr. Daher gets you a specialist's diagnosis, honest options, and an exact price. What you do next is up to you.</p>
+        <div class="hero-actions reveal">
+          <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>
         </div>
-        <div class="reveal d1 rounded-brand border border-line bg-white p-7 shadow-soft">
-          <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-mint text-petrol"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-          <h3 class="mt-5 text-ink" style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);">No impression trays</h3>
-          <p class="mt-1.5 text-ink-soft" style="font-size:var(--fs-md);">Comfortable digital scanning for braces and Invisalign alike.</p>
-        </div>
-        <div class="reveal d2 rounded-brand border border-line bg-white p-7 shadow-soft">
-          <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-mint text-petrol"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M8 7h6.5a2.5 2.5 0 010 5H8m0 0h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <h3 class="mt-5 text-ink" style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);">Clear costs up front</h3>
-          <p class="mt-1.5 text-ink-soft" style="font-size:var(--fs-md);">Your full plan and price, in writing, before you decide.</p>
-        </div>
-        <div class="reveal d2 rounded-brand border border-line bg-white p-7 shadow-soft">
-          <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-mint text-petrol"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21s-6-5.1-6-10a6 6 0 1112 0c0 4.9-6 10-6 10z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.2" stroke="currentColor" stroke-width="1.7"/></svg></div>
-          <h3 class="mt-5 text-ink" style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);">By Canada Place</h3>
-          <p class="mt-1.5 text-ink-soft" style="font-size:var(--fs-md);">On West Hastings, easy before work or on a lunch break.</p>
-        </div>
-        <div class="reveal d3 rounded-brand p-7 text-ink-on-teal" style="background:var(--teal);box-shadow:var(--shadow-cta);">
-          <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-white/35"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <h3 class="mt-5" style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);">Complex cases other offices decline</h3>
-          <p class="mt-1.5" style="opacity:.82;font-size:var(--fs-md);">Referred cases, retreatment of earlier work, and bites another orthodontist turned down. Complex correction is the part of orthodontics a specialist trains for.</p>
-        </div>
+        <p class="fineprint reveal">Free consultation. No referral needed. $1,000 down, from $220/mo at 0% in-house financing.</p>
       </div>
     </div>
   </section>
 
+  <!-- AUTHORITY LOGOS, Section 07. Lifted out of the credentials section on 2026-08-26 so
+       it sits where AUTHORITY-LOGOS-SPEC rule 4 asks for it, "further down as a section
+       divider, adjacent to reviews", which is also where the kit's own BrightWay reference
+       build puts it. Deliberately NOT a marquee: rule 6 bans a scroller here and carousels
+       are in its banned list, so this site's marquee allowance does not extend to it. -->
+  <section class="block authority" id="authority">
+    <div class="wrap">
+      <div class="authbar reveal">
+
+        <h2 class="lbl">Where the credentials come from</h2>
+        <div class="authgrid">
+          <div class="authcell">
+            <span class="mark"><img src="assets/authority/invisalign.png" alt="Invisalign, by Align Technology" loading="lazy" decoding="async" width="364" height="80"></span>
+            <span class="rel">Scientific advisory board, and a top 1% provider globally</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">McGill University</span></span>
+            <span class="rel">Alma mater, and the Dr. James McCutcheon award</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">Universit&eacute; de Montr&eacute;al</span></span>
+            <span class="rel">Former associate professor</span>
+          </div>
+          <div class="authcell">
+            <span class="mark"><span class="wordmark">University of the Pacific</span></span>
+            <span class="rel">Former associate professor</span>
+          </div>
+        </div>
+        <!-- FLAG: only genuinely held, client-confirmed credentials appear here.
+             Marks that would strengthen this band but are NOT confirmed to us, so are
+             deliberately absent: the AAO or Canadian Association of Orthodontists
+             membership mark, Royal College of Dentists of Canada certification, and the
+             Invisalign provider TIER. The practice's own Instagram bio says "Blue Diamond"
+             and TikTok says "Platinum+", which contradict each other and neither came from
+             the client, so no tier is claimed. One written confirmation from Maya adds any
+             of these. -->
+      </div>
+    </div>
+  </section>
   <!-- (KIND WORDS) — testimonial wall [Tailwind block] -->
   <section class="block" style="background:var(--surface);" id="reviews">
     <div class="wrap">
@@ -1922,10 +1929,6 @@
       </div>
     </div>
   </section>
-
-  <!-- MOVED 2026-08-26: was position 4, directly after the trust bar. The kit puts the
-       services grid at position 9, AFTER reviews, so the page makes its case before it
-       hands over a directory. Section unchanged, including its three service-page links. -->
   <!-- (THE PATHS) = SERVICES GRID, Section 09. Three cards, because the spec allows
        3, 6 or 9 only and bans 4. Each H3 leads with the searchable service name and the
        whole card is a doorway to that service page, which is simultaneously the keyword's
@@ -1978,51 +1981,63 @@
     </div>
   </section>
 
-
-  <!-- USP ZIGZAG row 2 of 2. The objection-killer, which is the BrightWay pattern:
-       affordable must not read as assembly line. Runs photo-free as the centred band
-       variant the spec permits, rather than reusing a third photograph or touching stock.
-       This slot previously held a second FAQ block, which duplicated the accordion below
-       it and attributed its questions to invented people ("Sarah, from Yaletown, asks"). -->
-  <section class="block uspz" id="same-doctor">
+  <!-- (THE DIFFERENCE) — value props -->
+  <section class="block values">
     <div class="wrap">
-      <div class="uspz-centre reveal">
-        <span class="eyebrow">(No compromise)</span>
-        <h2 class="h2">Affordable never means <em>an assembly line.</em></h2>
-        <p>The price is lower than people expect for a specialist. What comes with it is not.</p>
-        <ul class="checks">
-          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>The same doctor at every single visit.</b> Dr. Daher diagnoses,
-            plans and adjusts every case himself. No rotating faces, no handoffs, and nobody
-            re-reading your history back to you.</span></li>
-          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Refinement is covered until the finish is right.</b> A finished
-            case means a healthy bite, not a bite that photographs well from the front.</span></li>
-          <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Conservative by conviction.</b> No unnecessary extractions and no
-            surgery a patient does not need, which has been the rule here for thirty years.</span></li>
-        </ul>
-        <p style="margin-top:var(--sp-7);">
-          <a class="tlink" href="/why-choose-us">Why the specialist, not the shortcut <span class="arr">&rarr;</span></a></p>
+      <div class="sec-head reveal">
+        <h2 class="h2">Thirty years a specialist, and <em>he still plans every case himself.</em></h2>
       </div>
-    </div>
-  </section>
-
-  <!-- MOVED 2026-08-26 (Jules): this is the site's ONE CTA band, and it now sits in
-       CTA-BAND-SPEC's default slot, directly after the USP zigzag, instead of before the
-       footer. The page therefore ends on the locations map with no closing ask. That was a
-       deliberate call, and it is softened by two things that were already there: the
-       locations card carries its own booking button, and the mobile sticky bar (Call, Book,
-       Directions) is present on every screen. -->
-  <section class="block closing" id="book">
-    <div class="wrap">
-      <div class="inner">
-        <h2 class="h2 reveal">Start with a conversation, <em>not a commitment.</em></h2>
-        <p class="reveal">A free consultation with Dr. Daher gets you a specialist's diagnosis, honest options, and an exact price. What you do next is up to you.</p>
-        <div class="hero-actions reveal">
-          <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>
+      <!-- bento grid [Tailwind block].
+       PHOTO BUDGET, deliberate: the homepage has 11 image slots and the client has
+       delivered 8 photographs, 6 of which are committed to content slots (hero,
+       doctor, zigzag, three service cards). That leaves 2 unused photos for 5
+       DECORATIVE slots, so some repetition is arithmetically forced until the Aug 12
+       shoot lands. What is avoidable, and is avoided: no photo repeats WITHIN the
+       decorative set, and no photo appears more than twice on the page. This card
+       reuses the preloaded hero frame because its gradient scrim renders it as
+       texture and the bytes are already paid for. -->
+      <div class="tw-block i-cards grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:auto-rows-[1fr]">
+        <div class="reveal relative overflow-hidden rounded-brand p-8 text-white sm:col-span-2 lg:col-span-1 lg:row-span-2" style="min-height:300px;">
+          <img src="assets/photos/w880/dt-7.jpg" alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" width="880" height="660" fetchpriority="high">
+          <span class="absolute inset-0" style="background:linear-gradient(180deg, color-mix(in srgb,var(--petrol-deep),transparent 28%), var(--petrol-deep) 94%);"></span>
+          <div class="relative flex h-full flex-col justify-end">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" class="mb-auto text-teal"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c0-3.3 3.1-5 7-5s7 1.7 7 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <h3 class="mt-6 tracking-tight" style="font-size:var(--fs-3xl);font-weight:var(--fw-semibold);">First scan to final reveal.</h3>
+            <p class="mt-3 text-white/75" style="font-size:var(--fs-md);">The same certified specialist at every appointment: your diagnosis, your plan, and each adjustment along the way. Never a rotating cast of faces.</p>
+          </div>
         </div>
-        <p class="fineprint reveal">Free consultation. No referral needed. $1,000 down, from $220/mo at 0% in-house financing.</p>
+        <div class="reveal d1 rounded-brand border border-line bg-white p-7 shadow-soft">
+          <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-mint text-petrol"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.7"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+          <h3 class="mt-5 text-ink" style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);">No impression trays</h3>
+          <p class="mt-1.5 text-ink-soft" style="font-size:var(--fs-md);">Comfortable digital scanning for braces and Invisalign alike.</p>
+        </div>
+        <div class="reveal d2 rounded-brand border border-line bg-white p-7 shadow-soft">
+          <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-mint text-petrol"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M8 7h6.5a2.5 2.5 0 010 5H8m0 0h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3 class="mt-5 text-ink" style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);">Clear costs up front</h3>
+          <p class="mt-1.5 text-ink-soft" style="font-size:var(--fs-md);">Your full plan and price, in writing, before you decide.</p>
+        </div>
+        <div class="reveal d2 rounded-brand border border-line bg-white p-7 shadow-soft">
+          <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-mint text-petrol"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21s-6-5.1-6-10a6 6 0 1112 0c0 4.9-6 10-6 10z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.2" stroke="currentColor" stroke-width="1.7"/></svg></div>
+          <h3 class="mt-5 text-ink" style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);">By Canada Place</h3>
+          <p class="mt-1.5 text-ink-soft" style="font-size:var(--fs-md);">On West Hastings, easy before work or on a lunch break.</p>
+        </div>
+        <div class="reveal d3 rounded-brand p-7 text-ink-on-teal" style="background:var(--teal);box-shadow:var(--shadow-cta);">
+          <div class="grid h-12 w-12 place-items-center rounded-[14px] bg-white/35"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3 class="mt-5" style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);">Complex cases other offices decline</h3>
+          <p class="mt-1.5" style="opacity:.82;font-size:var(--fs-md);">Referred cases, retreatment of earlier work, and bites another orthodontist turned down. Complex correction is the part of orthodontics a specialist trains for.</p>
+        </div>
       </div>
     </div>
   </section>
+
+
+  <!-- MOVED 2026-08-26: was position 4, directly after the trust bar. The kit puts the
+       services grid at position 9, AFTER reviews, so the page makes its case before it
+       hands over a directory. Section unchanged, including its three service-page links. -->
+
+
+
+
 
   <!-- STANDARD FAQ -->
   <section class="block faq" id="faq">
@@ -2061,7 +2076,6 @@
       </div>
     </div>
   </section>
-
   <!-- (WHERE TO FIND US) — locations map -->
   <section class="block locations" id="visit">
     <div class="wrap">
