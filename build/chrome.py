@@ -40,13 +40,19 @@ ICONS = (
     '<link rel="apple-touch-icon" sizes="180x180" href="/assets/downtown-orthodontics-apple-touch-icon-180.png" />'
 )
 
-TAILWIND = '<script src="https://cdn.tailwindcss.com"></script>'
+# TIER 4 fix: the tailwind.config block lived only in index.html, so on the other 16
+# pages every brand utility (bg-petrol-deep, text-teal, border-line, shadow-soft)
+# generated nothing - which painted financing.html's counters section white on white.
+# It is chrome now, sliced from index.html like everything else.
+TW_CONFIG = _between("<script>\n  tailwind.config", "</script>")
+TAILWIND = ('<script src="https://cdn.tailwindcss.com"></script>\n' + TW_CONFIG)
 ANIME = '<script src="https://cdn.jsdelivr.net/npm/animejs@4/lib/anime.iife.min.js"></script>'
 
 ANNOUNCE = _between('  <!-- ANNOUNCEMENT', "  </div>\n", inclusive=True)
 HEADER = _between('  <header class="nav">', "  </header>\n")
 FOOTER = _between("  <footer>", "  </footer>\n")
 MBAR = _between('  <nav class="mbar"', "  </nav>\n")
+DRAWER = _between('  <!-- MOBILE DRAWER', "  <!-- /MOBILE DRAWER -->\n")
 SCRIPTS = _between("  <script>\n", "  </script>\n")
 
 # The homepage's own in-page anchors become real destinations sitewide. This changes
@@ -91,6 +97,7 @@ HEADER_X = relink(HEADER)
 FOOTER_X = relink(FOOTER)
 ANNOUNCE_X = relink(ANNOUNCE)
 MBAR_X = relink(MBAR)
+DRAWER_X = relink(DRAWER)
 
 # ---------------------------------------------------------------- page assembly
 def head(title, desc, slug, noindex=False, preload=None, schema=None, og_image=None):
@@ -138,6 +145,7 @@ def page(title, desc, slug, body, noindex=False, preload=None, schema=None, og_i
         ANNOUNCE_X,
         "\n  <!-- NAV -->",
         HEADER_X,
+        DRAWER_X.rstrip(),
         body.rstrip(),
         "\n  <!-- FOOTER -->",
         FOOTER_X,

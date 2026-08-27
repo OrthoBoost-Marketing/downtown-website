@@ -40,8 +40,33 @@
 }
 </script>
 <script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    corePlugins: { preflight: false },
+    theme: { extend: {
+      colors: {
+        teal: 'var(--teal)', 'teal-2': 'var(--teal-2)',
+        petrol: 'var(--petrol)', 'petrol-deep': 'var(--petrol-deep)',
+        surface: 'var(--surface)', 'surface-2': 'var(--surface-2)', mint: 'var(--mint)',
+        ink: 'var(--ink)', 'ink-soft': 'var(--ink-soft)', 'ink-faint': 'var(--ink-faint)',
+        'ink-on-teal': 'var(--ink-on-teal)', line: 'var(--line)',
+      },
+      fontFamily: { sans: ['Nunito','system-ui','-apple-system','sans-serif'] },
+      borderRadius: { brand: '20px', btn: '12px' },
+      boxShadow: { brand: '0 18px 40px rgba(10,16,22,.12)', soft: '0 10px 30px rgba(10,16,22,.08)' },
+      maxWidth: { content: '1200px' },
+    } }
+  }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/animejs@4/lib/anime.iife.min.js"></script>
 <style>
+  /* Sharing tailwind.config sitewide (TIER 4 finding 2) also turned Preflight OFF on the
+     other 16 pages, which had been running the CDN's default config and therefore relied on
+     Preflight for `button, input, select, textarea { font: inherit }`. Without it a native
+     <button class="btn"> fell back to the UA's 13.33px Arial, which widened the form submit
+     by ~10px and blew out the .reqgrid column. Restate just that one normalisation. */
+  button, input, select, textarea, optgroup { font: inherit; letter-spacing: inherit; }
+
   /* Tailwind blocks run with Preflight OFF — normalise the handful of elements that rely
      on it (margins, border-style), scoped to .tw-block so nothing else is affected.
      :where() keeps specificity 0 so Tailwind utility classes still win. */
@@ -162,11 +187,15 @@
   .btn { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; font-weight: 700;
     font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: .16em; line-height: 1; border: none; border-radius: var(--radius-btn); padding: 18px 30px; white-space: nowrap;
     transition: transform .25s var(--e-out), box-shadow .25s var(--e-out), background .25s, color .25s, border-color .25s; }
-  .btn-primary { background: var(--teal); color: var(--ink-on-teal); box-shadow: var(--shadow-cta); }
+  .btn-primary { background: var(--teal); color: var(--ink-on-teal); box-shadow: var(--shadow-cta);
+    /* TIER 4: the pale-blue fill is 1.41:1 on white and the soft shadow makes no edge.
+       A 1px --teal-2 rim (18.66:1 on white) gives the control a real boundary; the fill
+       stays in the brand accent. */
+    border: 1px solid var(--teal-2); }
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 38px color-mix(in srgb,var(--teal),transparent 52%); }
   .btn-dark { background: var(--petrol); color: #fff; }
   .btn-dark:hover { transform: translateY(-2px); background: var(--petrol-deep); }
-  .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+  .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink-faint); }
   .btn-outline:hover { border-color: var(--petrol); color: var(--petrol); }
   .btn-ghost-light { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.5); }
   .btn-ghost-light:hover { background: rgba(255,255,255,.12); border-color:#fff; }
@@ -254,12 +283,21 @@
   .hero-actions .btn { padding: 16px 26px; font-size: var(--fs-xs); }
   /* on the pale-blue hero field the teal CTA has no separation — solid ink fill
      so the primary action pops (charcoal is a core kit colour) */
-  .hero-actions .btn-primary { background: var(--petrol-deep); color: #fff; box-shadow: 0 16px 34px -14px rgba(1,4,8,.55); }
+  .hero-actions .btn-primary { background: var(--petrol-deep); color: #fff; box-shadow: 0 16px 34px -14px rgba(1,4,8,.55);
+    /* near-black fill already clears 3:1 on every ground it sits on, so the rim is not needed here */
+    border-color: transparent; }
   .hero-actions .btn-primary:hover { background: #000; box-shadow: 0 20px 42px -14px rgba(1,4,8,.62); }
   /* ...but on the near-black bands that button was black-on-black. Fixed 2026-08-24. */
-  .doc .hero-actions .btn-primary, #financing .hero-actions .btn-primary { background: var(--teal); color: var(--ink-on-teal); box-shadow: var(--shadow-cta); }
-  .doc .hero-actions .btn-primary:hover, #financing .hero-actions .btn-primary:hover { background: color-mix(in srgb, var(--teal) 86%, #fff); }
-  .hero-actions .btn-outline { border-color: color-mix(in srgb, var(--petrol), transparent 55%); color: var(--petrol); }
+  /* .bg-petrol-deep added with the TIER 4 config fix: financing.html's counters band is
+     a Tailwind utility section, not the homepage's #financing, so it never matched this
+     rule. Once the band actually painted, the petrol-deep .btn-primary sat on a
+     petrol-deep ground and the control had no boundary at all. Same treatment as the
+     other dark bands: the accent fill, 14.07:1 against the band. */
+  .doc .hero-actions .btn-primary, #financing .hero-actions .btn-primary,
+  .bg-petrol-deep .hero-actions .btn-primary { background: var(--teal); color: var(--ink-on-teal); box-shadow: var(--shadow-cta); }
+  .doc .hero-actions .btn-primary:hover, #financing .hero-actions .btn-primary:hover,
+  .bg-petrol-deep .hero-actions .btn-primary:hover { background: color-mix(in srgb, var(--teal) 86%, #fff); }
+  .hero-actions .btn-outline { border-color: color-mix(in srgb, var(--petrol), transparent 40%); color: var(--petrol); }
   .hero-actions .btn-outline:hover { border-color: var(--petrol); color: var(--petrol); background: color-mix(in srgb,#fff,transparent 45%); }
 
   /* thin credential row under the CTAs */
@@ -457,7 +495,9 @@
   .closing h2 { color: var(--ink); }
   .closing p { color: var(--ink-soft); font-size: var(--fs-xl); max-width: 46ch; margin: 18px auto 30px; }
   .closing .hero-actions { justify-content: center; }
-  .closing .fineprint { margin-top: 20px; font-size: var(--fs-base); color: var(--ink-faint); }
+  /* TIER 4: the .closing::before radial glow darkens the ground under this line, which
+     dropped --ink-faint to 4.31-4.47:1. --ink-soft clears 4.5:1 on the worst ground. */
+  .closing .fineprint { margin-top: 20px; font-size: var(--fs-base); color: var(--ink-soft); }
 
   /* footer */
   footer { background: #010101; color: var(--on-deep-soft); padding: 64px 0 38px; }
@@ -897,7 +937,7 @@
     display: inline-flex; align-items: center; gap: var(--sp-2);
     min-height: var(--tap); padding: 0 var(--sp-4);
     background: var(--bg); color: var(--ink-soft);
-    border: var(--border) solid var(--line); border-radius: var(--radius-pill);
+    border: var(--border) solid var(--ink-faint); border-radius: var(--radius-pill);
     font-family: var(--font); font-size: var(--fs-sm); font-weight: var(--fw-semibold);
     cursor: pointer; transition: color .2s, border-color .2s;
   }
@@ -938,7 +978,8 @@
   .crumb { font-size: var(--fs-sm); color: var(--ink-faint); margin-bottom: var(--sp-4); }
   .crumb a { color: var(--ink-faint); text-decoration: none; }
   .crumb a:hover { color: var(--teal-2); }
-  .crumb span { padding: 0 var(--sp-2); color: var(--line-strong, var(--ink-faint)); opacity: .6; }
+  /* TIER 4: opacity .6 knocked the separator to 2.41:1. Full opacity --ink-faint is 5.9:1. */
+  .crumb span { padding: 0 var(--sp-2); color: var(--ink-faint); }
 
   /* two-column request band */
   .reqgrid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,4vw,60px); align-items: start; }
@@ -957,14 +998,17 @@
   .field { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
   .field.wide { grid-column: 1 / -1; }
   .field label { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--ink); }
-  .field input, .field select {
+  .field input, .field select, .field textarea {
     min-height: 46px; min-width: 0; width: 100%;
     font-family: var(--font); font-size: 16px; /* under 16px iOS zooms the page */
     color: var(--ink); background: var(--bg);
-    border: var(--border) solid var(--line); border-radius: var(--radius-btn);
+    /* TIER 4: --line on white is 1.24:1, so the field edge was effectively invisible.
+       --ink-faint is the safe boundary tone at 4.4:1+ on every ground here. */
+    border: var(--border) solid var(--ink-faint); border-radius: var(--radius-btn);
     padding: 0 var(--sp-4); }
+  .field textarea { padding: var(--sp-3) var(--sp-4); }
   .field select { padding-right: var(--sp-3); }
-  .field input:focus-visible, .field select:focus-visible {
+  .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible {
     outline: 2px solid var(--teal-2); outline-offset: 1px; border-color: var(--teal-2); }
   .formcard .btn { width: 100%; justify-content: center; margin-top: var(--sp-5); min-height: var(--tap); }
   .microline { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); color: var(--ink-faint); }
@@ -1046,14 +1090,121 @@
       gap: 2px; min-height: 48px; border-radius: var(--radius-btn); text-decoration: none;
       font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: .08em; text-transform: uppercase;
       border: var(--border) solid var(--line); color: var(--ink); background: var(--bg); }
-    .mbar a.primary { background: var(--teal); color: var(--ink-on-teal); border-color: transparent;
+    .mbar a.primary { background: var(--teal); color: var(--ink-on-teal); border-color: var(--teal-2);
       box-shadow: var(--shadow-cta); }
     .mbar a svg { flex: 0 0 auto; }
     body { padding-bottom: 72px; }
+    /* TIER 4: the bar must get out of the way while a form is on screen, or it covers
+       the controls. One IntersectionObserver in the shared script toggles .mbar-hide. */
+    .mbar { transition: transform .28s var(--e-out); will-change: transform; }
+    .mbar.mbar-hide { transform: translateY(130%); pointer-events: none; }
   }
   @media (max-width: 900px) and (prefers-reduced-motion: reduce) {
-    .mbar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--bg); }
+    .mbar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--bg);
+      transition: none; }
   }
+
+  /* ============================================================
+     TIER 4 - MOBILE NAV. Below 1024px .nav-mid is display:none and there was no
+     hamburger and no drawer, so 12 nav destinations were unreachable on a phone.
+     The drawer mirrors the desktop nav exactly: the same 5 top-level items, the
+     same 10 children, accordions for the 3 dropdowns, primary CTA pinned bottom.
+     Nothing here applies at >= 1025px, so the desktop nav is untouched.
+     ============================================================ */
+  .nav-burger { display: none; }
+  .nav-drawer { display: none; }
+  @media (max-width: 1024px) {
+    .nav-burger { display: inline-flex; align-items: center; justify-content: center;
+      flex: 0 0 auto; width: var(--tap); height: var(--tap);
+      min-width: var(--tap); min-height: var(--tap); padding: 0; cursor: pointer;
+      background: var(--bg); color: var(--ink);
+      border: var(--border) solid var(--ink-faint); border-radius: var(--radius-btn);
+      transition: background .2s, border-color .2s; }
+    .nav-burger:hover { background: var(--tint); }
+    .nav-burger .bars { display: block; position: relative; width: 18px; height: 12px; }
+    .nav-burger .bars i { position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px;
+      background: currentColor; transition: transform .25s var(--e-out), opacity .18s linear; }
+    .nav-burger .bars i:nth-child(1) { top: 0; }
+    .nav-burger .bars i:nth-child(2) { top: 5px; }
+    .nav-burger .bars i:nth-child(3) { top: 10px; }
+    .nav-burger[aria-expanded="true"] .bars i:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+    .nav-burger[aria-expanded="true"] .bars i:nth-child(2) { opacity: 0; }
+    .nav-burger[aria-expanded="true"] .bars i:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+    /* overflow:hidden clips the off-canvas panel so it can never widen the document */
+    .nav-drawer { display: block; position: fixed; inset: 0; z-index: 400;
+      overflow: hidden; pointer-events: none; }
+    .nav-drawer.open { pointer-events: auto; }
+    .dr-scrim { position: absolute; inset: 0; background: rgba(1,4,8,.5);
+      opacity: 0; transition: opacity .28s var(--e-out); }
+    .nav-drawer.open .dr-scrim { opacity: 1; }
+    .dr-panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(400px, 92vw);
+      display: flex; flex-direction: column; background: var(--bg);
+      border-left: var(--border) solid var(--line);
+      box-shadow: -18px 0 46px rgba(10,16,22,.20);
+      transform: translateX(101%); transition: transform .3s var(--e-out); }
+    .nav-drawer.open .dr-panel { transform: translateX(0); }
+
+    .dr-head { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+      gap: var(--sp-3); padding: var(--sp-3) var(--sp-4);
+      border-bottom: var(--border) solid var(--line); }
+    .dr-head .dr-title { font-size: var(--fs-2xs); font-weight: 700; text-transform: uppercase;
+      letter-spacing: .18em; color: var(--ink-faint); }
+    .dr-close { display: inline-flex; align-items: center; justify-content: center;
+      width: var(--tap); height: var(--tap); min-width: var(--tap); min-height: var(--tap);
+      padding: 0; cursor: pointer; background: var(--bg); color: var(--ink);
+      border: var(--border) solid var(--ink-faint); border-radius: var(--radius-btn); }
+    .dr-close:hover { background: var(--tint); }
+
+    .dr-scroll { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding: var(--sp-4); }
+    .dr-list, .dr-sub { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-2); }
+    .dr-list { gap: var(--sp-2); }
+    .dr-list > li { display: grid; gap: var(--sp-2); }
+    .dr-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+      width: 100%; min-height: 52px; padding: 0 var(--sp-4); text-align: left;
+      background: var(--surface); border: var(--border) solid var(--line);
+      border-radius: var(--radius-btn); cursor: pointer; text-decoration: none;
+      font-family: var(--font); font-size: var(--fs-xs); font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em; color: var(--ink); }
+    .dr-top:hover { background: var(--surface-2); }
+    .dr-top .caret { flex: 0 0 auto; color: var(--ink-faint); transition: transform .25s var(--e-out); }
+    .dr-top[aria-expanded="true"] .caret { transform: rotate(180deg); }
+    .dr-sub { display: none; padding-left: var(--sp-3); }
+    .dr-sub.open { display: grid; }
+    .dr-sub > li { display: grid; }
+    .dr-sub a { display: flex; flex-direction: column; justify-content: center; gap: 2px;
+      min-height: var(--tap); padding: var(--sp-3) var(--sp-4);
+      background: var(--bg); border: var(--border) solid var(--line);
+      border-radius: var(--radius-btn); text-decoration: none; color: var(--ink); }
+    .dr-sub a:hover { background: var(--surface); }
+    .dr-sub a b { font-weight: 700; font-size: var(--fs-md); }
+    .dr-sub a span { font-size: var(--fs-sm); color: var(--ink-soft); }
+    .dr-top:focus-visible, .dr-sub a:focus-visible, .dr-close:focus-visible,
+    .nav-burger:focus-visible, .dr-foot a:focus-visible {
+      outline: 2px solid var(--teal-2); outline-offset: 2px; }
+
+    .dr-foot { flex: 0 0 auto; display: grid; gap: var(--sp-2);
+      padding: var(--sp-4) var(--sp-4) calc(var(--sp-4) + env(safe-area-inset-bottom, 0px));
+      border-top: var(--border) solid var(--line); background: var(--bg); }
+    .dr-foot .btn { width: 100%; justify-content: center; min-height: 52px;
+      padding-inline: var(--sp-4); }
+    .dr-foot .dr-tel { display: flex; align-items: center; justify-content: center;
+      gap: var(--sp-2); min-height: var(--tap); border-radius: var(--radius-btn);
+      color: var(--ink); font-weight: 700; font-size: var(--fs-sm); text-decoration: none; }
+    .dr-foot .dr-tel:hover { background: var(--tint); }
+    .dr-foot .dr-tel svg { color: var(--teal-2); flex: 0 0 auto; }
+  }
+  @media (max-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .nav-drawer .dr-panel, .nav-drawer .dr-scrim,
+    .nav-burger .bars i, .dr-top .caret { transition: none; }
+  }
+  /* Adding the hamburger to .nav-right pushed the bar to 436px at a 390px viewport
+     (logo + tel + CTA + burger, all nowrap). At <= 900px the sticky bottom bar already
+     carries Book as its widest segment in the brand accent, and the drawer pins the same
+     CTA at its foot, so the header copy of it comes out there and nothing is lost.
+     Above 900px the header CTA is untouched. */
+  @media (max-width: 900px){ .nav-right .btn { display: none; } }
 
   /* ---------- (CREDENTIALS & RECOGNITION) — client-supplied 2026-08-24 ----------
      Every claim came from the practice (Maya) and is treated as confirmed. Two
@@ -1149,10 +1300,61 @@
       <div class="nav-right">
         <a class="nav-tel" href="tel:+16046623290" aria-label="Call Downtown Orthodontics at 604 662 3290"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z" fill="currentColor"/></svg><span class="tel-txt">(604) 662-3290</span></a>
         <a class="btn btn-primary" href="/appointment-request"><span class="cta-lg">Book a free consultation</span><span class="cta-sm">Book free consult</span></a>
+        <button class="nav-burger" id="navBurger" type="button" aria-expanded="false" aria-controls="navDrawer" aria-label="Open menu"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
       </div>
     </div>
   </header>
 
+  <!-- MOBILE DRAWER (TIER 4). Mirrors header.nav > nav.nav-mid exactly: same 5 top-level
+       items, same 10 children, accordions for the 3 dropdowns, CTA pinned at the bottom.
+       Inert while closed so its links are not reachable by keyboard or AT. -->
+  <div class="nav-drawer" id="navDrawer" inert aria-hidden="true">
+    <div class="dr-scrim" data-drawer-close></div>
+    <div class="dr-panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <div class="dr-head">
+        <span class="dr-title">Menu</span>
+        <button class="dr-close" type="button" data-drawer-close aria-label="Close menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="dr-scroll">
+        <ul class="dr-list">
+        <li>
+          <button class="dr-top" type="button" aria-expanded="true" aria-controls="drTreatments">Treatments <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <ul class="dr-sub open" id="drTreatments">
+            <li><a href="/braces"><b>Braces, clear &amp; metal</b><span>Metal and clear options</span></a></li>
+            <li><a href="/early-orthodontics"><b>Kids &amp; early care</b><span>Free growth checks from age 7</span></a></li>
+            <li><a href="/invisalign"><b>Invisalign &amp; Quick 6 Fix</b><span>Express cases from $4,299 flat</span></a></li>
+            <li><a href="/retainers"><b>Retainers &amp; aftercare</b><span>Keeping your result for good</span></a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="dr-top" type="button" aria-expanded="true" aria-controls="drWhy">Why us <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <ul class="dr-sub open" id="drWhy">
+            <li><a href="/dr-sam-daher"><b>Meet Dr. Daher</b><span>30+ years, and the full record</span></a></li>
+            <li><a href="/why-choose-us"><b>Why the specialist</b><span>Not a dental office doing aligners</span></a></li>
+            <li><a href="/reviews"><b>Patient reviews</b><span>28 five-star reviews, in full</span></a></li>
+          </ul>
+        </li>
+        <li><a class="dr-top" href="/financing">Pricing</a></li>
+        <li>
+          <button class="dr-top" type="button" aria-expanded="true" aria-controls="drResources">Resources <svg class="caret" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <ul class="dr-sub open" id="drResources">
+            <li><a href="/faq"><b>Common questions</b><span>What families ask us first</span></a></li>
+            <li><a href="/#how"><b>How it works</b><span>Your first visit, step by step</span></a></li>
+            <li><a href="/contact"><b>Contact us</b><span>Hours, address and directions</span></a></li>
+          </ul>
+        </li>
+        <li><a class="dr-top" href="/#visit">Our address</a></li>
+        </ul>
+      </div>
+      <div class="dr-foot">
+        <a class="btn btn-primary" href="/appointment-request">Book a free consultation</a>
+        <a class="dr-tel" href="tel:+16046623290" aria-label="Call Downtown Orthodontics at 604 662 3290"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z" fill="currentColor"/></svg><span>(604) 662-3290</span></a>
+      </div>
+    </div>
+  </div>
+  <!-- /MOBILE DRAWER -->
 
 
   <section class="phero" id="top">
@@ -1787,6 +1989,112 @@
         addEventListener('resize', function(){ scrollable = buildClones(); }, { passive: true });
         raf = requestAnimationFrame(step);
       });
+    })();
+
+    /* ============================================================
+       TIER 4 - MOBILE NAV DRAWER. Focus trapped while open, Escape closes,
+       focus returns to the toggle, inert while closed.
+       ============================================================ */
+    (function(){
+      var burger = document.getElementById('navBurger');
+      var drawer = document.getElementById('navDrawer');
+      if (!burger || !drawer) return;
+      var FSEL = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+      function focusables(){
+        return Array.prototype.filter.call(drawer.querySelectorAll(FSEL), function(el){
+          return el.offsetWidth > 0 || el.offsetHeight > 0;
+        });
+      }
+      function isOpen(){ return drawer.classList.contains('open'); }
+
+      function openDrawer(){
+        drawer.removeAttribute('inert');
+        drawer.removeAttribute('aria-hidden');
+        drawer.classList.add('open');
+        burger.setAttribute('aria-expanded', 'true');
+        burger.setAttribute('aria-label', 'Close menu');
+        document.documentElement.style.overflow = 'hidden';
+        document.addEventListener('keydown', onKey, true);
+        var f = focusables();
+        if (f.length) f[0].focus();
+      }
+      function closeDrawer(returnFocus){
+        drawer.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.setAttribute('aria-label', 'Open menu');
+        document.documentElement.style.overflow = '';
+        document.removeEventListener('keydown', onKey, true);
+        if (drawer.contains(document.activeElement)) {
+          try { document.activeElement.blur(); } catch (e) {}
+        }
+        drawer.setAttribute('inert', '');
+        drawer.setAttribute('aria-hidden', 'true');
+        if (returnFocus !== false) burger.focus();
+      }
+      function onKey(e){
+        if (e.key === 'Escape' || e.key === 'Esc') { e.preventDefault(); closeDrawer(true); return; }
+        if (e.key !== 'Tab') return;
+        var f = focusables();
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        var inside = drawer.contains(document.activeElement);
+        if (e.shiftKey) {
+          if (!inside || document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else if (!inside || document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+
+      burger.addEventListener('click', function(){ isOpen() ? closeDrawer(true) : openDrawer(); });
+      Array.prototype.forEach.call(drawer.querySelectorAll('[data-drawer-close]'), function(el){
+        el.addEventListener('click', function(){ closeDrawer(true); });
+      });
+      Array.prototype.forEach.call(drawer.querySelectorAll('.dr-top[aria-controls]'), function(btn){
+        btn.addEventListener('click', function(){
+          var sub = document.getElementById(btn.getAttribute('aria-controls'));
+          var was = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', was ? 'false' : 'true');
+          if (sub) sub.classList.toggle('open', !was);
+        });
+      });
+      Array.prototype.forEach.call(drawer.querySelectorAll('a[href]'), function(a){
+        a.addEventListener('click', function(){ closeDrawer(false); });
+      });
+      var mqDesk = window.matchMedia('(min-width: 1025px)');
+      var onDesk = function(){ if (mqDesk.matches && isOpen()) closeDrawer(false); };
+      if (mqDesk.addEventListener) mqDesk.addEventListener('change', onDesk);
+      else if (mqDesk.addListener) mqDesk.addListener(onDesk);
+    })();
+
+    /* ============================================================
+       TIER 4 - the sticky mobile bar must clear out while a form is on screen,
+       or it sits on top of the form controls. One observer, all forms.
+       ============================================================ */
+    (function(){
+      // the shared <script> block is emitted BEFORE the .mbar markup on every page, so the
+      // bar does not exist yet at parse time. Wait for the document to finish.
+      function start(){
+      var bar = document.querySelector('.mbar');
+      if (!bar || typeof IntersectionObserver !== 'function') return;
+      var forms = document.querySelectorAll('form');
+      if (!forms.length) return;
+      var visible = 0;
+      var seen = [];
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          var i = seen.indexOf(en.target);
+          var had = i > -1;
+          if (en.isIntersecting && !had) { seen.push(en.target); }
+          else if (!en.isIntersecting && had) { seen.splice(i, 1); }
+        });
+        visible = seen.length;
+        bar.classList.toggle('mbar-hide', visible > 0);
+      }, { threshold: 0 });
+      Array.prototype.forEach.call(forms, function(f){ io.observe(f); });
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+      else start();
     })();
 
   </script>

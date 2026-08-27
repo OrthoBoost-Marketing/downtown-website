@@ -246,7 +246,7 @@ CONTACT_BODY = phero(
               </div>
               <div class="field wide">
                 <label for="c-msg">How can we help?</label>
-                <textarea id="c-msg" name="message" rows="4" style="min-height:96px;min-width:0;width:100%;font-family:var(--font);font-size:16px;color:var(--ink);background:var(--bg);border:var(--border) solid var(--line);border-radius:var(--radius-btn);padding:var(--sp-3) var(--sp-4);"></textarea>
+                <textarea id="c-msg" name="message" rows="4" style="min-height:96px;min-width:0;width:100%;font-family:var(--font);font-size:16px;color:var(--ink);background:var(--bg);border:var(--border) solid var(--ink-faint);border-radius:var(--radius-btn);padding:var(--sp-3) var(--sp-4);"></textarea>
               </div>
             </div>
             <input type="hidden" name="page" value="contact" />
