@@ -828,6 +828,12 @@
      white-space:nowrap gives this row a ~303px min-content width, which is wider than the
      card's content box on a phone and reintroduces the shearing fixed above. */
   @media (max-width: 560px){
+    /* Address and hours centre on PHONES ONLY (Jules, 2026-08-27). Deliberately scoped to
+       this breakpoint and to these two blocks: the eyebrow, headline and lead above them
+       stay left aligned, and on tablet and desktop the card is a two-column split where
+       centring would wreck the rag against the map. 560px is reused rather than invented,
+       so the whole phone layout turns over at one width. */
+    .loc-addr, .loc-hours { text-align: center; }
     .loc-actions { flex-direction: column; align-items: stretch; }
     .loc-actions .btn { width: 100%; justify-content: center; text-align: center;
       white-space: normal; padding: 15px 20px; letter-spacing: .12em; line-height: 1.25; }
