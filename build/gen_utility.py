@@ -91,6 +91,7 @@ PRIVACY = phero(
 """, counsel=COUNSEL)
 
 C.write("privacy-policy.html", C.page(
+    noindex=True,
     title="Privacy Policy | Downtown Orthodontics",
     desc="How Downtown Orthodontics collects, uses and protects personal information.",
     slug="privacy-policy", body=PRIVACY))
@@ -157,6 +158,7 @@ TERMS = phero(
 """, counsel=COUNSEL)
 
 C.write("terms.html", C.page(
+    noindex=True,
     title="Terms &amp; Conditions | Downtown Orthodontics",
     desc="The terms on which the Downtown Orthodontics website is provided.",
     slug="terms", body=TERMS))
@@ -221,6 +223,7 @@ ACCESS = phero(
 """, counsel=COUNSEL)
 
 C.write("accessibility.html", C.page(
+    noindex=True,
     title="Web Accessibility Statement | Downtown Orthodontics",
     desc="What Downtown Orthodontics has done to make this website usable for everyone, and how to report a problem.",
     slug="accessibility", body=ACCESS))
@@ -271,6 +274,7 @@ NOTFOUND = phero(
 """)
 
 C.write("404.html", C.page(
+    noindex=True,
     title="Page Not Found | Downtown Orthodontics",
     desc="That page has moved or never existed. Here is where most people are heading.",
     slug="404", body=NOTFOUND))

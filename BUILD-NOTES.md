@@ -23,7 +23,9 @@ in `build/`:
 a generated page; the next run overwrites it.
 
 ```bash
-for g in gen_appointment gen_services gen_rest gen_support gen_utility; do python build/$g.py; done
+for g in gen_appointment gen_services gen_rest gen_support gen_utility gen_reviews; do
+    python build/$g.py
+done
 ```
 
 HTML blocks use `__TOKEN__` placeholders rather than `%`-formatting, because the copy is
@@ -336,10 +338,24 @@ the FAQ-duplicate block converted to a zigzag row on 2026-08-25 — so the comme
 `build/post_media.py` is the new **last build step** and must run after the generators:
 
 ```
-for g in gen_appointment gen_services gen_rest gen_support gen_utility; do python build/$g.py; done
-python build/post_media.py
+for g in gen_appointment gen_services gen_rest gen_support gen_utility gen_reviews; do
+    python build/$g.py
+done
 python "$KIT/plugin/skills/static-site-deploy/scripts/add_img_dims.py" .
+python build/post_media.py        # LAST, because it repairs
 ```
+
+**The order above is load bearing, and this file had it backwards until 2026-08-27.**
+`post_media.py` must run AFTER the kit's `add_img_dims.py`, never before. The kit script
+has a stray-solidus defect at its line 113 that writes new attributes after the closing
+`/`, and `post_media.py` repairs that output. Reverse the two and 28 malformed tags come
+back. See the docstring in `build/post_media.py`, which is the authority on this.
+
+Both defects are now filed against the kit as
+[PR 1](https://github.com/OrthoBoost-Marketing/orthoboost-website-kit/pull/1) (stop
+producing it) and
+[PR 2](https://github.com/OrthoBoost-Marketing/orthoboost-website-kit/pull/2) (repair what
+exists). Until both merge, keep running `post_media.py` last.
 
 It lazies every image and iframe *except* the page's own preloaded LCP image and the logo,
 and adds `fetchpriority="high"` to that hero. The exemption is driven by each page's
@@ -473,7 +489,12 @@ outbound `cid` link itself.
 Page CSS lives in the **shared stylesheet**, not a page-local `<style>`, so the
 one-stylesheet-sliced-verbatim invariant the generators depend on still holds.
 
-## Homepage section order does not match the kit (open, 2026-08-26)
+## Homepage section order does not match the kit (CLOSED 2026-08-26, see below)
+
+> **Superseded.** The full reorder was approved and shipped the same day, in commit
+> `c3f4180`. The spine now matches the kit exactly: 8 of 8 kit-consecutive pairs, zero
+> inversions. The ledger below is kept because it is the measurement that justified the
+> change, not because it still describes the page.
 
 Measured, not assumed. The 26 August conformance audit laid its ledger out *in* kit order
 and checked each section's **presence**; it never checked **position**. It should have.
@@ -512,8 +533,10 @@ Five further sections sit between these and belong to no kit type (`#how`, `#res
 `#why-specialist`, the bento, `#faq`). The kit does not ban extras, and they are not the
 reason the order diverges.
 
-**Not fixed, because reordering the homepage is exactly the "significant layout change"
-that was ruled out on 2026-08-25.** It is a sequencing decision, not a defect in any single
+**Was not fixed at the time, because reordering the homepage is exactly the "significant
+layout change" that was ruled out on 2026-08-25.** Jules then approved the full reorder on
+2026-08-26 after seeing that the kit's own reference build follows the canonical order
+literally. Shipped in `c3f4180`. It is a sequencing decision, not a defect in any single
 section. Options, cheapest first:
 
 - **Leave it**, and record the deviation. The page reads well and every section is present.
@@ -583,3 +606,148 @@ with zero overflow, zero clipped elements and zero sections under 40px.
 - **The stack conflict is still unresolved.** The brief names WordPress + Elementor +
   RankMath Pro; this is static on Vercel; registrar is CloudFlare. Settle before cutover.
 - Three Dr. Ty rulings from the homepage audit, plus the trust-bar question (F 07).
+
+## Closing pass: twelve register items (2026-08-27, Jules)
+
+Twelve open items were ruled on in one sitting and executed in a single pass, four agents
+working on disjoint files. Partitioned by file OWNERSHIP rather than by task, because
+`index.html` is both the homepage and the source `build/chrome.py` slices chrome from, so
+two agents editing it concurrently would silently clobber each other.
+
+### Rulings applied
+
+- **Trust bar: 8 iconed marquee cells to 4 static typographic cells.** Matches the kit's
+  BrightWay reference build, and fixes the one genuine cardinality violation on the page:
+  `TRUST-BAR-SPEC` rule 2 says 3 to 5 cells. Kept, for patient-decision value rather than
+  prestige: certified specialist, 30+ years, 0% in-house financing, direct insurance
+  billing. The marquee is gone entirely, including the `role="region"` and the "drag or use
+  the arrow keys" aria-label, which described behaviour that no longer exists.
+- **H1 now reads "for all of Vancouver."**, not "Van City". Highest-weight string on the
+  site, and the slang has negligible search volume. The `<h2>` "Loved across Van City"
+  survives deliberately: the local register is worth keeping somewhere.
+- **Bento kept** as a house section. The kit does not ban extra sections and its reference
+  build carries one of its own, so this was a preference, not a violation.
+- **Card borders now pass.** `--line` `#e1e8ee` to `#8b9094`: 1.24:1 to **3.22:1** on white
+  and 3.00:1 on `--surface`. `--line-deep` was also failing and nobody had noticed, at
+  1.19:1 on the dark band's chip fill, now **3.16:1**. Accepted: 2.78:1 on `--surface-2`,
+  whose only bordered use is a 32px numeral disc, not a card. Clearing that too needs a
+  visibly heavier line everywhere.
+
+### Claims resolved
+
+- **Price parity is absent, and this is now verified rather than asserted.** It had been
+  reported removed three times on the strength of grepping phrasings, which is the wrong
+  method. Correct method, and the one to use next time: extract every sentence containing
+  the subject nouns and READ them. All 68 sentences naming both "braces" and "Invisalign"
+  across the 17 pages are nav chrome, form selects, or clinical-suitability statements.
+- **Social profile URLs and the Neera Arora quote never existed on the site.** Both were
+  carried as open items for weeks. The only "social" hits were `twitter:card` meta, which
+  is an Open Graph card declaration, not a profile link, and there is no `sameAs`.
+- **Invisalign provider tier stays pending** by Jules's call. Unverified, so unchanged.
+- **Shipping without the Aug 12 photography and without before/afters**, no placeholders.
+- **There is no six-bullet services block.** That register item was double-counted: `#paths`
+  runs 3 cards, which `SERVICES-GRID-SPEC` rule 1 allows. The real over-ceiling group was
+  the trust bar, fixed above.
+- **Four credentials appeared three times each, not one.** After the trust bar shrank,
+  `MEET-THE-DOCTOR-SPEC`'s cross-section rule took `.doc-creds` from 6 chips to 3. "Former
+  associate professor", the 2014 Invisalign award, "certified specialist" and "30+ years"
+  are each now asserted once.
+
+### Third-party scripts removed
+
+Tailwind (**3.4.17**) and anime.js (**4.1.4**) are vendored under `assets/vendor/`, with
+provenance and refresh commands in `assets/vendor/README.md`.
+
+**The anime.js dependency was already broken and silent about it.** The old `animejs@4`
+range URL resolves to 4.5.0 today, but 4.5.0 no longer ships `lib/anime.iife.min.js` at
+all, so jsdelivr had been quietly falling back to 4.1.4. That URL could have started 404ing
+on any deploy and killed the headline motion sitewide with no warning. Now pinned locally.
+Moving past 4.1.4 means choosing a new entry point, not bumping a number.
+
+Still the browser JIT build, not a compiled stylesheet, because `chrome.py` injects
+`TW_CONFIG` for it to read at runtime. A compiled build is feasible as a follow-up: node
+v24.15.0 and npm 11.12.1 are present, and all 324 runtime class manipulations toggle
+hand-written state classes (`active`, `in`, `open`, `is-drag`) with **zero Tailwind
+utilities toggled dynamically**, so no safelist would be needed. Gate it on a 17-page
+visual diff.
+
+### noindex is now actually selective
+
+`head()` and `page()` had accepted a `noindex` argument since the beginning and **never read
+it**, and no generator passed it. So the "selective noindex removal at cutover" promised in
+the launch register was impossible: setting the flag did nothing, and the only way to open
+the site to indexing was to delete the line, which would have exposed the utility pages too.
+
+Now `REVIEW_BUILD` in `build/chrome.py` is the single cutover switch, and the five pages
+that stay noindex forever pass `noindex=True` individually, so flipping the switch cannot
+expose them: the four utility pages plus `appointment-request-confirmation`. Verified in all
+four states of the truth table. `REVIEW_BUILD` stays `True`; this is a staging URL.
+**`robots.txt` carries its own blanket `Disallow: /` and must come off separately.**
+
+### Forms
+
+Wired end to end except the endpoint. One constant, `GHL_WEBHOOK_URL` at
+`build/common.py:26`, feeds all six form instances. Full field mapping, storage keys and a
+cutover checklist are in `build/GHL-WIRING.md`.
+
+Two things worth knowing, because the earlier audit got them wrong:
+
+- The nine hidden attribution fields existed but were **static empty strings populated by
+  nothing**. A code comment promised a first-touch cookie that had never been implemented.
+  The audit had cleared the 14-vs-5 field count as "not a finding" on the strength of those
+  fields existing.
+- The **contact form carried no UTM fields at all**, so attribution was missing outright on
+  one of the three forms. All three now share one definition so they cannot drift again.
+
+While the endpoint is unset, no form can be submitted: controls render `disabled` with a
+notice offering (604) 662-3290 as a `tel:` link. That is deliberate. The previous
+`action=""` posted to the page and lost the lead with no trace. No cookie is set anywhere,
+sidestepping rather than merely bounding the never-expiring-cookie defect in our WordPress
+plugin. No analytics vendor, pixel or remote script was added.
+
+The homepage loads `ob-leads.js` with **no config object**, so an ad visitor who lands on
+`/` and converts elsewhere keeps this landing's attribution. It sits after the main
+`<script>` block on purpose: `chrome.py` slices by the FIRST `"  <script>"` marker, so a
+one-line tag with attributes cannot match it and does not propagate to the other 16 pages,
+which load it with a full config. The four legal and utility pages load it not at all.
+
+### Two kit bugs filed upstream
+
+The stray-solidus defect we had been working around is now filed as
+[PR 1](https://github.com/OrthoBoost-Marketing/orthoboost-website-kit/pull/1), and a second
+distinct bug found alongside it as
+[PR 2](https://github.com/OrthoBoost-Marketing/orthoboost-website-kit/pull/2).
+
+PR 2 is the interesting one. `add_img_dims.py`'s early return, which is what makes the
+script idempotent and is correct in itself, means an already-corrupted tag (which by
+definition carries `width` and `height`) is never re-examined. **Corruption already on disk
+is permanent and survives every rerun**, and fixing the injection does not heal it. Until
+both merge, keep running `post_media.py` last.
+
+### Also fixed this pass
+
+- **This file documented the pipeline order backwards**, with `post_media.py` before the
+  kit's `add_img_dims.py`. Anyone rebuilding from the documented commands rather than from
+  the docstring would have silently reintroduced all 28 malformed tags. Both snippets also
+  omitted `gen_reviews`, so the reviews page would have gone stale on every rebuild. The
+  code was right and the documentation was wrong, which is the direction that actually
+  bites, because documentation is what people reach for.
+- A pre-existing stray `</div>` in the hero-screen block: div balance in `<body>` was **-1**
+  and is now 0.
+- Removed the `.steps-grid` / `.pstep` CSS family, 10 lines the chrome slice had been
+  copying into all 17 pages. Neither class appears as markup anywhere on the site.
+
+### Left alone, on purpose
+
+- 660 em dashes live in code comments, CSS comments and script comments. **Zero reach
+  visible copy or any attribute**, so nothing patient-facing breaks the house style. They do
+  still ship inside comments, which is a mild agency tell of the same family as the
+  `font-claude` and `notionvc` markers we grep for before launch. Cleaning them touches all
+  17 files and is its own pass.
+- `.credo-list` is now 5 items in a 3-column ruled grid, so the bottom rule runs one column
+  short. Cosmetic, and better than padding the list with a fact we just deduplicated.
+- The `.field` border override hard-coding `--ink-faint` is arguably redundant now that
+  `--line` passes. Still correct at 4.4:1. Separate call.
+- No-JS form delivery is **untested**, not working-as-far-as-we-know. The forms keep a real
+  `action`, but a native POST sends urlencoded and the GHL webhook trigger is only known to
+  parse JSON. Every form carries a `<noscript>` block pointing at the phone.

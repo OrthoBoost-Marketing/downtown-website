@@ -8,19 +8,20 @@ what-happens block, one first-visit quote strip, and NO mid-page or final CTA ba
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
-from common import fill
+import common
+from common import fill, attribution_inputs, wire_form, leads_script
 
 TICK = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
         '<path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
 # ------------------------------------------------------------------ the form
 # REQUEST-FORM-SPEC: exactly four fields plus at most one select. Zero PHI.
-# Hidden attribution set is present but unwired: the GHL webhook URL is not on file
-# (CLIENT-BRIEF.md, Integrations). orthoboost-ghl-forms + orthoboost-leads-connect
-# finish this at launch.
-FORM = """        <div class="formcard reveal d1">
+# The endpoint comes from GHL_WEBHOOK_URL in build/common.py, the single place it is
+# set. While that is unset, wire_form() disables every control and inserts a notice
+# pointing at the practice phone, so no lead is accepted or faked. See build/GHL-WIRING.md.
+FORM_TPL = """        <div class="formcard reveal d1">
           <h2>Request your free consultation</h2>
-          <form id="request-form" method="post" action="" novalidate>
+          <form method="post" action="" novalidate>
             <div class="fgrid">
               <div class="field">
                 <label for="f-first">First name</label>
@@ -49,23 +50,20 @@ FORM = """        <div class="formcard reveal d1">
                 </select>
               </div>
             </div>
-            <!-- Attribution. Populated from URL params and a first-touch cookie at launch. -->
-            <input type="hidden" name="utm_source" value="" />
-            <input type="hidden" name="utm_medium" value="" />
-            <input type="hidden" name="utm_campaign" value="" />
-            <input type="hidden" name="utm_term" value="" />
-            <input type="hidden" name="utm_content" value="" />
-            <input type="hidden" name="gclid" value="" />
-            <input type="hidden" name="fbclid" value="" />
-            <input type="hidden" name="offer" value="$1,000 off full treatment" />
-            <input type="hidden" name="page" value="appointment-request" />
+%(attribution)s
             <button class="btn btn-primary" type="submit">Request my free consultation <span class="arr">&rarr;</span></button>
           </form>
           <p class="microline">Your consultation is free and there is no obligation to start.
             We only ask for a name, a phone number and an email, never health details:
             Dr. Daher covers all of that with you in person.</p>
-          <!-- NOT WIRED YET: no GHL webhook URL on file. See CLIENT-BRIEF.md, Integrations. -->
-        </div>"""
+          <noscript>
+            <p class="microline">This form needs JavaScript to send your request. Please call
+              the practice on <a class="tlink" href="tel:+16046623290">(604) 662-3290</a>.</p>
+          </noscript>
+        </div>""" % {"attribution": attribution_inputs(
+    "appointment-request", offer="$1,000 off full treatment")}
+
+FORM = wire_form(FORM_TPL, "lead-appointment")
 
 BODY = """
   <!-- HERO with the form, above the fold (free-consult template) -->
@@ -140,7 +138,7 @@ BODY = """
       </div>
     </div>
   </section>
-""" % {"tick": TICK, "form": FORM}
+""" % {"tick": TICK, "form": FORM} + leads_script()
 
 SCHEMA = """{
   "@context": "https://schema.org",
@@ -265,7 +263,10 @@ CONF_BODY = fill("""
       </div>
     </div>
   </section>
-""")
+""") + leads_script()
+# The confirmation page loads the same script so the ob_generate_lead event fires here,
+# on the conversion URL. It is a one-shot flag set at submit time, so arriving at this
+# page directly fires nothing.
 
 # UTILITY-PAGES-SPEC mobile nuance: the visitor has already converted, so this
 # page's sticky-bar centre segment becomes an explore action instead of "Book".
@@ -281,6 +282,7 @@ _MBAR_EXPLORE = """    <a class="primary" href="/dr-sam-daher">
     </a>"""
 
 _conf = C.page(
+    noindex=True,   # a thank-you page has no business in search results
     title="Request Received | Downtown Orthodontics",
     desc="Your free consultation request has been received. Dr. Daher's front desk will call you the same business day.",
     slug="appointment-request-confirmation",

@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
 
 from common import TICK, PHONE, phero, cta_band, faq_rows, jstr as j, fill
+from common import leads_script
 
 # ==================================================================== DOCTOR BIO
 # DOCTOR-PAGE-SPEC wants story before credentials: origin spark, the personal wound
@@ -143,7 +144,7 @@ DOC_SCHEMA = """{
 C.write("dr-sam-daher.html", C.page(
     title="Dr. Sam Daher, Orthodontist | Downtown Vancouver",
     desc="Downtown Vancouver orthodontist Dr. Sam Daher, a certified specialist with 30+ years. Align Technology advisory board, 2014 Invisalign Lifetime Award.",
-    slug="dr-sam-daher", body=DOC_BODY, schema=DOC_SCHEMA,
+    slug="dr-sam-daher", body=DOC_BODY + leads_script(), schema=DOC_SCHEMA,
     preload="assets/photos/w880/dt-6.jpg", og_image="/assets/photos/dt-6.jpg"))
 
 # ==================================================================== WHY CHOOSE US
@@ -311,4 +312,4 @@ WHY_SCHEMA = """{
 C.write("why-choose-us.html", C.page(
     title="Why a Specialist Orthodontist | Downtown Vancouver",
     desc="Why see a certified specialist orthodontist in downtown Vancouver rather than a dental office selling aligners on the side. Conservative care, 30+ years.",
-    slug="why-choose-us", body=WHY_BODY, schema=WHY_SCHEMA))
+    slug="why-choose-us", body=WHY_BODY + leads_script(), schema=WHY_SCHEMA))

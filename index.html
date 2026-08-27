@@ -117,17 +117,22 @@
   ]
 }
 </script>
-<!-- Tailwind Play CDN — a utility layer over the Downtown tokens. Preflight is OFF so the
-     hand-tuned CSS below stays untouched; Tailwind colours point at the same CSS vars, so
-     the brand kit remains the single source of truth. (Concept/demo use — for production,
-     compile Tailwind rather than ship the CDN.) -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- anime.js v4 — motion engine for the headline word cascades. On THIS page that is all
-     it drives: there are no .count elements and no before/after here. The counters live on
-     /financing, which inherits this <head> through build/chrome.py. Progressive
-     enhancement: every use falls back to the original CSS/rAF motion when the CDN is
-     unavailable, and reduced-motion skips it entirely. -->
-<script src="https://cdn.jsdelivr.net/npm/animejs@4/lib/anime.iife.min.js"></script>
+<!-- Tailwind browser JIT build, vendored at assets/vendor/tailwind.min.js (v3.4.17).
+     A utility layer over the Downtown tokens. Preflight is OFF so the hand-tuned CSS below
+     stays untouched; Tailwind colours point at the same CSS vars, so the brand kit remains
+     the single source of truth. Still the JIT build, not a compiled stylesheet: it reads
+     the tailwind.config block below at runtime. Byte for byte the file the CDN served,
+     just served from this origin. See assets/vendor/README.md. -->
+<script src="/assets/vendor/tailwind.min.js"></script>
+<!-- anime.js 4.1.4, vendored at assets/vendor/anime.iife.min.js. Motion engine for the
+     headline word cascades. On THIS page that is all it drives: there are no .count
+     elements and no before/after here. The counters live on /financing, which inherits
+     this <head> through build/chrome.py. Progressive enhancement: every use falls back to
+     the original CSS/rAF motion if the script fails, and reduced-motion skips it.
+     Pinned deliberately: the old "animejs@4" range URL had been silently resolving to
+     4.1.4 because 4.5.0 no longer ships lib/anime.iife.min.js at all, so that URL could
+     have started 404ing on any deploy and killed the headline motion sitewide. -->
+<script src="/assets/vendor/anime.iife.min.js"></script>
 <script>
   tailwind.config = {
     corePlugins: { preflight: false },
@@ -202,8 +207,8 @@
     --on-deep-soft: color-mix(in srgb,#fff,transparent 26%);
     --on-deep-faint: color-mix(in srgb,#fff,transparent 52%);
     --ink-on-teal: #010101;
-    --line: #e1e8ee;
-    --line-deep: color-mix(in srgb,#fff,transparent 86%);
+    --line: #8b9094;        /* contrast-audit fix: was #e1e8ee (1.24:1 on white). 3.22:1 on --bg, 3.00:1 on --surface */
+    --line-deep: color-mix(in srgb,#fff,transparent 60%); /* contrast-audit fix: was transparent 86% (1.19:1 on the .doc chips). 3.16:1 now */
     --tint: color-mix(in srgb, var(--teal), transparent 72%);
 
     --font: 'Nunito', system-ui, -apple-system, sans-serif;
@@ -445,7 +450,7 @@
     .hero-callout { left: 16px; bottom: 16px; }
     .hero-figure { transform: translateY(30px); }
   }
-  /* short viewports: compress the hero so hero + marquee still fit one screen */
+  /* short viewports: compress the hero so hero + credentials bar still fit one screen */
   @media (min-width: 901px) and (max-height: 700px){
     .hero-eyebrow { margin-bottom: 12px; }
     .hero-title { font-size: clamp(2.1rem, 3.7vw, 3rem); }
@@ -466,7 +471,7 @@
     .hero-mask > * { transform: none !important; }
   }
 
-  /* ---------- first screen: hero + marquee fit one viewport (desktop) ---------- */
+  /* ---------- first screen: hero + credentials bar fit one viewport (desktop) ---------- */
   .hero-screen { --top-h: 100px; }
   @media (min-width: 901px){
     .hero-screen { display: flex; flex-direction: column; height: calc(100dvh - var(--top-h)); min-height: 340px; }
@@ -474,13 +479,17 @@
     .hero-screen .creds { flex: 0 0 auto; }
   }
 
-  /* ---------- credentials marquee ---------- */
+  /* ---------- credentials bar (static; TRUST-BAR-SPEC rules 2, 3 and 5) ---------- */
   .creds { padding: 17px 0 19px; border-bottom: var(--border) solid var(--line); background: var(--bg); }
-  .mq-creds { gap: 56px; }
   .creds .t { text-align: center; color: var(--ink-faint); font-size: var(--fs-xs); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 11px; }
-  .cred { display: inline-flex; align-items: center; gap: 10px; color: var(--ink-soft); font-weight: 600; font-size: var(--fs-lg); white-space: nowrap; }
-  .cred svg { color: var(--teal-2); }
-  @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .cred-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-3) var(--sp-7); align-items: start; justify-items: center; }
+  .cred-cell { text-align: center; color: var(--ink-soft); font-family: var(--font);
+    font-weight: var(--fw-semibold); font-size: var(--fs-lg); line-height: 1.3; max-width: 22ch; }
+  @media (max-width: 720px){
+    .cred-row { grid-template-columns: 1fr 1fr; gap: var(--sp-4) var(--sp-5); }
+    .cred-cell { font-size: var(--fs-base); }
+  }
 
   /* ---------- section base ---------- */
   section.block { padding: var(--section-y) 0; }
@@ -510,16 +519,6 @@
   @media (max-width: 880px){ .paths-grid { grid-template-columns: 1fr; max-width: 480px; margin-inline:auto; } }
 
   /* ---------- (HOW IT WORKS) — numbered steps with + tags ---------- */
-  .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(26px,3.4vw,46px); }
-  .pstep { position: relative; }
-  .pstep .no { font-size: var(--fs-lg); font-weight: 600; color: var(--teal-2); letter-spacing: .02em; font-variant-numeric: tabular-nums; }
-  .pstep .no::before { content:"/"; color: var(--ink-faint); margin-right: 2px; }
-  .pstep h3 { margin: 16px 0 10px; font-size: var(--fs-3xl); font-weight: 600; letter-spacing: -.02em; }
-  .pstep p { color: var(--ink-soft); font-size: var(--fs-lg); margin: 0 0 20px; }
-  .pstep .tag { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-base); font-weight: 600; color: var(--petrol); }
-  .pstep .tag::before { content:"+"; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--tint); color: var(--petrol); font-weight: 700; }
-  .pstep + .pstep::before { content:""; position:absolute; left: -23px; top: 6px; bottom: 6px; width:1px; background: var(--line); }
-  @media (max-width: 820px){ .steps-grid { grid-template-columns: 1fr; gap: 34px; } .pstep + .pstep::before { display:none; } }
 
   /* ---------- (MEET DR. DAHER) — single-orthodontist spotlight ---------- */
   .doc { background: var(--petrol-deep); color: #fff; position: relative; overflow: hidden; }
@@ -1025,7 +1024,6 @@
   .mq > * { flex: 0 0 auto; }
   .mq:focus-visible { outline: 2px solid var(--teal-2); outline-offset: 4px; }
   .mq-reviews > .tcard { width: min(360px, 78vw); }
-  .mq-creds > .cred { flex: 0 0 auto; }
 
   /* the pause control: real button, keyboard reachable, states driven by aria-pressed */
   .mq-ctl {
@@ -1500,7 +1498,7 @@
   </div>
   <!-- /MOBILE DRAWER -->
 
-  <!-- FIRST SCREEN — hero collage + credentials marquee share one viewport -->
+  <!-- FIRST SCREEN: hero collage + credentials bar share one viewport -->
   <div class="hero-screen">
   <!-- HERO -->
   <section class="hero lux" id="top">
@@ -1509,7 +1507,7 @@
         <div class="hero-mask m-eyebrow"><span class="hero-eyebrow">Orthodontic Specialists · Downtown Vancouver</span></div>
         <h1 class="hero-title">
           <span class="hero-mask m-title"><span>The specialist orthodontist</span></span>
-          <span class="hero-mask m-title"><span><em>for all of Van City.</em></span></span>
+          <span class="hero-mask m-title"><span><em>for all of Vancouver.</em></span></span>
         </h1>
         <div class="hero-mask m-sub"><p class="hero-sub">Braces, Invisalign, and kids' early care, done right. Conservative, patient-first treatment from Dr. Daher, 30+ years in downtown Vancouver.</p></div>
         <div class="hero-actions">
@@ -1535,20 +1533,24 @@
     </div>
   </section>
 
-  <!-- CREDENTIALS MARQUEE -->
+  <!-- CREDENTIALS BAR (Section 03). Four STATIC typographic cells: TRUST-BAR-SPEC rule 2
+       caps the bar at 3-5, rule 3 bans icons ("an icon grid above stats is the #1
+       generic-AI tell"), and rule 5 bans a horizontal scroller and asks for a 2x2 grid on
+       mobile. This was an eight-cell icon marquee until 2026-08-27; nothing here scrolls,
+       drags or takes focus any more. The four kept are the ones a patient actually decides
+       on. The award, the advisory board and the lecture count are prestige rather than
+       decision material, and all three are stated in full in the credentials section
+       below; "Braces & Invisalign, planned by a specialist" already runs verbatim in the
+       hero credential row a few lines above. -->
   <div class="creds">
-    <div class="wrap"><div class="t">Downtown Vancouver's orthodontic specialists</div></div>
-    <div class="mq mq-creds" data-marquee data-speed="0.25" tabindex="0" role="region"
-         aria-label="Credentials, scrollable. Drag or use the arrow keys.">
-      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Certified Specialist in Orthodontics</span>
-      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Invisalign Lifetime Achievement Award, 2014</span>
-      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Align Technology Scientific Advisory Board</span>
-      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Lectured in 46 Countries</span>
-      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 30+ Years in Practice</span>
-      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Braces &amp; Invisalign, Planned by a Specialist</span>
-      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 0% In-House Financing</span>
-      <span class="cred"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Direct Insurance Billing</span>
-    </div>
+    <div class="wrap">
+      <div class="t">Downtown Vancouver's orthodontic specialists</div>
+      <div class="cred-row">
+        <span class="cred-cell">Certified Specialist in Orthodontics</span>
+        <span class="cred-cell">30+ Years in Practice</span>
+        <span class="cred-cell">0% In-House Financing</span>
+        <span class="cred-cell">Direct Insurance Billing</span>
+      </div>
     </div>
   </div>
   </div><!-- /hero-screen -->
@@ -1575,11 +1577,14 @@
         <span class="eyebrow">(Meet Dr. Sam Daher)</span>
         <h2 class="h2">One specialist, <em>start to finish.</em></h2>
         <p class="bio">Dr. Daher has planned orthodontic treatment for over 30 years, and leads a specialist orthodontic practice in downtown Vancouver. He opened the world's first Invisalign-only practice in 2009, has taught in 142 cities across six continents, and still sits on Align Technology's scientific advisory board. His patients range from seven-year-olds at their first growth check to adults with cases other offices declined, and his rule hasn't changed: careful diagnosis, honest recommendations, and no unnecessary extractions.</p>
+        <!-- Three credential chips, down from six on 2026-08-27. MEET-THE-DOCTOR-SPEC
+             ("Cross-section discipline") says a credential that already ran in the trust
+             bar must not be repeated here, and the bar now carries "Certified Specialist
+             in Orthodontics" and "30+ Years in Practice" verbatim. The Invisalign
+             Lifetime Achievement Award came out too: it is stated as the lead card of the
+             credentials section below, which is the one place it now appears. -->
         <div class="doc-creds">
-          <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Certified specialist in orthodontics</span>
-          <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> 30+ years in practice</span>
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Complex &amp; referred cases welcome</span>
-          <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Invisalign Lifetime Achievement Award</span>
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Align scientific advisory board</span>
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Founder, Daher Aligner Institute</span>
         </div>
@@ -1656,10 +1661,13 @@
 
 
 
-  <!-- (CREDENTIALS & RECOGNITION) — the doctor's record, front and centre.
-       Source: consolidated client direction from Maya, 2026-08-24. Ten items, in the
+  <!-- (CREDENTIALS & RECOGNITION): the doctor's record, front and centre.
+       Source: consolidated client direction from Maya, 2026-08-24. Nine items, in the
        order she gave them: the three lead cards carry the first, fourth and ninth,
-       the ruled list carries the other seven, so every fact is stated exactly once.
+       the ruled list carries the rest, so every fact is stated exactly once.
+       The "Former associate professor" row was deleted on 2026-08-27: that exact string
+       ran three times on this page, and the authority band below states it per
+       institution, under each university's own wordmark, which is that band's job.
        Previously held out of every concept as unconfirmed
        "Priority-4" claims; the client has now supplied them, so they run.
        NOTE the company is "Align Technology" (singular) — the source note wrote
@@ -1680,7 +1688,6 @@
         <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>An early adopter of Invisalign</b><span>Dr. Daher worked with Align Technology&rsquo;s founder on the company&rsquo;s scientific advisory board.</span></div></div>
         <div class="ci reveal d1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Still on Align&rsquo;s scientific advisory board</b><span>One of a select few orthodontists serving on it today.</span></div></div>
         <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Founder of two ventures beyond the practice</b><span>The Daher Aligner Institute, and Stream Dental HR.</span></div></div>
-        <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Former associate professor</b><span>University of Montreal and University of the Pacific.</span></div></div>
         <div class="ci reveal d1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>McGill&rsquo;s Dr. James McCutcheon award</b><span>Recognised by his alma mater.</span></div></div>
         <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Top 1% of Invisalign providers globally</b><span>And the top provider worldwide from 2009 to 2011.</span></div></div>
       </div>
@@ -2147,7 +2154,7 @@
     // Hero collage always plays its entrance on load (reduced-motion CSS makes it instant).
     setTimeout(()=>document.querySelector('.hero')?.classList.add('hero-play'), 90);
 
-    // Size the first screen so the hero + marquee fit exactly one viewport (desktop).
+    // Size the first screen so the hero + credentials bar fit exactly one viewport (desktop).
     (function(){
       const screen = document.querySelector('.hero-screen');
       const announce = document.querySelector('.announce');
@@ -2551,5 +2558,13 @@
       Directions
     </a>
   </nav>
+  <!-- First-touch attribution only. The homepage has no form, but an ad visitor who
+       lands here and converts on another page must keep this landing's attribution.
+       No config object: ob-leads.js defaults to 90 day attribution and a 30 day retry
+       queue, so those constants stay single-sourced in build/common.py. Deliberately
+       placed AFTER the main <script> block, which build/chrome.py slices by its first
+       "  <script>" marker: a one-line tag with attributes cannot match it, so this
+       does not propagate to the other 16 pages. They load it with a full config. -->
+  <script src="/assets/js/ob-leads.js" defer></script>
 </body>
 </html>

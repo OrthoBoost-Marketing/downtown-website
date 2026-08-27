@@ -10,6 +10,7 @@ One service per page. Rows never drift to sibling services.
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
+from common import attribution_inputs, wire_form, leads_script
 
 TICK = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
         '<path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
@@ -26,7 +27,7 @@ def form(slug, preselect, quote_note):
                   "Not sure yet, help me choose"]:
         sel = ' selected' if label == preselect else ''
         opts.append('                  <option%s>%s</option>' % (sel, label.replace("'", "&rsquo;")))
-    return """
+    tpl = """
   <!-- REQUEST FORM -->
   <section class="block" id="request">
     <div class="wrap">
@@ -69,25 +70,26 @@ def form(slug, preselect, quote_note):
                 </select>
               </div>
             </div>
-            <input type="hidden" name="utm_source" value="" />
-            <input type="hidden" name="utm_medium" value="" />
-            <input type="hidden" name="utm_campaign" value="" />
-            <input type="hidden" name="utm_term" value="" />
-            <input type="hidden" name="utm_content" value="" />
-            <input type="hidden" name="gclid" value="" />
-            <input type="hidden" name="fbclid" value="" />
-            <input type="hidden" name="offer" value="$1,000 off full treatment" />
-            <input type="hidden" name="page" value="%(slug)s" />
+%(attribution)s
             <button class="btn btn-primary" type="submit">Request a call back <span class="arr">&rarr;</span></button>
           </form>
           <p class="microline">Your consultation is free. We ask for a name, a phone number and
             an email, never health details.</p>
-          <!-- NOT WIRED YET: no GHL webhook URL on file. See CLIENT-BRIEF.md. -->
+          <noscript>
+            <p class="microline">This form needs JavaScript to send your request. Please call
+              the practice on <a class="tlink" href="tel:+16046623290">(604) 662-3290</a>.</p>
+          </noscript>
         </div>
       </div>
     </div>
   </section>
-""" % {"opts": "\n".join(opts), "slug": slug, "phone": PHONE, "quote_note": quote_note}
+"""
+    # The form's endpoint and its fail-safe state both come from GHL_WEBHOOK_URL in
+    # build/common.py. Same treatment on all four service pages.
+    section = tpl % {"opts": "\n".join(opts), "phone": PHONE, "quote_note": quote_note,
+                     "attribution": attribution_inputs(
+                         slug, offer="$1,000 off full treatment")}
+    return wire_form(section, "lead-%s" % slug) + leads_script()
 
 
 DOCTOR_BAND = """

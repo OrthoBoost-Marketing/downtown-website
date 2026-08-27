@@ -4,7 +4,157 @@ HTML blocks use __TOKEN__ placeholders rather than %-formatting, because the cop
 full of literal percent signs (0%, 5%, 100%) and escaping them all is a bug farm.
 """
 import json
+import re
 import html as H
+
+# ==================================================================== LEAD ROUTING
+#
+#   >>> THIS IS THE ONE PLACE THE GOHIGHLEVEL ENDPOINT IS SET. <<<
+#
+# At cutover, paste the client's GHL inbound-webhook URL between the quotes below and
+# re-run the generators. Nothing else on the site needs editing: all three lead forms
+# and the submit script derive their endpoint from this constant.
+#
+#   GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/<LOC>/webhook-trigger/<ID>"
+#
+# WHILE THIS IS "" (UNSET), every lead form renders in its fail-safe state: every
+# control is disabled and the card carries a notice pointing at the practice phone
+# number. No submission is accepted, no confirmation page is shown, and no lead is
+# reported as sent, because a static site with no endpoint cannot deliver one.
+#
+# Full documentation, field mapping and cutover checklist: build/GHL-WIRING.md
+GHL_WEBHOOK_URL = ""
+
+# Where a successful submit lands. The real file is appointment-request-confirmation.html;
+# vercel.json sets cleanUrls:true and trailingSlash:false, so the clean URL carries no
+# trailing slash. This repo has no /thank-you/ page, so the confirmation page is the
+# conversion URL.
+LEAD_CONFIRM_URL = "/appointment-request-confirmation"
+
+# The practice number. Not the tracking number, not a personal line.
+PRACTICE_PHONE = "(604) 662-3290"
+PRACTICE_TEL = "+16046623290"
+
+# First-touch attribution is held in localStorage for this many days and then dropped,
+# on read and on write. NO COOKIE IS SET ANYWHERE by these forms: a never-expiring
+# attribution cookie is a known defect in the WordPress plugin and is avoided here by
+# not using cookies at all. 90 days matches the house attribution window.
+LEAD_ATTR_DAYS = 90
+
+# A lead whose POST failed is queued in localStorage for this many days, then dropped.
+# Shorter than the attribution window on purpose: a month-old unsent lead is stale, and
+# the cap stops the queue growing without bound.
+LEAD_QUEUE_DAYS = 30
+
+# Canonical OrthoBoost click-id and UTM hidden fields, in payload order. utm_term is a
+# local addition to the canonical set; see build/GHL-WIRING.md.
+LEAD_ATTR_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+                    "gclid", "fbclid", "gbraid", "wbraid"]
+
+_FORM_OPEN_RE = re.compile(r"<form\b[^>]*>")
+_CONTROL_RE = re.compile(r"<(?:input|select|textarea|button)\b[^>]*>")
+
+
+def attribution_inputs(page_slug, offer=""):
+    """The hidden attribution set, defined ONCE here for all three lead forms.
+
+    Every value ships empty except `offer` and `page`, which carry build-time defaults.
+    assets/js/ob-leads.js fills the rest at runtime from the URL query string, the
+    referrer and the stored first touch. A URL ?offer= param overrides the default.
+    """
+    rows = ["            <!-- Attribution. Hidden, no PHI. Filled at runtime by"
+            " /assets/js/ob-leads.js. -->"]
+    rows += ['            <input type="hidden" name="%s" value="" />' % n
+             for n in LEAD_ATTR_FIELDS]
+    rows.append('            <input type="hidden" name="offer" value="%s" />' % offer)
+    rows.append('            <input type="hidden" name="page" value="%s" />' % page_slug)
+    return "\n".join(rows)
+
+
+def _unset_notice(form_id):
+    """The fail-safe notice shown inside a form while GHL_WEBHOOK_URL is unset.
+
+    There is no mailto fallback because no practice email address is on file
+    (CLIENT-BRIEF.md), and inventing one would be worse than omitting it.
+    """
+    # NB: built with .replace, not fill(), because fill() reserves __PHONE__ for the
+    # phone ICON and would swap the number for an SVG.
+    tpl = """
+            <p id="{ID}-unset" class="microline" role="status" style="margin:0 0 var(--sp-5);
+              padding:var(--sp-4);border:var(--border) solid var(--ink-faint);
+              border-radius:var(--radius-btn);background:var(--surface);">
+              <b>Online requests are not open yet.</b> This form cannot send your details
+              at the moment. Please call the practice on
+              <a class="tlink" href="tel:{TEL}">{NUM}</a> and we will book your free
+              consultation now.</p>"""
+    return (tpl.replace("{ID}", form_id)
+               .replace("{TEL}", PRACTICE_TEL)
+               .replace("{NUM}", PRACTICE_PHONE))
+
+
+def wire_form(html, form_id):
+    """Apply the GHL_WEBHOOK_URL config to one lead form's HTML.
+
+    Endpoint SET:   the form gets a real action="<endpoint>", so it stays a genuine
+                    <form> rather than a JS-only trap, and remains interactive.
+    Endpoint UNSET: every visible control is disabled and the fail-safe notice is
+                    inserted as the form's first child, so nothing can be typed or
+                    submitted and nothing claims to have been sent.
+
+    Hidden inputs are never disabled, so the attribution set stays inspectable. The
+    disable pass is bounded by the closing </form> tag, so it is safe to hand this whole
+    page bodies: controls elsewhere on the page are never touched.
+    """
+    tags = _FORM_OPEN_RE.findall(html)
+    assert len(tags) == 1, "expected exactly one <form> in %s, found %d" % (form_id, len(tags))
+    m = _FORM_OPEN_RE.search(html)
+    if GHL_WEBHOOK_URL:
+        open_tag = ('<form id="%s" method="post" action="%s" novalidate data-ob-lead="1">'
+                    % (form_id, H.escape(GHL_WEBHOOK_URL, quote=True)))
+        return html[:m.start()] + open_tag + html[m.end():]
+
+    open_tag = ('<form id="%s" method="post" action="" novalidate data-ob-lead="0"'
+                ' aria-describedby="%s-unset">' % (form_id, form_id))
+    head = html[:m.start()]
+    close = html.index("</form>", m.end())
+    inner, rest = html[m.end():close], html[close:]
+
+    disabled = [0]
+
+    def _disable(mm):
+        tag = mm.group(0)
+        if 'type="hidden"' in tag:
+            return tag
+        disabled[0] += 1
+        if tag.endswith("/>"):
+            return tag[:-2].rstrip() + " disabled />"
+        return tag[:-1].rstrip() + " disabled>"
+
+    inner = _CONTROL_RE.sub(_disable, inner)
+    assert disabled[0] >= 5, "expected 5+ controls to disable in %s, got %d" % (
+        form_id, disabled[0])
+    return head + open_tag + _unset_notice(form_id) + inner + rest
+
+
+def leads_script():
+    """Per-page config plus the local submit script.
+
+    The config is emitted per page from GHL_WEBHOOK_URL, so the constant above stays the
+    single source of truth. The script is a local file: no third-party or CDN script is
+    added anywhere, because the site is being de-CDN'd in parallel.
+    """
+    cfg = json.dumps({
+        "endpoint": GHL_WEBHOOK_URL,
+        "confirm": LEAD_CONFIRM_URL,
+        "phone": PRACTICE_PHONE,
+        "tel": PRACTICE_TEL,
+        "attr_days": LEAD_ATTR_DAYS,
+        "queue_days": LEAD_QUEUE_DAYS,
+    }, sort_keys=True)
+    return ('\n  <!-- Lead forms. Endpoint comes from GHL_WEBHOOK_URL in build/common.py. -->\n'
+            '  <script>window.OB_LEADS = %s;</script>\n'
+            '  <script src="/assets/js/ob-leads.js" defer></script>\n' % cfg)
+
 
 TICK = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">'
         '<path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>')

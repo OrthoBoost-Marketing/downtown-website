@@ -15,6 +15,20 @@ INDEX = os.path.join(ROOT, "index.html")
 
 DOMAIN = "https://downtownorthodontics.ca"
 
+# ---------------------------------------------------------------- indexing
+# THE CUTOVER SWITCH. True means every page is noindex, because this build is served from a
+# vercel.app staging URL and must not compete with the live domain. Set it False at cutover,
+# and at the same time delete robots.txt, which carries its own blanket "Disallow: /".
+#
+# Pages that must stay noindex AFTER launch do NOT rely on this: they pass noindex=True to
+# page() individually, so flipping this switch cannot accidentally expose them. Those are
+# the four utility pages (privacy-policy, terms, accessibility, 404) and the appointment
+# confirmation page, which is a thank-you page and has no business in search results.
+#
+# Until 2026-08-27 this switch did not exist and the noindex parameter below was accepted
+# but never read, so neither half of this was actually possible.
+REVIEW_BUILD = True
+
 # Photographs ship twice: the client's full-resolution original in assets/photos/,
 # and an 880px-wide derivative in assets/photos/w880/ built by build/make_w880.py.
 # Every slot on the site displays at ~440px CSS or less, so 880px covers a 2x DPR
@@ -56,8 +70,17 @@ ICONS = (
 # generated nothing - which painted financing.html's counters section white on white.
 # It is chrome now, sliced from index.html like everything else.
 TW_CONFIG = _between("<script>\n  tailwind.config", "</script>")
-TAILWIND = ('<script src="https://cdn.tailwindcss.com"></script>\n' + TW_CONFIG)
-ANIME = '<script src="https://cdn.jsdelivr.net/npm/animejs@4/lib/anime.iife.min.js"></script>'
+
+# Both runtime libraries are VENDORED under assets/vendor/ (see assets/vendor/README.md
+# for source URLs, pinned versions and the refresh commands). No third-party request is
+# made at page load any more; only Google Fonts stays remote, deliberately.
+# tailwind.min.js is the browser JIT build (Tailwind 3.4.17), byte-identical to what the
+# Tailwind Play CDN served, so TW_CONFIG above is still read at runtime exactly as
+# before. Load order matters: the JIT script first, then the config it reads.
+# Paths are root-relative to match the head's other local assets (ICONS, og:image,
+# preload) and so they resolve identically from a nested URL under vercel cleanUrls.
+TAILWIND = ('<script src="/assets/vendor/tailwind.min.js"></script>\n' + TW_CONFIG)
+ANIME = '<script src="/assets/vendor/anime.iife.min.js"></script>'
 
 ANNOUNCE = _between('  <!-- ANNOUNCEMENT', "  </div>\n", inclusive=True)
 HEADER = _between('  <header class="nav">', "  </header>\n")
@@ -123,8 +146,12 @@ def head(title, desc, slug, noindex=False, preload=None, schema=None, og_image=N
         "<title>%s</title>" % title,
         '<meta name="description" content="%s" />' % desc,
     ]
-    # Review build: every page is noindex until launch. Utility pages stay noindex after.
-    out.append('<meta name="robots" content="noindex, nofollow" />')
+    # Two independent reasons to be noindex: the whole build is in review, or this
+    # particular page is never meant to be indexed. Either one is enough.
+    if REVIEW_BUILD or noindex:
+        out.append('<meta name="robots" content="noindex, nofollow" />')
+    else:
+        out.append('<meta name="robots" content="index, follow" />')
     out += [
         '<link rel="canonical" href="%s" />' % canon,
         '<meta property="og:type" content="website" />',

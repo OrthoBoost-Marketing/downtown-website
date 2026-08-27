@@ -3,6 +3,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
 from common import TICK, PHONE, phero, cta_band, faq_rows, fill, faq_schema
+from common import attribution_inputs, wire_form, leads_script
 
 # ==================================================================== FINANCING
 # FINANCIAL-AND-FAQ-PAGE-SPEC: commercial-query H1, the monthly anchor repeated and
@@ -181,7 +182,7 @@ FIN_BODY = phero(
 C.write("financing.html", C.page(
     title="Braces Payment Plans, Downtown Vancouver | 0% Financing",
     desc="Braces and Invisalign payment plans in downtown Vancouver: $1,000 down, from $220/mo at 0% in-house interest, insurance billed directly.",
-    slug="financing", body=FIN_BODY,
+    slug="financing", body=FIN_BODY + leads_script(),
     schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "isPartOf": { "@id": "https://downtownorthodontics.ca/#practice" },\n  "about": { "@id": "https://downtownorthodontics.ca/#practice" },\n  "mainEntity": [\n%s\n  ]\n}' % fin_schema))
 
 # ==================================================================== FAQ
@@ -284,7 +285,7 @@ FAQ_BODY = phero(
 C.write("faq.html", C.page(
     title="Orthodontic FAQ Downtown Vancouver | Braces &amp; Invisalign",
     desc="Answers on braces and Invisalign cost in downtown Vancouver, when children should first be seen, treatment length, retainers and referrals.",
-    slug="faq", body=FAQ_BODY,
+    slug="faq", body=FAQ_BODY + leads_script(),
     schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "isPartOf": { "@id": "https://downtownorthodontics.ca/#practice" },\n  "about": { "@id": "https://downtownorthodontics.ca/#practice" },\n  "mainEntity": [\n%s\n  ]\n}' % faq_schema))
 
 # ==================================================================== CONTACT
@@ -337,14 +338,17 @@ CONTACT_BODY = phero(
                 <textarea id="c-msg" name="message" rows="4" style="min-height:96px;min-width:0;width:100%;font-family:var(--font);font-size:16px;color:var(--ink);background:var(--bg);border:var(--border) solid var(--ink-faint);border-radius:var(--radius-btn);padding:var(--sp-3) var(--sp-4);"></textarea>
               </div>
             </div>
-            <input type="hidden" name="page" value="contact" />
+__ATTRIBUTION__
             <button class="btn btn-primary" type="submit">Send message <span class="arr">&rarr;</span></button>
           </form>
           <p class="microline">General enquiries only. Please do not send health information here:
             Dr. Daher covers anything clinical with you in person. To book, use the
             <a class="tlink" href="/appointment-request">free consultation request</a>.</p>
+          <noscript>
+            <p class="microline">This form needs JavaScript to send your message. Please call
+              the practice on <a class="tlink" href="tel:+16046623290">(604) 662-3290</a>.</p>
+          </noscript>
           <!-- The general-inquiry message box is the ONE permitted textarea (build-site rules). -->
-          <!-- NOT WIRED YET: no GHL webhook URL on file. -->
         </div>
       </div>
     </div>
@@ -369,11 +373,15 @@ CONTACT_BODY = phero(
       </div>
     </div>
   </section>
-""") + cta_band(
+""", attribution=attribution_inputs("contact")) + cta_band(
     "Ready to <em>book?</em>",
     "The consultation is free, no referral is needed, and you leave with a digital scan, an honest "
     "read on your bite and your exact price in writing.",
     "Monday 10:00 to 18:00 &middot; Tuesday and Thursday 08:00 to 15:00 &middot; Wednesday 08:00 to 16:30.")
+
+# The contact form's endpoint and its fail-safe state both come from GHL_WEBHOOK_URL in
+# build/common.py. wire_form bounds its disable pass to this page's one <form>.
+CONTACT_BODY = wire_form(CONTACT_BODY, "lead-contact") + leads_script()
 
 # (11) A minimal ContactPage pointing at the shared #practice entity. No address,
 # hours or geo facts are restated here, so there is nothing extra to keep in sync.

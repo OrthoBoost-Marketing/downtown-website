@@ -17,7 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import chrome as C
-from common import cta_band, fill, phero
+from common import cta_band, fill, phero, leads_script
 from reviews_data import (COUNT, GOOGLE_TOPICS, GOOGLE_URL, HARVESTED, RATING,
                           REVIEWS, SPOTLIGHT)
 
@@ -237,6 +237,6 @@ C.write("reviews.html", C.page(
     desc=("Twenty-eight verified five-star Google reviews for Downtown Orthodontics "
           "in downtown Vancouver, quoted word for word."),
     slug="reviews",
-    body=BODY,
+    body=BODY + leads_script(),
     schema=SCHEMA,
 ))
