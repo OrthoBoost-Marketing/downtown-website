@@ -247,14 +247,13 @@ def build(slug, title, desc, h, rows, faqs, form_preselect, quote_note, service_
 # ============================================================ BRACES
 build(
     slug="braces",
-    title="Braces in Downtown Vancouver | Metal &amp; Clear | Downtown Orthodontics",
-    desc="Metal and clear braces in downtown Vancouver, planned and adjusted by specialist orthodontist Dr. Sam Daher. $1,000 down, from $220/mo at 0% in-house.",
+    title="Braces in Downtown Vancouver | Metal &amp; Clear Braces",
+    desc="Metal and clear braces in downtown Vancouver, planned by specialist orthodontist Dr. Sam Daher. $1,000 down, from $220/mo at 0% in-house.",
     h=hero(
         eyebrow="Braces &middot; Downtown Vancouver",
         h1="Braces in downtown Vancouver.",
         sub="Metal and clear braces planned and adjusted by a certified specialist, not fitted in "
-            "between fillings. $1,000 down, from $220 a month at 0% in-house interest, and priced "
-            "exactly the same as Invisalign.",
+            "between fillings. $1,000 down, from $220 a month at 0% in-house interest.",
         chips=["Clear and metal options", "Adjusted by Dr. Daher himself", "Free consultation"],
         photo="assets/photos/used-2.jpg",
         alt="A Downtown Orthodontics clinician scanning a patient chairside before braces treatment"),
@@ -266,9 +265,9 @@ build(
              "had to put up with as a teenager. For a lot of bites that is backwards. Braces move "
              "teeth the orthodontist controls directly, which makes them faster and more predictable "
              "on rotations, deep bites and anything that needs real mechanics.",
-             "So the honest answer depends on your bite, not on fashion. Dr. Daher plans it "
-             "braces and Invisalign here, which means nobody at this practice has a financial "
-             "reason to steer you toward one."],
+             "So the honest answer depends on your bite, not on fashion. Dr. Daher plans and "
+             "adjusts both braces and Invisalign himself, so the option you are offered is "
+             "the one that suits your bite."],
          "link": "/#how", "link_text": "See how a first visit works",
          "photo": "assets/photos/office-inside.jpg",
          "alt": "The open treatment area at Downtown Orthodontics, with chairs and chairside screens",
@@ -299,10 +298,10 @@ build(
          "photo": None},
     ],
     faqs=[
-        ("Do braces cost more than Invisalign here?",
-         "No. We price braces and Invisalign the same, which is deliberate: it means the recommendation you get is about your bite and not about our margin. Most treatment starts at $1,000 down and about $220 a month with 0% in-house financing, and we bill your insurance directly. Your exact figure comes from your free consultation."),
+        ("Who decides whether braces or Invisalign is right for me?",
+         "Dr. Daher does, at your free consultation, and he plans and adjusts both himself. That matters more than it sounds: a general dental office selling aligners on the side can only recommend the one thing it offers. You leave with the option that suits your bite, and your exact figure for it in writing."),
         ("How much do braces cost in Vancouver?",
-         "Every bite is different, so you get your exact price in writing at your free consultation rather than a range that may not apply to you. Most plans here start at $1,000 down and about $220 a month at 0% in-house interest, with your insurance billed directly."),
+         "Every bite is different, so you get your exact price in writing at your free consultation rather than a range that may not apply to you. Most plans here start at $1,000 down and from $220 a month at 0% in-house interest, with your insurance billed directly."),
         ("Clear braces or metal braces?",
          "Ceramic clear brackets are far less visible and suit adults who would rather not advertise the treatment. Metal is stronger and often a little faster, which matters on complex mechanics. Dr. Daher will tell you honestly whether your case has a real preference or whether it is genuinely your choice."),
         ("Will braces hurt?",
@@ -322,8 +321,8 @@ build(
 # ============================================================ INVISALIGN
 build(
     slug="invisalign",
-    title="Invisalign in Downtown Vancouver | Quick 6 Fix $4,299 | Downtown Orthodontics",
-    desc="Invisalign planned by a specialist in downtown Vancouver, not a general dentist. Invisalign Express (Quick 6 Fix) at $4,299 flat. Free consultation with Dr. Sam Daher.",
+    title="Invisalign in Downtown Vancouver | Quick 6 Fix $4,299",
+    desc="Invisalign planned by a specialist in downtown Vancouver, not a general dentist. Invisalign Express (Quick 6 Fix) at $4,299 flat, free consult.",
     h=hero(
         eyebrow="Invisalign &middot; Downtown Vancouver",
         h1="Invisalign in downtown Vancouver.",
@@ -374,7 +373,7 @@ build(
     ],
     faqs=[
         ("How much does Invisalign cost in Vancouver?",
-         "Simple cases that suit Invisalign Express, what we call the Quick 6 Fix, are $4,299 flat. Full treatment starts at $1,000 down and about $220 a month at 0% in-house interest, the same as braces. Your exact figure comes from your free consultation, in writing, before you commit."),
+         "Simple cases that suit Invisalign Express, what we call the Quick 6 Fix, are $4,299 flat. Full treatment starts at $1,000 down and from $220 a month at 0% in-house interest. Your exact figure comes from your free consultation, in writing, before you commit."),
         ("What is the Quick 6 Fix?",
          "It is Invisalign Express for mild crowding, small gaps, and teeth that have shifted after earlier treatment. It is a shorter course of aligners at a $4,299 flat rate. Not every case qualifies, and we confirm your candidacy free rather than selling you into it."),
         ("Why see an orthodontist instead of my dentist for Invisalign?",
@@ -396,8 +395,8 @@ build(
 # ============================================================ EARLY ORTHODONTICS
 build(
     slug="early-orthodontics",
-    title="Kids&rsquo; Orthodontist Downtown Vancouver | Early Treatment | Downtown Orthodontics",
-    desc="Free first orthodontic check from age seven in downtown Vancouver. Expanders, early treatment and Invisalign First, watched by specialist Dr. Sam Daher. Most kids just need monitoring.",
+    title="Kids&rsquo; Orthodontist Downtown Vancouver | Early Treatment",
+    desc="Free first orthodontic check from age seven in downtown Vancouver. Expanders, early treatment and Invisalign First with specialist Dr. Sam Daher.",
     h=hero(
         eyebrow="Kids &amp; early care &middot; Downtown Vancouver",
         h1="Kids&rsquo; orthodontics in downtown Vancouver.",
@@ -450,7 +449,7 @@ build(
         ("When should our child first see an orthodontist?",
          "Around age seven. Most children will not need anything done yet, but an early check lets Dr. Daher see how the jaw is growing and catch anything worth watching while it is still easy to influence. That first visit is always free."),
         ("How much does children's orthodontic treatment cost in Vancouver?",
-         "The first growth check is free. If treatment is genuinely needed, most plans start at $1,000 down and about $220 a month at 0% in-house interest, with your insurance billed directly. You get the exact figure in writing before anything begins."),
+         "The first growth check is free. If treatment is genuinely needed, most plans start at $1,000 down and from $220 a month at 0% in-house interest, with your insurance billed directly. You get the exact figure in writing before anything begins."),
         ("Is it too early for braces at seven?",
          "Usually, yes, and we will say so. The point of an age-seven check is not to start treatment but to know whether anything needs watching. If early treatment would genuinely help, an expander or partial braces timed to the growing jaw can prevent a bigger problem later."),
         ("What is an expander and does my child need one?",
@@ -470,8 +469,8 @@ build(
 # ============================================================ RETAINERS
 build(
     slug="retainers",
-    title="Retainers in Downtown Vancouver | Retention &amp; Replacements | Downtown Orthodontics",
-    desc="Clear retainers and retention planning in downtown Vancouver, checked by specialist Dr. Sam Daher. Every treatment plan finishes with retention, and old retainers can be replaced.",
+    title="Retainers in Downtown Vancouver | Retention &amp; Replacements",
+    desc="Clear retainers and retention planning in downtown Vancouver, checked by specialist Dr. Sam Daher. Old retainers can be replaced.",
     h=hero(
         eyebrow="Retainers &amp; aftercare &middot; Downtown Vancouver",
         h1="Retainers in downtown Vancouver.",

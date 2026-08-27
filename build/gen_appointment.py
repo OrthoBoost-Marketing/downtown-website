@@ -83,7 +83,7 @@ BODY = """
             <li>%(tick)s<span><b>The consultation is free</b>, including the digital scan and
               Dr. Daher&rsquo;s read on your bite. No referral needed.</span></li>
             <li>%(tick)s<span><b>Your exact price in writing</b> before you decide. Most plans
-              start at $1,000 down and about $220 a month at 0%% in-house interest.</span></li>
+              start at $1,000 down and from $220 a month at 0%% in-house interest.</span></li>
             <li>%(tick)s<span><b>We reply the same business day.</b> If you would rather not wait,
               call and we will book you on the spot.</span></li>
           </ul>
@@ -153,8 +153,8 @@ SCHEMA = """{
 }"""
 
 C.write("appointment-request.html", C.page(
-    title="Book a Free Orthodontic Consultation | Downtown Orthodontics Vancouver",
-    desc="Book a free consultation with Dr. Sam Daher, a certified specialist in orthodontics in downtown Vancouver. Digital scan, honest options and your exact price in writing. No referral needed.",
+    title="Book a Free Consultation | Downtown Vancouver Orthodontist",
+    desc="Book a free consultation with specialist orthodontist Dr. Sam Daher in downtown Vancouver. Digital scan, honest options, exact price in writing.",
     slug="appointment-request",
     body=BODY,
     schema=SCHEMA,

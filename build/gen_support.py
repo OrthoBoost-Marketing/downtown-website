@@ -10,7 +10,7 @@ from common import TICK, PHONE, phero, cta_band, faq_rows, fill, faq_schema
 # four-paragraph insurance explainer, and a payment-specific testimonial.
 FIN_FAQS = [
     ("How much do braces cost in downtown Vancouver?",
-     "Most treatment here starts at $1,000 down and about $220 a month with 0% in-house financing. Simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so your exact figure comes from your free consultation, in writing, before you commit to anything."),
+     "Most treatment here starts at $1,000 down and from $220 a month with 0% in-house financing. Simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so your exact figure comes from your free consultation, in writing, before you commit to anything."),
     ("Who decides whether I need braces or Invisalign?",
      "Dr. Daher does, at your consultation, and he plans and adjusts both himself. That matters more than it sounds: a general dental office selling aligners on the side can only recommend the one thing it offers. You get your exact figure for whichever option suits your bite, in writing, before you commit to anything."),
     ("Is the financing really 0% interest?",
@@ -18,7 +18,7 @@ FIN_FAQS = [
     ("Do you bill my insurance directly?",
      "Yes, we bill your plan directly rather than handing you paperwork to chase. Bring your plan details to the consultation and we will confirm your orthodontic coverage during the visit, so the numbers you hear on the day are real ones."),
     ("What if I do not have insurance?",
-     "Most of our patients pay through the in-house plan and a good share have no orthodontic coverage at all. $1,000 down and about $220 a month at 0% interest is the same offer either way. Insurance reduces what you pay; it is not what makes treatment possible."),
+     "Most of our patients pay through the in-house plan and a good share have no orthodontic coverage at all. $1,000 down and from $220 a month at 0% interest is the same offer either way. Insurance reduces what you pay; it is not what makes treatment possible."),
     ("Are there ways to pay less?",
      "Two. Pay in full and save 5%, or save $450 by starting the same day as your consultation. There is also $1,000 off full treatment for braces or Invisalign. We apply whatever you qualify for and show it on the written plan."),
 ]
@@ -27,7 +27,7 @@ fin_rows, fin_schema = faq_rows(FIN_FAQS)
 FIN_BODY = phero(
     "Pricing &amp; financing", "Pricing",
     "Braces payment plans in <em>downtown Vancouver.</em>",
-    "$1,000 down, from about $220 a month at 0% in-house interest, insurance billed directly, and "
+    "$1,000 down, from $220 a month at 0% in-house interest, insurance billed directly, and "
     "your full cost in writing before you decide. No asterisks.",
 ) + fill("""
   <section class="bg-petrol-deep text-white tw-block">
@@ -112,7 +112,7 @@ FIN_BODY = phero(
           very little.</p>
         <h3>And if you have no coverage at all</h3>
         <p>A good share of our patients have none. The in-house plan is the same either way:
-          $1,000 down, about $220 a month, 0% interest. Insurance lowers what you pay. It is not the
+          $1,000 down, from $220/mo, 0% interest. Insurance lowers what you pay. It is not the
           thing that makes treatment affordable.</p>
       </div>
     </div>
@@ -145,7 +145,7 @@ FIN_BODY = phero(
         </li>
         <li>
           <h3>Monthly at 0% in-house</h3>
-          <p>From about $220 a month, financed in-house rather than through a lender, so there is
+          <p>From $220 a month, financed in-house rather than through a lender, so there is
             no interest and no finance application. We bill your insurance directly.</p>
         </li>
       </ol>
@@ -179,15 +179,15 @@ FIN_BODY = phero(
     "$1,000 down, from $220/mo at 0% in-house financing. Insurance billed directly.")
 
 C.write("financing.html", C.page(
-    title="Braces Payment Plans in Downtown Vancouver | 0% Financing | Downtown Orthodontics",
-    desc="Braces and Invisalign payment plans in downtown Vancouver: $1,000 down, from $220/mo at 0% in-house interest, insurance billed directly. Your exact price in writing at a free consultation.",
+    title="Braces Payment Plans, Downtown Vancouver | 0% Financing",
+    desc="Braces and Invisalign payment plans in downtown Vancouver: $1,000 down, from $220/mo at 0% in-house interest, insurance billed directly.",
     slug="financing", body=FIN_BODY,
     schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "mainEntity": [\n%s\n  ]\n}' % fin_schema))
 
 # ==================================================================== FAQ
 FAQS = [
     ("How much does orthodontic treatment cost in downtown Vancouver?",
-     "Most treatment starts at $1,000 down and about $220 a month with 0% in-house financing, and we bill your insurance directly. Simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so you get your exact price in writing at your free consultation."),
+     "Most treatment starts at $1,000 down and from $220 a month with 0% in-house financing, and we bill your insurance directly. Simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so you get your exact price in writing at your free consultation."),
     ("When should our child first see an orthodontist?",
      "Around age seven. Most children will not need anything done yet, but an early check lets Dr. Daher see how the jaw is growing and catch anything worth watching while it is still easy to influence. That first visit is always free."),
     ("I am 40. Is it too late for me?",
@@ -221,8 +221,26 @@ assert sorted(i for g in FAQ_GROUPS for i in g[4]) == list(range(len(FAQS))), "F
 assert FAQ_GROUPS[0][4][0] == 0, "the cost+city question must stay first in its group"
 
 # Visible order and schema order are the same list, so they cannot drift.
-FAQ_FLAT = [FAQS[i] for g in FAQ_GROUPS for i in g[4]]
-_, faq_schema = faq_rows(FAQ_FLAT)
+# TIER 3 (4): five of these ten questions are ALREADY marked up as FAQPage on another
+# URL - four on index.html and one on early-orthodontics.html. Google disqualifies FAQ
+# markup duplicated across URLs, so both copies lose. Each question is therefore marked
+# up on exactly one page. All ten stay VISIBLE here, in their groups: only the JSON-LD
+# is trimmed. Indices are into FAQS.
+FAQ_SCHEMA_SKIP = {
+    1,  # "When should our child first see an orthodontist?" -> early-orthodontics.html
+    3,  # "Who will actually be treating us?"                -> index.html
+    4,  # "Braces or Invisalign: how do we choose?"          -> index.html
+    5,  # "How long does treatment usually take?"            -> index.html
+    7,  # "What if we move partway through treatment?"       -> index.html
+    6,  # "What about retainers when we are done?"         -> index.html (near-duplicate wording)
+}
+# Schema order follows visible order, so the two cannot drift.
+FAQ_SCHEMA_ITEMS = [FAQS[i] for g in FAQ_GROUPS for i in g[4] if i not in FAQ_SCHEMA_SKIP]
+# 4, not 5: "What about retainers when we are done?" was added to the skip list on
+# 2026-08-26 because index.html marks up the same question with "we're done", which is
+# a cross-URL duplicate in substance even though the bytes differ.
+assert len(FAQ_SCHEMA_ITEMS) == len(FAQS) - len(FAQ_SCHEMA_SKIP) == 4, "FAQ schema subset drifted"
+_, faq_schema = faq_rows(FAQ_SCHEMA_ITEMS)
 
 faq_jump = '<nav class="faq-jump reveal" aria-label="Question categories">%s</nav>' % "".join(
     '<a href="#%s">%s</a>' % (g[0], g[3]) for g in FAQ_GROUPS)
@@ -264,8 +282,8 @@ FAQ_BODY = phero(
     secondary=("/contact", "Or send us a message"))
 
 C.write("faq.html", C.page(
-    title="Orthodontic FAQ | Braces, Invisalign &amp; Cost Questions | Downtown Orthodontics",
-    desc="Answers on braces and Invisalign cost in downtown Vancouver, when children should first be seen, treatment length, retainers, referrals and transfers. From specialist Dr. Sam Daher.",
+    title="Orthodontic FAQ Downtown Vancouver | Braces &amp; Invisalign",
+    desc="Answers on braces and Invisalign cost in downtown Vancouver, when children should first be seen, treatment length, retainers and referrals.",
     slug="faq", body=FAQ_BODY,
     schema='{\n  "@context": "https://schema.org",\n  "@type": "FAQPage",\n  "mainEntity": [\n%s\n  ]\n}' % faq_schema))
 
@@ -273,7 +291,7 @@ C.write("faq.html", C.page(
 CONTACT_BODY = phero(
     "Visit us", "Visit",
     "In the heart of <em>downtown Vancouver.</em>",
-    "840 West Hastings Street, by Canada Place and a short walk from the office towers. Free "
+    "840 W Hastings St, by Canada Place and a short walk from the office towers. Free "
     "consultations, and no referral needed.",
 ) + fill("""
   <section class="block">
@@ -338,14 +356,14 @@ CONTACT_BODY = phero(
     <div class="wrap">
       <div class="sec-head reveal">
         <span class="eyebrow">(On the map)</span>
-        <h2 class="h2">840 West Hastings, <em>by Canada Place.</em></h2>
+        <h2 class="h2">840 W Hastings St, <em>by Canada Place.</em></h2>
         <p>Street level on West Hastings, across from the Terminal City Club. Pay parking is in
           the building and the Waterfront SkyTrain and SeaBus terminals are a few minutes&rsquo; walk.</p>
       </div>
       <div class="loc-map reveal d1" style="aspect-ratio:16/7;">
         <iframe
           src="https://maps.google.com/maps?q=Downtown%20Orthodontics%2C%20840%20W%20Hastings%20St%2C%20Vancouver%2C%20BC%20V6C%201C8&amp;z=14&amp;output=embed"
-          title="Map showing Downtown Orthodontics at 840 W Hastings St, Vancouver"
+          title="Map showing Downtown Orthodontics at 840 W Hastings St, Vancouver, BC V6C 1C8"
           referrerpolicy="no-referrer-when-downgrade"
           style="position:absolute;inset:0;width:100%;height:100%;border:0" loading="lazy"></iframe>
       </div>
@@ -357,7 +375,18 @@ CONTACT_BODY = phero(
     "read on your bite and your exact price in writing.",
     "Monday 10:00 to 18:00 &middot; Tuesday and Thursday 08:00 to 15:00 &middot; Wednesday 08:00 to 16:30.")
 
+# (11) A minimal ContactPage pointing at the shared #practice entity. No address,
+# hours or geo facts are restated here, so there is nothing extra to keep in sync.
+CONTACT_SCHEMA = """{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Contact Downtown Orthodontics",
+  "url": "https://downtownorthodontics.ca/contact",
+  "isPartOf": { "@id": "https://downtownorthodontics.ca/#practice" },
+  "about": { "@id": "https://downtownorthodontics.ca/#practice" }
+}"""
+
 C.write("contact.html", C.page(
     title="Contact Downtown Orthodontics | 840 W Hastings St, Vancouver",
-    desc="Downtown Orthodontics, 840 W Hastings St, Vancouver BC. Call (604) 662-3290, Monday to Thursday. Free consultations with specialist orthodontist Dr. Sam Daher, no referral needed.",
-    slug="contact", body=CONTACT_BODY))
+    desc="Downtown Orthodontics, 840 W Hastings St, Vancouver, BC. Call (604) 662-3290. Free consultations with specialist orthodontist Dr. Sam Daher.",
+    slug="contact", body=CONTACT_BODY, schema=CONTACT_SCHEMA))

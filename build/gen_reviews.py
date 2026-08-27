@@ -229,9 +229,7 @@ SCHEMA = """{
   "@type": "Dentist",
   "@id": "%(d)s/#practice",
   "name": "Downtown Orthodontics",
-  "url": "%(d)s/reviews",
   "telephone": "+1-604-662-3290",
-  "medicalSpecialty": "Orthodontic",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "840 W Hastings St",
@@ -243,10 +241,9 @@ SCHEMA = """{
 }""" % {"d": C.DOMAIN}
 
 C.write("reviews.html", C.page(
-    title="Patient Reviews | Downtown Orthodontics, Vancouver BC",
-    desc=("Twenty-eight verified five-star Google reviews for Downtown Orthodontics in "
-          "downtown Vancouver, quoted word for word. Braces, Invisalign and complex cases "
-          "with specialist Dr. Sam Daher."),
+    title="Patient Reviews | Downtown Orthodontics, Vancouver, BC",
+    desc=("Twenty-eight verified five-star Google reviews for Downtown Orthodontics "
+          "in downtown Vancouver, quoted word for word."),
     slug="reviews",
     body=BODY,
     schema=SCHEMA,

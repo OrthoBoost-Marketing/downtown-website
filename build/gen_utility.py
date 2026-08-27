@@ -31,7 +31,7 @@ PRIVACY = phero(
 
         <h2>Who we are</h2>
         <p>Downtown Orthodontics is an orthodontic practice at 840 W Hastings St, Vancouver,
-          British Columbia V6C 1C8. You can reach us on
+          BC V6C 1C8. You can reach us on
           <a href="tel:+16046623290">(604) 662-3290</a> with any question about this policy or
           about the information we hold on you.</p>
 
@@ -109,8 +109,8 @@ TERMS = phero(
         <p><b>Last updated:</b> [DATE TO CONFIRM]</p>
 
         <h2>About this website</h2>
-        <p>This website is operated by Downtown Orthodontics, 840 W Hastings St, Vancouver, British
-          Columbia V6C 1C8. By using it you accept these terms.</p>
+        <p>This website is operated by Downtown Orthodontics, 840 W Hastings St, Vancouver,
+          BC V6C 1C8. By using it you accept these terms.</p>
 
         <h2>This site is not medical advice</h2>
         <p>Everything on this website is general information about orthodontic treatment. It is not

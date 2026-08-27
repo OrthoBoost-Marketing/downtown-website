@@ -125,7 +125,6 @@ DOC_SCHEMA = """{
   "mainEntity": {
     "@type": "Physician",
     "name": "Dr. Sam Daher",
-    "medicalSpecialty": "Orthodontic",
     "jobTitle": "Certified Specialist in Orthodontics",
     "worksFor": { "@id": "https://downtownorthodontics.ca/#practice" },
     "award": [
@@ -142,8 +141,8 @@ DOC_SCHEMA = """{
 }"""
 
 C.write("dr-sam-daher.html", C.page(
-    title="Dr. Sam Daher, Orthodontist | Downtown Vancouver | Downtown Orthodontics",
-    desc="Dr. Sam Daher is a certified specialist orthodontist with 30+ years in downtown Vancouver. Align Technology scientific advisory board, 2014 Invisalign Lifetime Achievement Award, lectured in 46 countries.",
+    title="Dr. Sam Daher, Orthodontist | Downtown Vancouver",
+    desc="Downtown Vancouver orthodontist Dr. Sam Daher, a certified specialist with 30+ years. Align Technology advisory board, 2014 Invisalign Lifetime Award.",
     slug="dr-sam-daher", body=DOC_BODY, schema=DOC_SCHEMA,
     preload="assets/photos/dt-6.jpg", og_image="/assets/photos/dt-6.jpg"))
 
@@ -163,7 +162,7 @@ USPS = [
     ("The complex cases other offices decline",
      "Referred cases and bites that have already been turned down elsewhere are a normal part of "
      "the week here, not an exception."),
-    ("$220 a month at 0% in-house",
+    ("From $220/mo at 0% in-house",
      "$1,000 down, financing arranged in-house at no interest, insurance billed directly, and your "
      "full cost in writing before you commit."),
     ("By Canada Place",
@@ -298,7 +297,18 @@ WHY_BODY = phero(
     "writing. Then you decide.",
     "Free consultation. No referral needed. Clear and metal braces, and Invisalign.")
 
+# (11) This page carried no JSON-LD. A minimal WebPage that points at the shared
+# #practice entity: no new address, hours or geo facts to keep in sync.
+WHY_SCHEMA = """{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Why a specialist orthodontist",
+  "url": "https://downtownorthodontics.ca/why-choose-us",
+  "isPartOf": { "@id": "https://downtownorthodontics.ca/#practice" },
+  "about": { "@id": "https://downtownorthodontics.ca/#practice" }
+}"""
+
 C.write("why-choose-us.html", C.page(
-    title="Why Choose a Specialist Orthodontist | Downtown Vancouver | Downtown Orthodontics",
-    desc="Why see a certified specialist orthodontist in downtown Vancouver instead of a dental office selling aligners on the side. Conservative treatment, 30+ years.",
-    slug="why-choose-us", body=WHY_BODY))
+    title="Why a Specialist Orthodontist | Downtown Vancouver",
+    desc="Why see a certified specialist orthodontist in downtown Vancouver rather than a dental office selling aligners on the side. Conservative care, 30+ years.",
+    slug="why-choose-us", body=WHY_BODY, schema=WHY_SCHEMA))
