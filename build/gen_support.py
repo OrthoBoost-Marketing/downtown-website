@@ -31,7 +31,7 @@ FIN_BODY = phero(
     "your full cost in writing before you decide. No asterisks.",
 ) + fill("""
   <section class="bg-petrol-deep text-white tw-block">
-    <div class="wrap" style="padding-top:clamp(60px,8vw,104px);">
+    <div class="wrap" style="padding-top:var(--section-y);">
       <div class="sec-head reveal" style="margin-bottom:clamp(30px,4vw,44px);">
         <h2 class="h2" style="color:#fff;">The whole arrangement, <em style="color:var(--teal);">in four numbers.</em></h2>
         <p style="color:rgba(255,255,255,.72);">Your exact figure comes from your free consultation.
@@ -56,7 +56,7 @@ FIN_BODY = phero(
         <div class="mt-2.5 text-sm font-medium text-white/65">of your insurance billed directly</div>
       </div>
     </div>
-    <div class="wrap reveal" style="padding-bottom:clamp(60px,8vw,104px);">
+    <div class="wrap reveal" style="padding-bottom:var(--section-y);">
       <div class="hero-actions" style="margin-top:clamp(34px,5vw,52px);align-items:center;">
         <a class="btn btn-primary" href="/appointment-request">Get your exact price, free <span class="arr">&rarr;</span></a>
         <span class="text-sm font-medium text-white/55">Pay in full and save 5%, or save $450 when you start the same day.</span>

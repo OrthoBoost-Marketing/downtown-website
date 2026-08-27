@@ -15,6 +15,17 @@ INDEX = os.path.join(ROOT, "index.html")
 
 DOMAIN = "https://downtownorthodontics.ca"
 
+# Photographs ship twice: the client's full-resolution original in assets/photos/,
+# and an 880px-wide derivative in assets/photos/w880/ built by build/make_w880.py.
+# Every slot on the site displays at ~440px CSS or less, so 880px covers a 2x DPR
+# exactly and the originals were shipping 3-6x more bytes than any slot could use.
+# disp() is the display path; og:image and JSON-LD "image" keep the original, which
+# is why the originals stay on disk.
+def disp(photo):
+    """assets/photos/x.jpg -> assets/photos/w880/x.jpg"""
+    assert photo.startswith("assets/photos/") and "/w880/" not in photo, photo
+    return photo.replace("assets/photos/", "assets/photos/w880/", 1)
+
 # ---------------------------------------------------------------- chrome slices
 _src = io.open(INDEX, encoding="utf-8").read()
 

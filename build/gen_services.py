@@ -95,7 +95,7 @@ DOCTOR_BAND = """
   <section class="block doc">
     <div class="wrap doc-grid">
       <div class="doc-photo reveal">
-        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Daher, orthodontist at Downtown Orthodontics" /></div>
+        <div class="frame"><img src="assets/photos/w880/dt-6.jpg" alt="Dr. Daher, orthodontist at Downtown Orthodontics" /></div>
       </div>
       <div class="reveal d1">
         <h2 class="h2">One specialist, <em>start to finish.</em></h2>
@@ -137,13 +137,14 @@ def hero(eyebrow, h1, sub, chips, photo, alt):
       </div>
       <div class="hero-figure">
         <div class="hero-frame">
-          <img class="hshot" src="%(photo)s" alt="%(alt)s" />
+          <img class="hshot" src="%(photo_disp)s" alt="%(alt)s" />
         </div>
       </div>
     </div>
   </section>
 """ % {"eyebrow": eyebrow, "eyebrow_plain": eyebrow.split("&middot;")[0].strip(),
-       "h1": h1, "sub": sub, "chips": chip_html, "photo": photo, "alt": alt, "phone": PHONE}
+       "h1": h1, "sub": sub, "chips": chip_html, "photo_disp": C.disp(photo),
+       "alt": alt, "phone": PHONE}
 
 
 def zigzag(rows):
@@ -163,7 +164,7 @@ def zigzag(rows):
             # .reqgrid .flip { order: -1 }, while the DOM stays text-first for mobile.
             figure = ('      <div class="photo-side%s reveal d1"><div class="hero-frame">'
                       '<img src="%s" alt="%s" /></div></div>'
-                      % (" flip" if r.get("mirror") else "", r["photo"], r["alt"]))
+                      % (" flip" if r.get("mirror") else "", C.disp(r["photo"]), r["alt"]))
             grid = '<div class="reqgrid">'
         else:
             figure = ""
@@ -241,7 +242,8 @@ def build(slug, title, desc, h, rows, faqs, form_preselect, quote_note, service_
 }""" % (jstr(service_name), jstr(service_name), slug, faq_schema)
     body = h + zigzag(rows) + DOCTOR_BAND + form(slug, form_preselect, quote_note) + faq_html
     C.write(slug + ".html", C.page(title=title, desc=desc, slug=slug, body=body,
-                                   schema=schema, preload=photo, og_image="/" + photo))
+                                   schema=schema, preload=C.disp(photo),
+                                   og_image="/" + photo))
 
 
 # ============================================================ BRACES
@@ -322,7 +324,7 @@ build(
 build(
     slug="invisalign",
     title="Invisalign in Downtown Vancouver | Quick 6 Fix $4,299",
-    desc="Invisalign planned by a specialist in downtown Vancouver, not a general dentist. Invisalign Express (Quick 6 Fix) at $4,299 flat, free consult.",
+    desc="Invisalign planned by a specialist in downtown Vancouver, not a general dentist. Invisalign Express (Quick 6 Fix) at $4,299 flat, free consultation.",
     h=hero(
         eyebrow="Invisalign &middot; Downtown Vancouver",
         h1="Invisalign in downtown Vancouver.",
@@ -330,8 +332,8 @@ build(
             "and still sits on Align Technology&rsquo;s scientific advisory board. Simple crowding "
             "and relapse cases fit the Quick 6 Fix at $4,299 flat.",
         chips=["Top 1% of providers globally", "Quick 6 Fix &middot; $4,299 flat", "Free consultation"],
-        photo="assets/photos/dt-7.jpg",
-        alt="Dr. Daher holding an Invisalign aligner at Downtown Orthodontics"),
+        photo="assets/photos/used-3.jpg",
+        alt="Dr. Daher going through an Invisalign plan at his consultation desk"),
     rows=[
         {"eyebrow": "(Why you're here)",
          "h2": "Invisalign is a tool. The result comes from <em>the doctor holding it.</em>",
@@ -358,8 +360,8 @@ build(
              "<b>Refinement covered.</b> Extra aligners to finish it properly are part of the plan.",
              "<b>Clear retainers at the end.</b> With a retention plan Dr. Daher checks himself."],
          "link": "/financing", "link_text": "See the full pricing and financing",
-         "photo": "assets/photos/img-3127.jpg",
-         "alt": "Dr. Daher with an adult Invisalign patient at Downtown Orthodontics"},
+         "photo": "assets/photos/dt-7.jpg",
+         "alt": "Dr. Daher holding an Invisalign aligner at Downtown Orthodontics"},
         {"eyebrow": "(What to expect)",
          "h2": "Discreet enough that <em>most people never notice.</em>",
          "paras": [
@@ -389,7 +391,7 @@ build(
     quote_note="Placeholder: an Invisalign patient&rsquo;s review goes here, quoted verbatim with "
                "attribution. No client-approved quotes are on file yet.",
     service_name="Invisalign and Invisalign Teen",
-    photo="assets/photos/dt-7.jpg",
+    photo="assets/photos/used-3.jpg",
 )
 
 # ============================================================ EARLY ORTHODONTICS
@@ -478,8 +480,8 @@ build(
             "retention plan Dr. Daher checks himself. If an old retainer has stopped fitting, we "
             "can help with that too.",
         chips=["Included in every plan", "Retention checked by a specialist", "Replacements available"],
-        photo="assets/photos/used-1.jpg",
-        alt="A member of the Downtown Orthodontics team holding a clear retainer"),
+        photo="assets/photos/img-3127.jpg",
+        alt="Dr. Daher with an adult patient at Downtown Orthodontics"),
     rows=[
         {"eyebrow": "(Why you're here)",
          "h2": "The result is not finished <em>when the braces come off.</em>",
@@ -491,8 +493,8 @@ build(
              "Most relapse cases we see are not people whose treatment went wrong. They are people "
              "who stopped wearing a retainer in their twenties and came back a decade later."],
          "link": "/#how", "link_text": "See how a first visit works",
-         "photo": "assets/photos/img-3127.jpg",
-         "alt": "Dr. Daher with an adult patient at Downtown Orthodontics",
+         "photo": "assets/photos/used-1.jpg",
+         "alt": "A member of the Downtown Orthodontics team holding a clear retainer",
          "mirror": True},
         {"eyebrow": "(What you get)",
          "h2": "What retention actually involves.",
@@ -538,5 +540,5 @@ build(
     quote_note="Placeholder: a retention or relapse patient&rsquo;s review goes here, quoted verbatim "
                "with attribution. No client-approved quotes are on file yet.",
     service_name="Clear retainers and retention",
-    photo="assets/photos/used-1.jpg",
+    photo="assets/photos/img-3127.jpg",
 )

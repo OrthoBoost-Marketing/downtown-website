@@ -19,7 +19,7 @@ TICK = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden
 # (CLIENT-BRIEF.md, Integrations). orthoboost-ghl-forms + orthoboost-leads-connect
 # finish this at launch.
 FORM = """        <div class="formcard reveal d1">
-          <h2>Request your free consult</h2>
+          <h2>Request your free consultation</h2>
           <form id="request-form" method="post" action="" novalidate>
             <div class="fgrid">
               <div class="field">
@@ -59,7 +59,7 @@ FORM = """        <div class="formcard reveal d1">
             <input type="hidden" name="fbclid" value="" />
             <input type="hidden" name="offer" value="$1,000 off full treatment" />
             <input type="hidden" name="page" value="appointment-request" />
-            <button class="btn btn-primary" type="submit">Request my free consult <span class="arr">&rarr;</span></button>
+            <button class="btn btn-primary" type="submit">Request my free consultation <span class="arr">&rarr;</span></button>
           </form>
           <p class="microline">Your consultation is free and there is no obligation to start.
             We only ask for a name, a phone number and an email, never health details:
@@ -75,7 +75,7 @@ BODY = """
         <div class="reqcopy reveal">
           <p class="crumb"><a href="/">Home</a><span>&middot;</span>Free consultation</p>
           <span class="eyebrow">Free consult &middot; Downtown Vancouver</span>
-          <h1>Schedule your <em>free consult.</em></h1>
+          <h1>Schedule your <em>free consultation.</em></h1>
           <p class="sub">One visit with Dr. Daher, a certified specialist in
             orthodontics. You will leave knowing exactly what your bite needs, what it costs,
             and whether to start now or wait.</p>
@@ -105,7 +105,7 @@ BODY = """
     <div class="wrap">
       <div class="sec-head reveal">
         <span class="eyebrow">(What happens)</span>
-        <h2 class="h2">Your free consult, <em>start to finish.</em></h2>
+        <h2 class="h2">Your free consultation, <em>start to finish.</em></h2>
       </div>
       <ol class="steps reveal d1">
         <li>

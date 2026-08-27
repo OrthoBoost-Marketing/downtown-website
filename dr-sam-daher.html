@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" type="image/png" sizes="48x48" href="/assets/downtown-orthodontics-favicon-48.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/downtown-orthodontics-apple-touch-icon-180.png" />
-<link rel="preload" as="image" href="assets/photos/dt-6.jpg" fetchpriority="high" />
+<link rel="preload" as="image" href="assets/photos/w880/dt-6.jpg" fetchpriority="high" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400&display=swap" rel="stylesheet" />
@@ -57,9 +57,13 @@
         'ink-on-teal': 'var(--ink-on-teal)', line: 'var(--line)',
       },
       fontFamily: { sans: ['Nunito','system-ui','-apple-system','sans-serif'] },
-      borderRadius: { brand: '20px', btn: '12px' },
-      boxShadow: { brand: '0 18px 40px rgba(10,16,22,.12)', soft: '0 10px 30px rgba(10,16,22,.08)' },
-      maxWidth: { content: '1200px' },
+      // Same rule as `colors` above: point at the tokens, never restate their values.
+      // The radius and max-width keys here were literal copies of --radius-lg and --maxw
+      // and had drifted out of sight. Three keys (the 12px button radius, the heavy brand
+      // shadow, and the content max-width) had zero uses on all 17 pages, so they were
+      // dropped rather than re-pointed. Add a key back only when something uses it.
+      borderRadius: { brand: 'var(--radius-lg)' },
+      boxShadow: { soft: 'var(--shadow-soft)' },
     } }
   }
 </script>
@@ -83,11 +87,19 @@
      Structure & editorial feel modelled on hevahealth.com, forked from
      the Smiles concept-e and re-tokened to the Downtown kit:
      pale blue #CCDBE7 + near-black ink #010101 + charcoal #313131 +
-     light grey #EDEDED, all-Nunito. House persona VOICE (warm
-     family-trust + clinical confidence, accessible premium — never
-     luxury/VIP). Confirmed facts only: Quick 6 Fix $4,299, 0% in-house
-     financing, direct insurance billing. No financing figures, no
-     Priority-4 claims (Nira Arora / awards / Diamond Provider).
+     light grey #EDEDED, all-Nunito. VOICE: warm family-trust + clinical
+     confidence, professional and expert. NEVER luxury, VIP, boutique or
+     premium — the brief kills premium language outright, because the real
+     competitor is a general dentist selling discount aligners.
+     WHAT NOW RUNS, all client-confirmed on 2026-08-24: the financing
+     figures ($1,000 down, from $220/mo, 0% in-house, pay in full and save
+     5%, save $450 on a same-day start), Quick 6 Fix $4,299 flat, direct
+     insurance billing, the ten credentials including the 2014 Invisalign
+     Lifetime Achievement Award, and the real 4.4-from-160 Google rating.
+     Do not strip these; they are sourced.
+     STILL UNSUPPLIED, so still absent: the Neera Arora endorsement quote
+     (the brief spells it Neera; an earlier note here wrote "Nira"), any
+     Invisalign provider tier, and real before/after cases.
      ============================================================ */
   :root {
     --teal:   #CCDBE7;                   /* kit pale blue (accent) */
@@ -130,7 +142,7 @@
        8, 12, 20 and 30px were the four most common gaps before tokenizing, so
        those land on exact steps and nothing shifted when they were swapped. ---- */
     --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
-    --sp-6: 24px; --sp-7: 30px; --sp-8: 40px; --sp-9: 56px; --sp-10: 68px;
+    --sp-6: 24px; --sp-7: 30px; --sp-8: 40px; --sp-9: 56px;
 
     /* ---- Type scale. The page carried 38 distinct font sizes; these eight steps
        are the high-use values among them, so the scale describes the design that
@@ -149,7 +161,7 @@
        .display, .hero-title and the financing counters all sit at 200 to 300.
        Anything heavier in display type is off-brand, which is what --fw-display
        exists to stop. ---- */
-    --fw-display: 300; --fw-body: 400; --fw-medium: 500;
+    --fw-display: 300; --fw-medium: 500;
     --fw-semibold: 600; --fw-bold: 700;
 
     /* ---- Structure ---- */
@@ -170,15 +182,12 @@
   .wrap { width: min(100% - 48px, var(--maxw)); margin-inline: auto; }
 
   h1,h2,h3 { margin: 0; font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
-  /* Brand guide type pairing: The Seasons for display headings, Nunito for UI/body.
-     Serif wants generous size and near-zero tracking — scale carries the luxury. */
   h1, h2, .display { font-family: var(--font-display); font-weight: 300; letter-spacing: -0.015em; }
   /* Italic-emphasis headline signature. Emphasised phrase reads in light italic
      Nunito + slate blue — refined, never decorative. */
   h1 em, h2 em, .display em, .path h3 em, .qcard .q em { font-style: italic; font-weight: 300; color: var(--teal-2); }
   .display { font-size: clamp(2.8rem, 6vw, 4.9rem); line-height: 1.04; }
   .h2 { font-size: clamp(2.15rem, 4vw, 3.4rem); line-height: 1.08; }
-  .h3 { font-size: clamp(1.2rem, 1.7vw, 1.45rem); font-weight: 600; letter-spacing: -.02em; }
   .lead { font-size: clamp(1.05rem, 1.4vw, 1.22rem); color: var(--ink-soft); font-weight: 400; }
   p { text-wrap: pretty; }
   /* card-title layer: bolder Nunito for scannability at smaller sizes */
@@ -283,7 +292,7 @@
   .hero-eyebrow { display: inline-flex; align-items: center; gap: 11px; font-size: var(--fs-2xs); font-weight: 700;
     text-transform: uppercase; letter-spacing: .28em; color: var(--ink-soft); margin-bottom: 22px; }
   .hero-eyebrow::before { content: ""; width: 26px; height: 1.5px; background: var(--petrol); }
-  .hero-title { font-family: var(--font-display); font-weight: 200; font-size: clamp(2.5rem, 4.9vw, 4.25rem);
+  .hero-title { font-family: var(--font-display); font-weight: 200; font-size: var(--fs-display-xl);
     line-height: 1.1; letter-spacing: -.015em; text-wrap: balance; }
   .hero-title em { font-style: italic; font-weight: 300; color: var(--petrol); }
   .hero-sub { color: var(--ink-soft); font-size: clamp(1rem, 1.15vw, 1.16rem); line-height: 1.6; max-width: 42ch; margin: 24px 0 30px; }
@@ -324,7 +333,7 @@
     background: var(--bg); color: var(--ink); border-radius: var(--radius); box-shadow: var(--shadow);
     border: var(--border) solid var(--line); padding: 15px 20px 14px; min-width: 188px; }
   .hero-callout .co-eyebrow { display: block; font-size: var(--fs-2xs); font-weight: 700; text-transform: uppercase; letter-spacing: .24em; color: var(--teal-2); }
-  .hero-callout .co-price { font-family: var(--font-display); font-weight: 300; font-size: clamp(2rem,3vw,2.6rem); letter-spacing: -.02em; line-height: 1.08; }
+  .hero-callout .co-price { font-family: var(--font-display); font-weight: 300; font-size: var(--fs-display-md); letter-spacing: -.02em; line-height: 1.08; }
   .hero-callout .co-note { font-size: var(--fs-xs); color: var(--ink-faint); }
 
   /* ---- load choreography: text rises from masks, figure glides in, card pops ---- */
@@ -515,7 +524,11 @@
   .foot-soc { display: flex; gap: 10px; }
   .foot-soc a { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); display: grid; place-items: center; color: #fff; transition: background .2s, border-color .2s; }
   .foot-soc a:hover { background: var(--teal); border-color: var(--teal); color: var(--ink-on-teal); }
-  .foot-col h4 { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.5); margin: 0 0 14px; }
+  /* h3, not h4: there is no h3 above these in the footer, so h4 skipped a heading
+     level on every page. font-weight and line-height are restated because the global
+     h1,h2,h3 rule sets 700/1.08 and the UA h4 default these replace was bold/normal. */
+  .foot-col h3 { font-size: var(--fs-sm); font-weight: 700; line-height: normal;
+    text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.5); margin: 0 0 14px; }
   .foot-col a { display: block; color: var(--on-deep-soft); text-decoration: none; font-size: var(--fs-base); padding: 4px 0; }
   .foot-col a:hover { color: var(--teal); }
   .foot-legal { display: flex; flex-wrap: wrap; gap: var(--sp-5); }
@@ -590,7 +603,7 @@
 </style><style>
   /* ============================================================
      ELEVATION LAYER · 2026-06-25
-     Loads last; augments the base Smiles kit using the same tokens.
+     Loads last; augments the Downtown kit above using the same tokens.
      Adds refined depth, a global blur-in on reveals, hero aura motion,
      card-hover polish, a premium CTA, and the Graphite-style sticky-scroll
      "first visit" journey (#how). House persona: measured, warm, premium.
@@ -707,25 +720,12 @@
 
   .loc-map{ position: relative; aspect-ratio: 5/4.3; border-radius: clamp(16px,2vw,24px); overflow: hidden;
     background: linear-gradient(155deg, #f6fafc, #e7eff5); border: var(--border) solid var(--line); }
-  .loc-map > svg{ position:absolute; inset:0; width:100%; height:100%; }
-  .locpin{ position:absolute; transform: translate(-50%,-50%); z-index: 2; }
-  .locpin .dot{ position:relative; z-index:2; width:15px; height:15px; border-radius:50%; background: var(--bg);
-    border: 3px solid var(--petrol); box-shadow: 0 4px 12px rgba(2,4,6,.2); transition: transform .5s var(--e-out), background .5s var(--e-out); }
-  .locpin.primary .dot{ background: var(--petrol); }
-  .locpin .ring{ position:absolute; left:50%; top:50%; width:15px; height:15px; margin:-7.5px 0 0 -7.5px; border-radius:50%;
-    border: 2px solid var(--petrol); opacity:0; }
-  .locpin .loclabel{ position:absolute; left:50%; bottom: calc(100% + 11px); transform: translateX(-50%) translateY(6px);
-    background: var(--bg); border: var(--border) solid var(--line); border-radius: var(--radius-btn); padding: 8px 13px; text-align:center;
-    font-size:var(--fs-sm); font-weight:700; color: var(--ink); white-space:nowrap; box-shadow: var(--shadow-soft);
-    opacity:0; pointer-events:none; transition: opacity .4s var(--e-out), transform .4s var(--e-out); }
-  .locpin .loclabel small{ display:block; font-weight:500; font-size:var(--fs-2xs); color: var(--ink-faint); margin-top:1px; letter-spacing:.02em; }
-  .locpin .loclabel::after{ content:""; position:absolute; left:50%; top:100%; width:9px; height:9px; transform: translate(-50%,-55%) rotate(45deg);
-    background: var(--bg); border-right:var(--border) solid var(--line); border-bottom:var(--border) solid var(--line); }
-  .locpin.active .dot{ background: var(--petrol); transform: scale(1.3); }
-  .locpin.active .loclabel{ opacity:1; transform: translateX(-50%) translateY(0); z-index:3; }
-  .locpin.active .ring{ animation: loc-pulse 1.9s var(--e-out) infinite; }
-  @keyframes loc-pulse{ 0%{ transform: scale(1); opacity:.5; } 70%{ transform: scale(3.4); opacity:0; } 100%{ opacity:0; } }
-  @media (prefers-reduced-motion: reduce){ .locpin .ring{ animation:none; } .locpin.active .loclabel{ transform: translateX(-50%); } }
+  /* An animated multi-location map-pin system (18 lines of pin CSS, its pulse keyframes,
+     a reduced-motion guard, an inline-SVG map child selector, and a setInterval that
+     cycled the pins) was deleted here on 2026-08-26. It had ZERO matching markup on all
+     17 pages and never could: the practice has one office, and .loc-card holds a Google
+     Maps iframe rather than an inline SVG map. Do not re-add it for a second location;
+     re-add a real map component instead. */
 
   /* ---------- CTA BAND (Section 06) — the mid-page re-ask ----------
      CTA-BAND-SPEC places this directly after the USP zigzag; the closing band before
@@ -1018,7 +1018,11 @@
   .field select { padding-right: var(--sp-3); }
   .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible {
     outline: 2px solid var(--teal-2); outline-offset: 1px; border-color: var(--teal-2); }
-  .formcard .btn { width: 100%; justify-content: center; margin-top: var(--sp-5); min-height: var(--tap); }
+  /* .btn is white-space:nowrap, and a grid item's automatic minimum size is its
+     min-content width, so a long submit label sets the FLOOR for the whole .reqgrid
+     column: "Request my free consultation" forced a 413px track into a 390px viewport.
+     Let the submit label wrap instead. It fits on one line at every width above 390. */
+  .formcard .btn { width: 100%; justify-content: center; margin-top: var(--sp-5); min-height: var(--tap); white-space: normal; }
   .microline { margin: var(--sp-4) 0 0; font-size: var(--fs-sm); color: var(--ink-faint); }
 
   /* numbered step list, reused on appointment + confirmation */
@@ -1320,7 +1324,7 @@
   <!-- NAV -->
   <header class="nav">
     <div class="wrap nav-inner">
-      <a class="logo" href="/" aria-label="Downtown Orthodontics"><img src="assets/Logo_Full-Dark_Downtown%20Orthodontics.png" alt="Downtown Orthodontics" /></a>
+      <a class="logo" href="/" aria-label="Downtown Orthodontics"><img src="assets/Logo_Full-Dark_Downtown%20Orthodontics.png" alt="Downtown Orthodontics" width="700" height="250" /></a>
       <nav class="nav-mid">
         <div class="has-menu">
           <button type="button" aria-haspopup="true">Treatments <svg class="caret" width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -1443,7 +1447,7 @@
   <section class="block">
     <div class="wrap doc-grid" style="align-items:start;">
       <div class="doc-photo reveal">
-        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Sam Daher, orthodontist at Downtown Orthodontics" width="1600" height="2400" fetchpriority="high"></div>
+        <div class="frame"><img src="assets/photos/w880/dt-6.jpg" alt="Dr. Sam Daher, orthodontist at Downtown Orthodontics" width="880" height="1320" fetchpriority="high"></div>
       </div>
       <div class="reveal d1">
         <span class="eyebrow">(In practice)</span>
@@ -1531,14 +1535,14 @@
     <div class="wrap">
       <div class="foot-top">
         <div class="foot-brand">
-          <img src="assets/Logo_Full-Light_Downtown%20Orthodontics.png" alt="Downtown Orthodontics" style="height:42px;" />
+          <img src="assets/Logo_Full-Light_Downtown%20Orthodontics.png" alt="Downtown Orthodontics" width="700" height="250" style="height:42px;" />
           <p>Specialist orthodontics for families and professionals in downtown Vancouver. Conservative, patient-first, and honest about it.</p>
           <!-- Social row removed 2026-08-24: all three icons were href="#" and no profile
                URLs exist on the Notion client record. Restore when Maya supplies them. -->
         </div>
-        <div class="foot-col"><h4>Treatments</h4><a href="/braces">Braces, clear &amp; metal</a><a href="/early-orthodontics">Kids &amp; early care</a><a href="/invisalign">Invisalign &amp; Quick 6 Fix</a><a href="/retainers">Retainers &amp; aftercare</a></div>
-        <div class="foot-col"><h4>Practice</h4><a href="/dr-sam-daher">Meet Dr. Daher</a><a href="/why-choose-us">Why the specialist</a><a href="/reviews">Patient reviews</a><a href="/#how">How it works</a><a href="/contact">Visit us</a><a href="/faq">Questions</a></div>
-        <div class="foot-col"><h4>Visit</h4><a href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">840 W Hastings St, Vancouver, BC V6C 1C8</a><a href="tel:+16046623290">(604) 662-3290</a><a href="https://downtownorthodontics.ca">downtownorthodontics.ca</a><span class="foot-hours">Mon 10:00&ndash;18:00 &middot; Tue 08:00&ndash;15:00</span><span class="foot-hours">Wed 08:00&ndash;16:30 &middot; Thu 08:00&ndash;15:00</span><span class="foot-hours">Friday to Sunday, closed</span></div>
+        <div class="foot-col"><h3>Treatments</h3><a href="/braces">Braces, clear &amp; metal</a><a href="/early-orthodontics">Kids &amp; early care</a><a href="/invisalign">Invisalign &amp; Quick 6 Fix</a><a href="/retainers">Retainers &amp; aftercare</a></div>
+        <div class="foot-col"><h3>Practice</h3><a href="/dr-sam-daher">Meet Dr. Daher</a><a href="/why-choose-us">Why the specialist</a><a href="/reviews">Patient reviews</a><a href="/#how">How it works</a><a href="/contact">Visit us</a><a href="/faq">Questions</a></div>
+        <div class="foot-col"><h3>Visit</h3><a href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">840 W Hastings St, Vancouver, BC V6C 1C8</a><a href="tel:+16046623290">(604) 662-3290</a><a href="https://downtownorthodontics.ca">downtownorthodontics.ca</a><span class="foot-hours">Mon 10:00&ndash;18:00 &middot; Tue 08:00&ndash;15:00</span><span class="foot-hours">Wed 08:00&ndash;16:30 &middot; Thu 08:00&ndash;15:00</span><span class="foot-hours">Friday to Sunday, closed</span></div>
       </div>
       <div class="foot-base">
         <span>© 2026 Downtown Orthodontics. All rights reserved.</span>
@@ -1656,23 +1660,6 @@
         if (e.isIntersecting) { const i = panels.indexOf(e.target); if (i >= 0) setActive(i); }
       }), { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
       panels.forEach(p => jo.observe(p));
-    })();
-
-    // ===== (WHERE TO FIND US) — cycle the active map pin + its label =====
-    (function(){
-      const pins = [...document.querySelectorAll('.locpin')];
-      const sec = document.querySelector('.locations');
-      if (!pins.length || !sec) return;
-      const primary = pins.find(p => p.classList.contains('primary')) || pins[0];
-      const show = (el) => pins.forEach(p => p.classList.toggle('active', p === el));
-      if (reduce) { show(primary); return; }
-      let i = Math.max(0, pins.indexOf(primary)), timer = null;
-      const io = new IntersectionObserver((es) => es.forEach(e => {
-        if (e.isIntersecting && !timer) {
-          timer = setInterval(() => { i = (i + 1) % pins.length; show(pins[i]); }, 2200);
-        }
-      }), { threshold: .35 });
-      io.observe(sec);
     })();
 
     // ===== Headline choreography — split each display heading into words that

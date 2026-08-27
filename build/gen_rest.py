@@ -52,7 +52,7 @@ DOC_BODY = phero(
   <section class="block">
     <div class="wrap doc-grid" style="align-items:start;">
       <div class="doc-photo reveal">
-        <div class="frame"><img src="assets/photos/dt-6.jpg" alt="Dr. Sam Daher, orthodontist at Downtown Orthodontics" /></div>
+        <div class="frame"><img src="assets/photos/w880/dt-6.jpg" alt="Dr. Sam Daher, orthodontist at Downtown Orthodontics" /></div>
       </div>
       <div class="reveal d1">
         <span class="eyebrow">(In practice)</span>
@@ -144,7 +144,7 @@ C.write("dr-sam-daher.html", C.page(
     title="Dr. Sam Daher, Orthodontist | Downtown Vancouver",
     desc="Downtown Vancouver orthodontist Dr. Sam Daher, a certified specialist with 30+ years. Align Technology advisory board, 2014 Invisalign Lifetime Award.",
     slug="dr-sam-daher", body=DOC_BODY, schema=DOC_SCHEMA,
-    preload="assets/photos/dt-6.jpg", og_image="/assets/photos/dt-6.jpg"))
+    preload="assets/photos/w880/dt-6.jpg", og_image="/assets/photos/dt-6.jpg"))
 
 # ==================================================================== WHY CHOOSE US
 # WHY-PAGE-SPEC: no form. Six USPs as a grid, then deep-dives on the top three.
@@ -169,7 +169,7 @@ USPS = [
      "Close enough to the office towers that adjustments fit into a lunch break, and close enough "
      "to transit that a school run works."),
 ]
-usp_cards = "\n".join("""        <div class="reveal%s rounded-brand border border-line bg-white p-7 shadow-soft" style="border-radius:var(--radius-lg);">
+usp_cards = "\n".join("""        <div class="reveal%s rounded-brand border border-line bg-white p-7 shadow-soft">
           <h3 style="font-size:var(--fs-xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-3);letter-spacing:-.01em;">%s</h3>
           <p style="margin:0;color:var(--ink-soft);font-size:var(--fs-md);">%s</p>
         </div>""" % ((" d%d" % (i % 3) if i % 3 else ""), t, b) for i, (t, b) in enumerate(USPS))
@@ -236,7 +236,7 @@ WHY_BODY = phero(
           <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">The
             aligners themselves come from the same company wherever you go. The planning does not.</p>
         </div>
-        <div class="hero-frame"><img src="assets/photos/practice.jpg" alt="Dr. Daher at Downtown Orthodontics" /></div>
+        <div class="hero-frame"><img src="assets/photos/w880/practice.jpg" alt="Dr. Daher at Downtown Orthodontics" /></div>
       </div>
     </div>
   </section>
@@ -244,7 +244,7 @@ WHY_BODY = phero(
   <section class="block">
     <div class="wrap">
       <div class="reqgrid reveal">
-        <div class="hero-frame" style="order:-1;"><img src="assets/photos/used-3.jpg" alt="Dr. Daher explaining a treatment plan at his consultation desk" /></div>
+        <div class="hero-frame" style="order:-1;"><img src="assets/photos/w880/used-3.jpg" alt="Dr. Daher explaining a treatment plan at his consultation desk" /></div>
         <div>
           <h2 style="font-family:var(--font);font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">A specialist plans it either way</h2>
           <p style="color:var(--ink-soft);font-size:var(--fs-md);">A general dental office selling
@@ -272,7 +272,7 @@ WHY_BODY = phero(
           <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">
             <a class="tlink" href="/early-orthodontics">Read about kids&rsquo; early care <span class="arr">&rarr;</span></a></p>
         </div>
-        <div class="hero-frame"><img src="assets/photos/office-inside.jpg" alt="The Downtown Orthodontics treatment area" /></div>
+        <div class="hero-frame"><img src="assets/photos/w880/office-inside.jpg" alt="The Downtown Orthodontics treatment area" /></div>
       </div>
     </div>
   </section>
