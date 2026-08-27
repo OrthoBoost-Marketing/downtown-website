@@ -442,6 +442,37 @@
   .hero.hero-play .hero-actions { opacity: 1; transform: none; transition-delay: .58s; }
   .hero.hero-play .hero-cred { opacity: 1; transform: none; transition-delay: .70s; }
 
+  /* ---------- hero scroll handoff (2026-08-27) ----------
+     The cascade above plays once, on load. This is the second beat, and it is driven by
+     scroll position rather than by a timer, which is what every other section on this page
+     does. As the reader scrolls, the copy lifts slightly faster than the page while the
+     portrait lags behind it, so the hero comes apart a little and hands off to the
+     credentials bar instead of sliding away as one flat plate.
+
+     --hero-p runs 0 (hero at rest) to 1 (hero fully scrolled past) and is written by the
+     handoff block in the shared script. At p = 0 every transform below is the identity, so
+     a browser with JS disabled sees exactly what it saw before this existed.
+
+     Deliberately does NOT touch .hero-mask children, .hero-figure, .hero-actions,
+     .hero-cred or .hero-callout. The load cascade animates transform on all of those, and
+     two rules fighting over one property is exactly how an entrance animation ends up
+     stuck half-played.
+
+     The portrait's translate is a percentage of its OWN height and stays inside the scale
+     headroom it creates, so the frame never shows an edge. The service pages reuse
+     .hero / .hero-copy / .hshot, so they inherit this too. */
+  .hero { --hero-p: 0; }
+  .hero-copy {
+    transform: translate3d(0, calc(var(--hero-p) * -26px), 0);
+    opacity: calc(1 - var(--hero-p) * .18);
+  }
+  .hero-frame .hshot {
+    transform: translate3d(0, calc(var(--hero-p) * 2.5%), 0) scale(calc(1 + var(--hero-p) * .07));
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero-copy, .hero-frame .hshot { transform: none; opacity: 1; }
+  }
+
   @media (max-width: 900px){
     .hero .wrap { grid-template-columns: 1fr; gap: 30px; padding-block: 32px 36px; }
     .hero-copy { max-width: none; }
@@ -479,16 +510,28 @@
     .hero-screen .creds { flex: 0 0 auto; }
   }
 
-  /* ---------- credentials bar (static; TRUST-BAR-SPEC rules 2, 3 and 5) ---------- */
+  /* ---------- credentials bar (scrolling marquee, Jules 2026-08-27) ----------
+     Four cells, no icons, in the shared .mq component. The label row carries the pause
+     toggle, which is required by house marquee condition 1 and which the original version
+     of this bar never had. Deliberate deviation from TRUST-BAR-SPEC rule 5, which bans a
+     scroller here. */
   .creds { padding: 17px 0 19px; border-bottom: var(--border) solid var(--line); background: var(--bg); }
-  .creds .t { text-align: center; color: var(--ink-faint); font-size: var(--fs-xs); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 11px; }
-  .cred-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--sp-3) var(--sp-7); align-items: start; justify-items: center; }
-  .cred-cell { text-align: center; color: var(--ink-soft); font-family: var(--font);
-    font-weight: var(--fw-semibold); font-size: var(--fs-lg); line-height: 1.3; max-width: 22ch; }
+  .creds .t { text-align: center; color: var(--ink-faint); font-size: var(--fs-xs); letter-spacing: .2em; text-transform: uppercase; }
+  .creds-head { display: flex; align-items: center; justify-content: center;
+    gap: var(--sp-4); flex-wrap: wrap; margin-bottom: 11px; }
+  /* The bar is slim, so the visible pill is smaller here than the one under the reviews.
+     The HIT AREA is still a full --tap 44px though, extended by a transparent overlay
+     rather than by min-height, which would have pushed this bar 14px taller on mobile
+     where the label already wraps to two lines. 30px pill + 7px top + 7px bottom = 44. */
+  .creds .mq-ctl { min-height: 30px; padding: 0 var(--sp-3); font-size: var(--fs-2xs); position: relative; }
+  .creds .mq-ctl::after { content: ""; position: absolute; left: 0; right: 0; top: -7px; bottom: -7px; }
+  .mq-creds { gap: 56px; }
+  .cred { display: inline-flex; align-items: center; gap: 10px; color: var(--ink-soft);
+    font-weight: var(--fw-semibold); font-size: var(--fs-lg); white-space: nowrap; }
+  .mq-creds > .cred { flex: 0 0 auto; }
   @media (max-width: 720px){
-    .cred-row { grid-template-columns: 1fr 1fr; gap: var(--sp-4) var(--sp-5); }
-    .cred-cell { font-size: var(--fs-base); }
+    .mq-creds { gap: 34px; }
+    .cred { font-size: var(--fs-base); }
   }
 
   /* ---------- section base ---------- */
@@ -1533,24 +1576,38 @@
     </div>
   </section>
 
-  <!-- CREDENTIALS BAR (Section 03). Four STATIC typographic cells: TRUST-BAR-SPEC rule 2
-       caps the bar at 3-5, rule 3 bans icons ("an icon grid above stats is the #1
-       generic-AI tell"), and rule 5 bans a horizontal scroller and asks for a 2x2 grid on
-       mobile. This was an eight-cell icon marquee until 2026-08-27; nothing here scrolls,
-       drags or takes focus any more. The four kept are the ones a patient actually decides
-       on. The award, the advisory board and the lecture count are prestige rather than
-       decision material, and all three are stated in full in the credentials section
-       below; "Braces & Invisalign, planned by a specialist" already runs verbatim in the
-       hero credential row a few lines above. -->
+  <!-- CREDENTIALS BAR (Section 03). A scrolling marquee again as of 2026-08-27, on
+       Jules's ruling, carrying the FOUR cells chosen that morning rather than the original
+       eight. The award, the advisory board and the lecture count stay out: they are
+       prestige rather than decision material and all three are stated in full in the
+       credentials section below, and "Braces & Invisalign, planned by a specialist"
+       already runs verbatim in the hero credential row a few lines above.
+
+       DELIBERATE SPEC DEVIATION: TRUST-BAR-SPEC rule 5 bans a horizontal scroller in this
+       section. Overridden by Jules. Rule 2 (3 to 5 cells) is satisfied at four, and rule 3
+       (no icons) is still honoured, so the cells are typographic.
+
+       The house marquee allowance carries three conditions, and this bar now meets all
+       three, which the ORIGINAL version of it did not: it had no pause control at all.
+       Pause/play is the real <button> below with aria-pressed, hover, focus and tap also
+       pause, it drags on desktop and mobile through the shared .mq component, and the four
+       cells are real text in the DOM. Only the JS-injected duplicates are aria-hidden. -->
   <div class="creds">
     <div class="wrap">
-      <div class="t">Downtown Vancouver's orthodontic specialists</div>
-      <div class="cred-row">
-        <span class="cred-cell">Certified Specialist in Orthodontics</span>
-        <span class="cred-cell">30+ Years in Practice</span>
-        <span class="cred-cell">0% In-House Financing</span>
-        <span class="cred-cell">Direct Insurance Billing</span>
+      <div class="creds-head">
+        <div class="t">Downtown Vancouver's orthodontic specialists</div>
+        <button class="mq-ctl" type="button" data-marquee-toggle aria-pressed="false">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+          <span data-marquee-label>Pause</span>
+        </button>
       </div>
+    </div>
+    <div class="mq mq-creds" data-marquee data-speed="0.25" tabindex="0" role="region"
+         aria-label="Practice credentials, scrollable. Drag or use the arrow keys.">
+      <span class="cred">Certified Specialist in Orthodontics</span>
+      <span class="cred">30+ Years in Practice</span>
+      <span class="cred">0% In-House Financing</span>
+      <span class="cred">Direct Insurance Billing</span>
     </div>
   </div>
   </div><!-- /hero-screen -->
@@ -1573,22 +1630,27 @@
       <div class="doc-photo reveal">
         <div class="frame"><img src="assets/photos/w880/dt-6.jpg" alt="Dr. Daher, orthodontist at Downtown Orthodontics" loading="lazy" decoding="async" width="880" height="1320"></div>
       </div>
-      <div class="reveal d1">
-        <span class="eyebrow">(Meet Dr. Sam Daher)</span>
+      <!-- Staggered on 2026-08-27. This column used to be a single `.reveal d1`, so the
+           whole card arrived as one lump while every other section on the page brings its
+           pieces in on the d1/d2/d3 delays. The h2 carries no `.reveal`: the word-splitter
+           animates it per word, and `.split.reveal` deliberately cancels the block reveal
+           so the two do not fight each other. -->
+      <div class="doc-body">
+        <span class="eyebrow reveal">(Meet Dr. Sam Daher)</span>
         <h2 class="h2">One specialist, <em>start to finish.</em></h2>
-        <p class="bio">Dr. Daher has planned orthodontic treatment for over 30 years, and leads a specialist orthodontic practice in downtown Vancouver. He opened the world's first Invisalign-only practice in 2009, has taught in 142 cities across six continents, and still sits on Align Technology's scientific advisory board. His patients range from seven-year-olds at their first growth check to adults with cases other offices declined, and his rule hasn't changed: careful diagnosis, honest recommendations, and no unnecessary extractions.</p>
+        <p class="bio reveal d1">Dr. Daher has planned orthodontic treatment for over 30 years, and leads a specialist orthodontic practice in downtown Vancouver. He opened the world's first Invisalign-only practice in 2009, has taught in 142 cities across six continents, and still sits on Align Technology's scientific advisory board. His patients range from seven-year-olds at their first growth check to adults with cases other offices declined, and his rule hasn't changed: careful diagnosis, honest recommendations, and no unnecessary extractions.</p>
         <!-- Three credential chips, down from six on 2026-08-27. MEET-THE-DOCTOR-SPEC
              ("Cross-section discipline") says a credential that already ran in the trust
              bar must not be repeated here, and the bar now carries "Certified Specialist
              in Orthodontics" and "30+ Years in Practice" verbatim. The Invisalign
              Lifetime Achievement Award came out too: it is stated as the lead card of the
              credentials section below, which is the one place it now appears. -->
-        <div class="doc-creds">
+        <div class="doc-creds reveal d2">
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Complex &amp; referred cases welcome</span>
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Align scientific advisory board</span>
           <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Founder, Daher Aligner Institute</span>
         </div>
-        <div class="hero-actions">
+        <div class="hero-actions reveal d3">
           <!-- ONE outline CTA. The spec bans a solid booking button here, and bans a second
                CTA, so the old "See the full record" link to #credentials came out too: that
                section sits immediately below this one anyway. -->
@@ -1664,10 +1726,13 @@
   <!-- (CREDENTIALS & RECOGNITION): the doctor's record, front and centre.
        Source: consolidated client direction from Maya, 2026-08-24. Nine items, in the
        order she gave them: the three lead cards carry the first, fourth and ninth,
-       the ruled list carries the rest, so every fact is stated exactly once.
-       The "Former associate professor" row was deleted on 2026-08-27: that exact string
-       ran three times on this page, and the authority band below states it per
-       institution, under each university's own wordmark, which is that band's job.
+       the ruled list carries the other six, which is the even 3x3 the section was asked
+       for and which fills the ruled list's second row exactly.
+       The "Former associate professor" row was deleted on the morning of 2026-08-27 as a
+       duplicate, then RESTORED the same day on Jules's call. The overlap is accepted, not
+       overlooked: the authority band below carries Universite de Montreal and University
+       of the Pacific as wordmarks, so the row states the relationship in words and the
+       band shows the institutions.
        Previously held out of every concept as unconfirmed
        "Priority-4" claims; the client has now supplied them, so they run.
        NOTE the company is "Align Technology" (singular) — the source note wrote
@@ -1687,9 +1752,10 @@
       <div class="credo-list">
         <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>An early adopter of Invisalign</b><span>Dr. Daher worked with Align Technology&rsquo;s founder on the company&rsquo;s scientific advisory board.</span></div></div>
         <div class="ci reveal d1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Still on Align&rsquo;s scientific advisory board</b><span>One of a select few orthodontists serving on it today.</span></div></div>
-        <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Founder of two ventures beyond the practice</b><span>The Daher Aligner Institute, and Stream Dental HR.</span></div></div>
-        <div class="ci reveal d1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>McGill&rsquo;s Dr. James McCutcheon award</b><span>Recognised by his alma mater.</span></div></div>
-        <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Top 1% of Invisalign providers globally</b><span>And the top provider worldwide from 2009 to 2011.</span></div></div>
+        <div class="ci reveal d2"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Founder of two ventures beyond the practice</b><span>The Daher Aligner Institute, and Stream Dental HR.</span></div></div>
+        <div class="ci reveal"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>McGill&rsquo;s Dr. James McCutcheon award</b><span>Recognised by his alma mater.</span></div></div>
+        <div class="ci reveal d1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Top 1% of Invisalign providers globally</b><span>And the top provider worldwide from 2009 to 2011.</span></div></div>
+        <div class="ci reveal d2"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Former associate professor</b><span>University of Montreal and University of the Pacific.</span></div></div>
       </div>
 
     </div>
@@ -2175,6 +2241,41 @@
       document.querySelectorAll('.reveal').forEach(el=>{ if(!el.closest('.hero')) io.observe(el); });
     }
 
+    /* ---------- hero scroll handoff ----------
+       Writes --hero-p on .hero: 0 while the hero sits at rest, 1 once it has scrolled
+       fully past. The CSS above turns that into a small parallax split between the copy
+       and the portrait.
+
+       Cheap by construction: one rAF per scroll burst rather than work per scroll event,
+       and no work at all once the hero has left the viewport. Reduced motion opts out
+       before any listener is attached. */
+    (function(){
+      var hero = document.querySelector('.hero');
+      if (!hero || reduce) return;
+      var pending = false, onscreen = true;
+      function apply(){
+        pending = false;
+        var h = hero.offsetHeight || 1;
+        var p = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / h));
+        hero.style.setProperty('--hero-p', p.toFixed(4));
+      }
+      function queue(){
+        if (pending || !onscreen) return;
+        pending = true;
+        requestAnimationFrame(apply);
+      }
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function(entries){
+          onscreen = entries[0].isIntersecting;
+          // settle at the end state rather than freezing mid-drift on the way out
+          if (onscreen) queue(); else hero.style.setProperty('--hero-p', '1');
+        }).observe(hero);
+      }
+      addEventListener('scroll', queue, { passive: true });
+      addEventListener('resize', queue, { passive: true });
+      apply();
+    })();
+
     // Testimonial marquee — duplicate each column once so the vertical loop is seamless
 
 
@@ -2327,17 +2428,30 @@
         // Clone for a seamless loop. Clones are injected here, never in the HTML, and
         // are aria-hidden, so neither Google nor a screen reader sees duplicates.
         var half = 0;
+        function mkClone(n){
+          var c = n.cloneNode(true);
+          c.setAttribute('data-mq-clone','');
+          c.setAttribute('aria-hidden','true');
+          c.querySelectorAll('a,button,input,select,textarea').forEach(function(f){ f.tabIndex = -1; });
+          return c;
+        }
         function buildClones(){
           track.querySelectorAll('[data-mq-clone]').forEach(function(n){ n.remove(); });
+          // A strip narrower than its bar has nothing to scroll, so it would sit
+          // motionless. The credentials bar is four short cells and does exactly that on a
+          // desktop viewport: 731px of text in a 1200px bar. So repeat the set until it is
+          // wider than the bar BEFORE measuring the wrap point. The reviews marquee already
+          // overflows many times over, so this loop never runs for it.
+          var guard = 0;
+          while (track.scrollWidth <= track.clientWidth + 8 && guard++ < 24) {
+            var before = track.scrollWidth;
+            originals.forEach(function(n){ track.appendChild(mkClone(n)); });
+            if (track.scrollWidth <= before) break;    // zero-width content, do not spin
+          }
           half = track.scrollWidth;
-          if (half <= track.clientWidth + 8) return false;   // nothing to scroll
-          originals.forEach(function(n){
-            var c = n.cloneNode(true);
-            c.setAttribute('data-mq-clone','');
-            c.setAttribute('aria-hidden','true');
-            c.querySelectorAll('a,button,input,select,textarea').forEach(function(f){ f.tabIndex = -1; });
-            track.appendChild(c);
-          });
+          if (half <= track.clientWidth + 8) return false;   // still nothing to scroll
+          // mirror the whole strip once so the wrap at `half` lands on identical content
+          [].slice.call(track.children).forEach(function(n){ track.appendChild(mkClone(n)); });
           return true;
         }
         var scrollable = buildClones();
