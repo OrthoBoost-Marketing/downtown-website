@@ -1770,8 +1770,15 @@
         var originals = [].slice.call(track.children);
         if (!originals.length) return;
 
-        // Clone for a seamless loop. Clones are injected here, never in the HTML, and
-        // are aria-hidden, so neither Google nor a screen reader sees duplicates.
+        // Clone for a seamless loop. Clones are injected here, never in the HTML, and are
+        // aria-hidden, so a screen reader does not see duplicates.
+        //
+        // CORRECTED 2026-08-27: this comment used to claim Google does not see them either.
+        // That is false. aria-hidden removes a node from the accessibility tree, not from the
+        // rendered text a crawler extracts, so the duplicates ARE in the indexable text
+        // (measured: 2018 of the homepage's 13660 rendered characters). It is harmless
+        // boilerplate repetition and worth nothing, which is the actual reason never to put a
+        // phrase in a marquee hoping the clones multiply it.
         var half = 0;
         function mkClone(n){
           var c = n.cloneNode(true);
