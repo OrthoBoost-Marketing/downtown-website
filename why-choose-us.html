@@ -1161,9 +1161,11 @@
   .prose .legal-note { border: var(--border) solid var(--line); border-radius: var(--radius);
     padding: var(--sp-5); background: var(--surface); font-size: var(--fs-base); color: var(--ink-soft); margin-bottom: var(--sp-7); }
 
-  /* placeholder slot, used wherever the brief says TBD */
-  .slot { border: var(--border) dashed var(--line-strong, var(--ink-faint)); border-radius: var(--radius);
-    padding: var(--sp-5); background: var(--bg); font-size: var(--fs-base); color: var(--ink-faint); font-style: italic; }
+  /* .slot (the dashed placeholder box) was removed on 2026-08-27. Its last two users, the
+     doctor page's "in his own words" section and the team block on why-choose-us, were cut
+     rather than launched empty, and the other six were filled with real reviews. It was
+     shipping into all 17 pages via the sliced stylesheet. Re-add it if a future build needs
+     an honest visible gap again. */
 
   @media (max-width: 900px){
     .reqgrid { grid-template-columns: 1fr; }
@@ -1663,9 +1665,12 @@
         <p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-5);">The practice
           is deliberately small. You see Dr. Daher at every visit and the same handful of people at
           the front desk and chairside, which means nobody has to read your history back to you.</p>
-        <p class="slot" style="margin-top:var(--sp-5);">Placeholder: named team introductions go here
-          once the practice supplies bios and headshots. There is no separate team page for the
-          same reason.</p>
+        <!-- No named introductions. Maya and Bita are known to us by first name only, with
+             no roles, bios or headshots on file. This shipped as a visible placeholder until
+             2026-08-27, when Jules cut it: the heading and the paragraph above already make
+             the small-practice point without naming anyone, and there is no separate team
+             page for the same reason. Full names plus job titles are enough to restore it,
+             and it can run type-only if headshots never arrive. -->
       </div>
     </div>
   </section>

@@ -80,20 +80,13 @@ DOC_BODY = phero(
     </div>
   </section>
 
-  <!-- THE PLACEHOLDER THE SPEC REQUIRES US TO BE HONEST ABOUT -->
-  <section class="block" style="background:var(--surface);">
-    <div class="wrap" style="max-width:760px;">
-      <div class="reveal">
-        <span class="eyebrow">(In his own words)</span>
-        <h2 class="h2">Still to come.</h2>
-        <p class="slot" style="margin-top:var(--sp-5);">Placeholder, and a deliberate one. The kit&rsquo;s
-          doctor-page spec asks for story before credentials: why he chose orthodontics, what shaped
-          the conservative approach, and a short &ldquo;away from the office&rdquo; section. None of
-          that is on file, and this build does not invent biography. Roughly 200 words from
-          Dr. Daher closes this section, plus 60 words on life outside the practice.</p>
-      </div>
-    </div>
-  </section>
+  <!-- NO "in his own words" section. The kit's doctor-page spec asks for story before
+       credentials: why he chose orthodontics, what shaped the conservative approach, and a
+       short "away from the office" note. None of that is on file and this build does not
+       invent biography, so the section shipped as a visible placeholder until 2026-08-27,
+       when Jules cut it rather than launch with an empty promise on the page. The
+       credentials, the record and the treatment philosophy carry the page on their own.
+       Roughly 200 words from Dr. Daher plus 60 on life outside restores it. -->
 
   <!-- CREDENTIALS, identical treatment to the homepage section -->
   <section class="block credo" id="credentials">
@@ -286,9 +279,12 @@ WHY_BODY = phero(
         <p style="color:var(--ink-soft);font-size:var(--fs-lg);margin-top:var(--sp-5);">The practice
           is deliberately small. You see Dr. Daher at every visit and the same handful of people at
           the front desk and chairside, which means nobody has to read your history back to you.</p>
-        <p class="slot" style="margin-top:var(--sp-5);">Placeholder: named team introductions go here
-          once the practice supplies bios and headshots. There is no separate team page for the
-          same reason.</p>
+        <!-- No named introductions. Maya and Bita are known to us by first name only, with
+             no roles, bios or headshots on file. This shipped as a visible placeholder until
+             2026-08-27, when Jules cut it: the heading and the paragraph above already make
+             the small-practice point without naming anyone, and there is no separate team
+             page for the same reason. Full names plus job titles are enough to restore it,
+             and it can run type-only if headshots never arrive. -->
       </div>
     </div>
   </section>

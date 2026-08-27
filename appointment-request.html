@@ -1162,9 +1162,11 @@
   .prose .legal-note { border: var(--border) solid var(--line); border-radius: var(--radius);
     padding: var(--sp-5); background: var(--surface); font-size: var(--fs-base); color: var(--ink-soft); margin-bottom: var(--sp-7); }
 
-  /* placeholder slot, used wherever the brief says TBD */
-  .slot { border: var(--border) dashed var(--line-strong, var(--ink-faint)); border-radius: var(--radius);
-    padding: var(--sp-5); background: var(--bg); font-size: var(--fs-base); color: var(--ink-faint); font-style: italic; }
+  /* .slot (the dashed placeholder box) was removed on 2026-08-27. Its last two users, the
+     doctor page's "in his own words" section and the team block on why-choose-us, were cut
+     rather than launched empty, and the other six were filled with real reviews. It was
+     shipping into all 17 pages via the sliced stylesheet. Re-add it if a future build needs
+     an honest visible gap again. */
 
   @media (max-width: 900px){
     .reqgrid { grid-template-columns: 1fr; }

@@ -1175,9 +1175,11 @@
   .prose .legal-note { border: var(--border) solid var(--line); border-radius: var(--radius);
     padding: var(--sp-5); background: var(--surface); font-size: var(--fs-base); color: var(--ink-soft); margin-bottom: var(--sp-7); }
 
-  /* placeholder slot, used wherever the brief says TBD */
-  .slot { border: var(--border) dashed var(--line-strong, var(--ink-faint)); border-radius: var(--radius);
-    padding: var(--sp-5); background: var(--bg); font-size: var(--fs-base); color: var(--ink-faint); font-style: italic; }
+  /* .slot (the dashed placeholder box) was removed on 2026-08-27. Its last two users, the
+     doctor page's "in his own words" section and the team block on why-choose-us, were cut
+     rather than launched empty, and the other six were filled with real reviews. It was
+     shipping into all 17 pages via the sliced stylesheet. Re-add it if a future build needs
+     an honest visible gap again. */
 
   @media (max-width: 900px){
     .reqgrid { grid-template-columns: 1fr; }
@@ -1595,20 +1597,13 @@
     </div>
   </section>
 
-  <!-- THE PLACEHOLDER THE SPEC REQUIRES US TO BE HONEST ABOUT -->
-  <section class="block" style="background:var(--surface);">
-    <div class="wrap" style="max-width:760px;">
-      <div class="reveal">
-        <span class="eyebrow">(In his own words)</span>
-        <h2 class="h2">Still to come.</h2>
-        <p class="slot" style="margin-top:var(--sp-5);">Placeholder, and a deliberate one. The kit&rsquo;s
-          doctor-page spec asks for story before credentials: why he chose orthodontics, what shaped
-          the conservative approach, and a short &ldquo;away from the office&rdquo; section. None of
-          that is on file, and this build does not invent biography. Roughly 200 words from
-          Dr. Daher closes this section, plus 60 words on life outside the practice.</p>
-      </div>
-    </div>
-  </section>
+  <!-- NO "in his own words" section. The kit's doctor-page spec asks for story before
+       credentials: why he chose orthodontics, what shaped the conservative approach, and a
+       short "away from the office" note. None of that is on file and this build does not
+       invent biography, so the section shipped as a visible placeholder until 2026-08-27,
+       when Jules cut it rather than launch with an empty promise on the page. The
+       credentials, the record and the treatment philosophy carry the page on their own.
+       Roughly 200 words from Dr. Daher plus 60 on life outside restores it. -->
 
   <!-- CREDENTIALS, identical treatment to the homepage section -->
   <section class="block credo" id="credentials">
