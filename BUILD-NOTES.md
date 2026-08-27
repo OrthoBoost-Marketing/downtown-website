@@ -751,3 +751,70 @@ both merge, keep running `post_media.py` last.
 - No-JS form delivery is **untested**, not working-as-far-as-we-know. The forms keep a real
   `action`, but a native POST sends urlencoded and the GHL webhook trigger is only known to
   parse JSON. Every form carries a `<noscript>` block pointing at the phone.
+
+## data-speed is PIXELS PER SECOND, not per frame (2026-08-27)
+
+Jules reported the credentials marquee "doesn't work". It was running. It was moving at
+**15 pixels per second**, which is not motion any reader perceives: a cell took 13 seconds to
+cross and a full loop ran about two minutes.
+
+Two defects, both in the speed maths, and the second is the one worth remembering.
+
+**It was too slow.** `pos += speed` added `data-speed` pixels on every animation frame, and
+the credentials bar carried `data-speed="0.25"`.
+
+**The speed was never a speed.** Because the increment was per frame, the same page ran at
+15px/s on a 60Hz display, 30px/s on a 120Hz laptop and 36px/s on a 144Hz monitor. Any
+per-frame increment is really a per-refresh-rate increment.
+
+The loop is now time-based: it advances `speed * elapsedSeconds`, so `data-speed` is
+**pixels per second** and identical on every display. `dt` is clamped to 50ms because
+`requestAnimationFrame` stops in a background tab, and without the clamp the first frame back
+carries seconds of delta and teleports the strip.
+
+Current values, all three re-expressed in the new unit:
+
+| Track | Was (px/frame) | Now (px/s) | Note |
+|---|---|---|---|
+| `.mq-creds`, homepage | 0.25 | **48** | raised to be visibly moving |
+| `.mq-reviews`, homepage | 0.35 | **21** | 0.35 x 60, so unchanged on a 60Hz screen |
+| `.mq-liners`, `/reviews` | 0.3 | **18** | 0.3 x 60, likewise unchanged at 60Hz |
+
+The two reviews strips were deliberately converted at their existing 60Hz behaviour rather
+than retuned, so nothing about those sections changed for most readers. They simply stopped
+running at double speed on high-refresh displays.
+
+**`.mq-liners` lives in `build/gen_reviews.py`, not in `index.html`.** It is not part of the
+sliced chrome, so changing the unit in the homepage script alone left it declaring `0.3`,
+which under the new unit is one pixel every three seconds. Caught by grepping
+`data-speed` across `build/*.py` after the edit. Any future change to the marquee unit has to
+touch that file too.
+
+### The loop period is measured from the DOM
+
+`half` used to be `track.scrollWidth` taken *before* the mirror was appended. That is the
+width of the content, but the loop period is the distance from a cell to its mirrored copy,
+which also includes the flex gap between the strip and the mirror. Wrapping at the content
+width landed one gap short, so the strip jumped visibly once per loop.
+
+It now comes from `children[period].offsetLeft - children[0].offsetLeft`, which is exact and
+needs no knowledge of the gap. That matters because the gap is not constant: the credentials
+bar drops from 56px to 34px below 720px.
+
+### How this was verified, after two methods lied
+
+Worth writing down, because the first two answers were both wrong:
+
+- **The in-app Browser pane is useless for this.** It frequently does not lay out or
+  composite, so `clientWidth` reads 0 and `scrollLeft` reads 0 even while the animation runs.
+  It also reported the strip advancing at ~60px/s at one point, because with no vsync its
+  `requestAnimationFrame` runs unthrottled, which flattered the old per-frame code.
+- **`--virtual-time-budget` renders understate travel.** Virtual time advances in large steps
+  and the 50ms `dt` clamp caps each step's contribution, so a 3-second budget showed 8px of
+  travel against 144px of real travel.
+- **What worked: real headless Chrome driven over CDP against a wall clock.** Launch with
+  `--remote-debugging-port`, connect from Node (v24 has global `fetch` and `WebSocket`, no npm
+  needed), and sample `scrollLeft` over several seconds. That measured 47.9px/s against a
+  declared 48, and confirmed `wrapLandsOnSameContent` on both marquees. Scripts kept in the
+  session scratchpad as `measure-marquee.mjs` and `verify-wrap.mjs`.
+

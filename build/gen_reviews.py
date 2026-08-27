@@ -117,7 +117,11 @@ __HERO__
     <div class="wrap">
       <h2 class="sr-only">Patient reviews at a glance</h2>
       <div class="mq-wrap reveal">
-        <div class="mq mq-liners" data-marquee data-speed="0.3" tabindex="0" role="region"
+        <!-- data-speed is PIXELS PER SECOND since 2026-08-27 (it used to be px per
+             frame, which made every marquee display-dependent). 18 is 0.3 x 60, so this
+             strip behaves exactly as it did on a 60Hz screen and no longer runs double
+             speed on a 120Hz one. -->
+        <div class="mq mq-liners" data-marquee data-speed="18" tabindex="0" role="region"
              aria-label="Short quotes from patient reviews, scrollable. Drag or use the arrow keys.">
 __LINERS__
         </div>

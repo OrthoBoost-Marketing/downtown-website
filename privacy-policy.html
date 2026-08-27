@@ -1736,7 +1736,10 @@
     // touch drag, momentum and keyboard scrolling are native.
     (function(){
       document.querySelectorAll('[data-marquee]').forEach(function(track){
-        var speed = parseFloat(track.getAttribute('data-speed')) || 0.35;
+        // data-speed is PIXELS PER SECOND. It used to be pixels per frame, which meant the
+        // credentials bar crawled at 15px/s on a 60Hz display and ran at double that on a
+        // 120Hz one. Changed 2026-08-27.
+        var speed = parseFloat(track.getAttribute('data-speed')) || 30;
         var originals = [].slice.call(track.children);
         if (!originals.length) return;
 
@@ -1763,11 +1766,18 @@
             originals.forEach(function(n){ track.appendChild(mkClone(n)); });
             if (track.scrollWidth <= before) break;    // zero-width content, do not spin
           }
-          half = track.scrollWidth;
-          if (half <= track.clientWidth + 8) return false;   // still nothing to scroll
-          // mirror the whole strip once so the wrap at `half` lands on identical content
-          [].slice.call(track.children).forEach(function(n){ track.appendChild(mkClone(n)); });
-          return true;
+          if (track.scrollWidth <= track.clientWidth + 8) return false;  // nothing to scroll
+          // One period of the loop is everything currently in the track. Mirror it so that
+          // scrolling past the period shows identical content.
+          var period = [].slice.call(track.children);
+          period.forEach(function(n){ track.appendChild(mkClone(n)); });
+          // Take the period from the DOM, NOT from scrollWidth before mirroring. The two
+          // differ by the flex gap that sits between the strip and its mirror, and wrapping
+          // one gap short makes the strip jump visibly once per loop. offsetLeft also stays
+          // correct when the gap changes per breakpoint, which it does: the credentials bar
+          // drops from 56px to 34px under 720px.
+          half = track.children[period.length].offsetLeft - track.children[0].offsetLeft;
+          return half > 0;
         }
         var scrollable = buildClones();
 
@@ -1775,12 +1785,20 @@
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Position is accumulated in JS and assigned whole. Incrementing scrollLeft by
-        // a sub-pixel amount does NOT work: the property snaps to integers, so a 0.35
-        // increment is discarded every frame and the strip never moves.
-        var pos = 0;
-        function step(){
+        // a sub-pixel amount does NOT work: the property snaps to integers, so a small
+        // per-frame increment is discarded every frame and the strip never moves.
+        //
+        // Advance by ELAPSED TIME, not per frame, so the speed is the same on a 60Hz
+        // display and a 144Hz one. dt is clamped because requestAnimationFrame stops in a
+        // background tab: without the clamp, the first frame after the reader comes back
+        // would carry seconds of delta and teleport the strip mid-strip.
+        var pos = 0, last = 0;
+        function step(ts){
+          if (!last) last = ts;
+          var dt = Math.min(ts - last, 50) / 1000;
+          last = ts;
           if (!paused && !dragging && !userPaused && !reduce && scrollable) {
-            pos += speed;
+            pos += speed * dt;
             if (half > 0 && pos >= half) pos -= half;
             track.scrollLeft = pos;
           }
