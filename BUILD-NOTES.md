@@ -880,3 +880,42 @@ attempt dispatched at document coordinates, landed off-screen, and measured the 
 Regression checked after the hold was added: a vertical swipe over the bar still scrolls the
 page (327px), and a tap still toggles the pause (aria-pressed true, label Play, zero movement).
 
+## "The marquee is broken on Vercel" was prefers-reduced-motion (2026-08-27)
+
+The deploy was fine. Measured on the live site at the time of the report: **47.9px/s**, 16
+children, wrap landing on identical content. The difference was the reader's machine.
+
+Under `prefers-reduced-motion: reduce` the loop correctly refuses to animate, but
+`buildClones` still ran. So a **frozen** 3403px strip sat in a 1262px bar, showing the four
+real cells followed by visible copies of the first two, clipped at the edge:
+
+`Certified Specialist - 30+ Years - 0% In-House - Direct Insurance - Certified Specialist [CLONE] - 30+ Years [CLONE]`
+
+While it is moving, a partly visible duplicate is the entire point of a ticker. Frozen, the
+same thing reads as a bug. **Windows 11's "Animation effects" switch sets this preference**, so
+it is a common state and not an edge case.
+
+Fixed in two places:
+
+- `buildClones` returns early under reduced motion, so no duplicates are built at all. This
+  applies to every marquee, so the reviews strip stops showing duplicate cards too, and stays
+  manually draggable because it is still a real overflow-x region.
+- The credentials bar becomes what it actually is in that state: a wrapped, centred, static row
+  of four facts, with the edge mask off, the grab cursor off, and the Pause control hidden,
+  because there is nothing left to pause.
+
+Verified in both states: reduced motion gives 4 children, 0 clones, no clipping, every cell
+visible; motion on still gives 16 children and 47.9px/s.
+
+**The mask needed `.creds .mq-creds`, not `.mq-creds`.** The base `.mq` rules are also a single
+class and they sit later in this stylesheet, so an equal-specificity override lost on source
+order and the edge fade survived, greying the outer cells of the static row. First attempt at
+this fix looked right in the source and measured `maskNone: false`.
+
+### Contact block centring on phones
+
+Address, hours and the phone number centre at 560px and below. `text-align` cannot move the
+phone number, since `.loc-tel` is `inline-flex`, so it becomes a block-level flex row that
+centres its own icon and number. Verified centred with 0px offsets either side at 390px and
+560px, and left aligned from 561px up, where the card is a two-column split against the map.
+

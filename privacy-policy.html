@@ -421,6 +421,20 @@
     .mq-creds { gap: 34px; }
     .cred { font-size: var(--fs-base); }
   }
+  /* Reduced motion: this bar never scrolls, so present it as what it actually is, a static
+     row of four facts. Without this it stays a clipped scroller showing the list restarting
+     partway along, which reads as a broken marquee rather than as a deliberate still. The
+     edge mask has to go too, or it fades the outer cells for no reason, and the Pause
+     control goes because there is nothing left to pause. */
+  @media (prefers-reduced-motion: reduce){
+    /* .creds .mq-creds, not .mq-creds: the base .mq rules are ALSO a single class and they
+       sit later in this stylesheet, so an equal-specificity override loses on source order
+       and the edge-fade mask survived, fading the outer cells of a static row. */
+    .creds .mq-creds { flex-wrap: wrap; justify-content: center; overflow-x: hidden;
+      cursor: auto; gap: var(--sp-3) var(--sp-7); padding-bottom: 0;
+      -webkit-mask-image: none; mask-image: none; }
+    .creds .mq-ctl { display: none; }
+  }
 
   /* ---------- section base ---------- */
   section.block { padding: var(--section-y) 0; }
@@ -810,6 +824,10 @@
        centring would wreck the rag against the map. 560px is reused rather than invented,
        so the whole phone layout turns over at one width. */
     .loc-addr, .loc-hours { text-align: center; }
+    /* text-align cannot move this one: .loc-tel is inline-flex, so it becomes a block-level
+       flex row and centres its own icon and number. Added 2026-08-27 on Jules's follow-up so
+       the whole contact block reads as one centred group. */
+    .loc-tel { display: flex; justify-content: center; }
     .loc-actions { flex-direction: column; align-items: stretch; }
     .loc-actions .btn { width: 100%; justify-content: center; text-align: center;
       white-space: normal; padding: 15px 20px; letter-spacing: .12em; line-height: 1.25; }
@@ -1762,6 +1780,9 @@
         // credentials bar crawled at 15px/s on a 60Hz display and ran at double that on a
         // 120Hz one. Changed 2026-08-27.
         var speed = parseFloat(track.getAttribute('data-speed')) || 30;
+        // Computed HERE, above buildClones, because buildClones needs it. It used to be
+        // declared below the first call, so var hoisting left it undefined at that point.
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var originals = [].slice.call(track.children);
         if (!originals.length) return;
 
@@ -1777,6 +1798,11 @@
         }
         function buildClones(){
           track.querySelectorAll('[data-mq-clone]').forEach(function(n){ n.remove(); });
+          // Reduced motion: nothing will ever scroll, and a FROZEN strip with duplicates in it
+          // just looks broken, because the reader sees the list restart halfway along and get
+          // cut off. Build none. The credentials bar is styled to wrap into a static centred
+          // row instead; the reviews strip stays a real draggable overflow region.
+          if (reduce) { half = 0; return false; }
           // A strip narrower than its bar has nothing to scroll, so it would sit
           // motionless. The credentials bar is four short cells and does exactly that on a
           // desktop viewport: 731px of text in a 1200px bar. So repeat the set until it is
@@ -1822,7 +1848,6 @@
             pos = track.scrollLeft;      // adopt wherever the fling actually ended
           }, ms || 170);
         }
-        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Position is accumulated in JS and assigned whole. Incrementing scrollLeft by
         // a sub-pixel amount does NOT work: the property snaps to integers, so a small
