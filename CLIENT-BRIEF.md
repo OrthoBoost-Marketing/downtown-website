@@ -25,7 +25,11 @@ So the competitor framing is **strategy, not copy**. In patient-facing text:
 - Where a comparison is genuinely useful, compare **processes**, not people. The compare table's left column is headed "Aligners without a specialist" and its rows describe process gaps ("No orthodontic specialist involved"), which is the pattern to follow.
 - Phrases that are now banned sitewide, and were removed on 2026-09-04: "aligners on the side", "sold on the side", "discount aligners", "between fillings", "general dental office", "general dentist", "not the shortcut", "complex cases other offices decline", "cases other offices declined".
 
-**One deliberate exception:** verbatim patient reviews. Alex Bobylev's Google review says Dr. Daher is "repairing the work I had done at a regular dentist". That is the patient's own published words, attributed, which is a different risk class from the practice asserting it. It is retained pending a decision from Charlotte or Jules, and it is the only place any such wording remains.
+**One deliberate exception:** verbatim patient reviews. Alex Bobylev's Google review says Dr. Daher is "repairing the work I had done at a regular dentist". That is the patient's own published words, attributed, which is a different risk class from the practice asserting it.
+
+**SETTLED 2026-09-04 by Jules: the review stays, in full, in both places** (homepage and `/reviews`), untouched. Charlotte's review did not ask for anything about it, and the instruction was to do exactly what she asked and no more. A proposal to trim the longer `/reviews` version back to the homepage excerpt was raised and declined. Do not revisit this without a new instruction: it is the only place any dentist-directed wording remains, and that is intentional.
+
+Open question for whoever briefs the attorney already reviewing the three legal pages: whether the BC college restricts patient testimonials as a category, independent of their content. Nobody here has established that, and it would bear on the whole `/reviews` page and all 28 reviews on it, not just this one quote. It has not been checked.
 
 The reasoning behind the ban on premium language, which used to sit in an `index.html` comment, now lives in `BUILD-NOTES.md` under "Why premium language is banned", because that comment was being served on every page.
 
