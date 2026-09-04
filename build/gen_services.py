@@ -256,8 +256,8 @@ build(
     h=hero(
         eyebrow="Braces &middot; Downtown Vancouver",
         h1="Braces in downtown Vancouver.",
-        sub="Metal and clear braces planned and adjusted by a certified specialist, not fitted in "
-            "between fillings. $1,000 down, from $220 a month at 0% in-house interest.",
+        sub="Metal and clear braces planned and adjusted by a certified specialist "
+            "orthodontist. $1,000 down, from $220 a month at 0% in-house interest.",
         chips=["Clear and metal options", "Adjusted by Dr. Daher himself", "Free consultation"],
         photo="assets/photos/used-2.jpg",
         alt="A Downtown Orthodontics clinician scanning a patient chairside before braces treatment"),
@@ -303,7 +303,7 @@ build(
     ],
     faqs=[
         ("Who decides whether braces or Invisalign is right for me?",
-         "Dr. Daher does, at your free consultation, and he plans and adjusts both himself. That matters more than it sounds: a general dental office selling aligners on the side can only recommend the one thing it offers. You leave with the option that suits your bite, and your exact figure for it in writing."),
+         "Dr. Daher does, at your free consultation, and he plans and adjusts both himself. That matters more than it sounds: recommending between braces and Invisalign takes a specialist who plans both. You leave with the option that suits your bite, and your exact figure for it in writing."),
         ("How much do braces cost in Vancouver?",
          "Every bite is different, so you get your exact price in writing at your free consultation rather than a range that may not apply to you. Most plans here start at $1,000 down and from $220 a month at 0% in-house interest, with your insurance billed directly."),
         ("Clear braces or metal braces?",
@@ -327,7 +327,7 @@ build(
 build(
     slug="invisalign",
     title="Invisalign in Downtown Vancouver | Quick 6 Fix $4,299",
-    desc="Invisalign planned by a specialist in downtown Vancouver, not a general dentist. Invisalign Express (Quick 6 Fix) at $4,299 flat, free consultation.",
+    desc="Invisalign planned by a certified specialist orthodontist in downtown Vancouver. Invisalign Express (Quick 6 Fix) at $4,299 flat, free consultation.",
     h=hero(
         eyebrow="Invisalign &middot; Downtown Vancouver",
         h1="Invisalign in downtown Vancouver.",
@@ -341,9 +341,9 @@ build(
         {"eyebrow": "(Why you're here)",
          "h2": "Invisalign is a tool. The result comes from <em>the doctor holding it.</em>",
          "paras": [
-             "Plenty of dental offices now sell aligners between fillings and cleanings. The trays "
-             "come from the same company either way. What differs is who decides how the teeth "
-             "should move, how far, in what order, and what to do when a tooth does not track.",
+             "The trays come from the same company wherever you go. What differs is who decides "
+             "how the teeth should move, how far, in what order, and what to do when a tooth "
+             "does not track.",
              "That is the whole job of an orthodontic specialist, and it is the difference between "
              "a finished bite and one that looks straighter from the front. Dr. Daher has been "
              "doing it since Invisalign existed, and taught other clinicians how in 142 cities."],

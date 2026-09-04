@@ -919,3 +919,16 @@ phone number, since `.loc-tel` is `inline-flex`, so it becomes a block-level fle
 centres its own icon and number. Verified centred with 0px offsets either side at 390px and
 560px, and left aligned from 561px up, where the card is a two-column split against the map.
 
+
+## Why premium language is banned
+
+The brief rules out luxury, VIP, boutique and premium language anywhere in the copy. The
+original rationale, recorded in the concept comment at the top of `index.html`, was that the
+real competitor is a general dentist selling discount aligners, so positioning the practice as
+premium would have argued on the wrong ground.
+
+That rationale was moved out of `index.html` on 4 September 2026. Comments in that file are part
+of the chrome `build/chrome.py` slices, so they ship verbatim in the served HTML of all 17 pages,
+including `/terms` and `/privacy-policy`, and the client's reviewer asked in writing for that
+competitor framing to be dropped on regulatory grounds. The styling rule itself still stands in
+`index.html`; only the reasoning lives here, since this file is a repo doc and is never served.

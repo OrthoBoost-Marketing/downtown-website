@@ -177,7 +177,7 @@ __LINERS__
       <h2 class="sr-only">Where to go next</h2>
       <p class="rv-bridge reveal">Most of these patients arrived with the same questions you have.
         See <a href="/financing">exactly what treatment costs</a>, read
-        <a href="/why-choose-us">why a specialist and not a shortcut</a>, or
+        <a href="/why-choose-us">why a specialist plans it</a>, or
         <a href="/dr-sam-daher">meet Dr. Daher</a> before you book anything.</p>
     </div>
   </section>

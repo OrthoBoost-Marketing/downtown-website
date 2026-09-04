@@ -61,11 +61,10 @@ DOC_BODY = phero(
         <p style="color:var(--ink-soft);font-size:var(--fs-xl);margin-top:var(--sp-5);">
           Dr. Daher is a certified specialist in orthodontics and has planned treatment for over
           thirty years. Downtown Orthodontics is a specialist orthodontic practice in
-          downtown Vancouver, which means moving teeth is not something fitted in between fillings
-          and cleanings here. It is the whole job.</p>
+          downtown Vancouver, which means moving teeth is the whole job here.</p>
         <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">
-          His patients range from seven-year-olds at a first growth check to adults whose cases
-          other offices declined. The approach has not changed in three decades: careful diagnosis,
+          His patients range from seven-year-olds at a first growth check to adults referred for
+          complex cases. The approach has not changed in three decades: careful diagnosis,
           honest recommendations, no unnecessary extractions, and no surgery a patient does not
           need. If a result needs extra refinement to be right, he sees it through.</p>
         <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">
@@ -147,15 +146,16 @@ USPS = [
     ("A certified specialist downtown",
      "Orthodontics is a separate specialty after dental school, and Downtown Orthodontics is a "
      "specialist orthodontic practice in the downtown core. Everything here is planned by one."),
-    ("Complex cases other offices decline",
-     "Referred and retreatment work is routine here, including bites another orthodontist has "
-     "already turned down. Thirty years of it, in one pair of hands."),
+    ("On Align Technology&rsquo;s scientific advisory board",
+     "Dr. Daher was among the first to use Invisalign and still sits on Align Technology&rsquo;s "
+     "scientific advisory board, one of a select few worldwide. Align gave him its Lifetime "
+     "Achievement Award in 2014."),
     ("Conservative by conviction",
      "Thirty years in, the rule has not changed: no unnecessary extractions, no surgery a patient "
      "does not need, and the least treatment that gets the right result."),
-    ("The complex cases other offices decline",
-     "Referred cases and bites that have already been turned down elsewhere are a normal part of "
-     "the week here, not an exception."),
+    ("Referrals and retreatment, routinely",
+     "Referred cases and retreatment are a normal part of the week here, which is what a specialist "
+     "practice is for. Thirty years of it, in one pair of hands."),
     ("From $220/mo at 0% in-house",
      "$1,000 down, financing arranged in-house at no interest, insurance billed directly, and your "
      "full cost in writing before you commit."),
@@ -170,9 +170,9 @@ usp_cards = "\n".join("""        <div class="reveal%s rounded-brand border borde
 
 WHY_BODY = phero(
     "Why choose us", "Why a specialist",
-    "Why the specialist, <em>not the shortcut.</em>",
-    "Plenty of dental offices now sell aligners on the side. Straightening teeth safely is a "
-    "different job, done by someone who does only that.",
+    "Why a specialist, <em>for every bite.</em>",
+    "Orthodontics is a separate specialty after dental school. Here it is the only thing done, "
+    "by a certified specialist with thirty years in it.",
 ) + ("""
   <section class="block">
     <div class="wrap">
@@ -190,24 +190,23 @@ WHY_BODY = phero(
     <div class="wrap">
       <div class="sec-head center reveal">
         <span class="eyebrow">(The difference)</span>
-        <h2 class="h2">Discount aligners, <em>side by side.</em></h2>
-        <p>The competitor is not another orthodontist. It is a general dental office selling
-          aligners between fillings.</p>
+        <h2 class="h2">Specialist care, <em>side by side.</em></h2>
+        <p>What changes when a certified orthodontic specialist plans the case from the start.</p>
       </div>
       <div class="compare reveal">
-        <div class="ch old">Aligners sold on the side</div>
+        <div class="ch old">Aligners without a specialist</div>
         <div class="ch new">A certified specialist downtown</div>
-        <div class="cc old">Fitted between fillings and cleanings</div>
+        <div class="cc old">No orthodontic specialist involved</div>
         <div class="cc new">%(tick)s A certified specialist at every visit</div>
-        <div class="cc old">One tool for every problem</div>
+        <div class="cc old">One appliance, whatever the bite</div>
         <div class="cc new">%(tick)s Braces, Invisalign and early care, matched to the bite</div>
-        <div class="cc old">&ldquo;Close enough&rdquo; bites signed off</div>
+        <div class="cc old">Finished when the trays run out</div>
         <div class="cc new">%(tick)s Refinement covered until the finish is right</div>
-        <div class="cc old">Surprise fees at the end</div>
+        <div class="cc old">Costs that land later</div>
         <div class="cc new">%(tick)s Your full cost, in writing, up front</div>
       </div>
-      <p class="compare-note reveal">Your smile is worth more than discount aligners from an office
-        that does them on the side. It is still affordable here.</p>
+      <p class="compare-note reveal">Done right by a certified specialist downtown. It is still
+        affordable here.</p>
       <div class="hero-actions reveal" style="justify-content:center;margin-top:var(--sp-8);">
         <a class="btn btn-primary" href="/appointment-request">Book a free consultation <span class="arr">&rarr;</span></a>
       </div>
@@ -241,10 +240,10 @@ WHY_BODY = phero(
         <div class="hero-frame" style="order:-1;"><img src="assets/photos/w880/used-3.jpg" alt="Dr. Daher explaining a treatment plan at his consultation desk" /></div>
         <div>
           <h2 style="font-family:var(--font);font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">A specialist plans it either way</h2>
-          <p style="color:var(--ink-soft);font-size:var(--fs-md);">A general dental office selling
-            aligners on the side can only recommend the one thing it offers. Dr. Daher plans and
-            adjusts braces and Invisalign himself, so the option you are offered is the one that
-            suits your bite, and you get your exact figure in writing before you commit.</p>
+          <p style="color:var(--ink-soft);font-size:var(--fs-md);">Braces and Invisalign are
+            different tools, and only one of them may suit your bite. Dr. Daher plans and adjusts
+            both himself, so the option you are offered is the one your case calls for, and you get
+            your exact figure in writing before you commit.</p>
           <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">
             <a class="tlink" href="/financing">See the pricing in full <span class="arr">&rarr;</span></a></p>
         </div>
@@ -307,5 +306,5 @@ WHY_SCHEMA = """{
 
 C.write("why-choose-us.html", C.page(
     title="Why a Specialist Orthodontist | Downtown Vancouver",
-    desc="Why see a certified specialist orthodontist in downtown Vancouver rather than a dental office selling aligners on the side. Conservative care, 30+ years.",
+    desc="Why see a certified specialist orthodontist in downtown Vancouver. Conservative care, 30+ years, complex and referred cases welcome.",
     slug="why-choose-us", body=WHY_BODY + leads_script(), schema=WHY_SCHEMA))

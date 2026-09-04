@@ -13,7 +13,7 @@ FIN_FAQS = [
     ("How much do braces cost in downtown Vancouver?",
      "Most treatment here starts at $1,000 down and from $220 a month with 0% in-house financing. Simple Invisalign Express cases run a $4,299 flat rate. Every bite is different, so your exact figure comes from your free consultation, in writing, before you commit to anything."),
     ("Who decides whether I need braces or Invisalign?",
-     "Dr. Daher does, at your consultation, and he plans and adjusts both himself. That matters more than it sounds: a general dental office selling aligners on the side can only recommend the one thing it offers. You get your exact figure for whichever option suits your bite, in writing, before you commit to anything."),
+     "Dr. Daher does, at your consultation, and he plans and adjusts both himself. That matters more than it sounds: recommending between braces and Invisalign takes a specialist who plans both. You get your exact figure for whichever option suits your bite, in writing, before you commit to anything."),
     ("Is the financing really 0% interest?",
      "Yes. It is arranged in-house rather than through a third-party lender, so there is no interest and no credit application to a finance company. $1,000 down, then a monthly amount agreed before treatment starts."),
     ("Do you bill my insurance directly?",
