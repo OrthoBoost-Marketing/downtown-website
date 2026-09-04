@@ -1,14 +1,29 @@
 /* Downtown Orthodontics lead forms.
  *
- * No dependencies and no third-party script. The only network call this file can make
- * is the POST to the GoHighLevel webhook itself.
+ * No dependencies and no third-party script. This file makes exactly two kinds of
+ * network call, both first-party POSTs to endpoints named in build/common.py:
+ *   1. the OrthoBoost Leads backup, leads.startorthoboost.com  (durable capture)
+ *   2. the client's GoHighLevel inbound webhook                 (when one is set)
+ *
+ * ORDER MATTERS AND IS THE POINT: the backup fires FIRST, so the lead is safe in
+ * Postgres before GHL is asked for anything. Every backup call is wrapped so it can
+ * never block, delay or alter the GHL submit or the thank-you redirect.
  *
  * Configuration arrives as window.OB_LEADS, emitted per page by the Python generators
- * from GHL_WEBHOOK_URL in build/common.py, which is the one place the endpoint is set.
+ * from GHL_WEBHOOK_URL, LEADS_BACKUP_URL and LEADS_SITE_ID in build/common.py, which
+ * is the one place any endpoint is set.
  *
- * While the endpoint is unset the generators already ship every form disabled with a
- * notice, so this file does nothing on submit. It still runs, because it also fires the
- * ob_generate_lead event on the confirmation page.
+ * Three states, all handled here:
+ *   backup + GHL   backup first, then GHL. GHL's status is reported back to the
+ *                  backup's /api/lead-result so the dashboard can flag GHL drops.
+ *                  Success and failure follow GHL, exactly as they always did.
+ *   backup only    the state today. The backup IS the delivery: success and failure
+ *                  follow the backup's response, /api/lead-result is never called
+ *                  (there is no GHL result to report), and the lead sits at 'pending'
+ *                  on the dashboard, which is the truth: captured, not yet in GHL.
+ *   neither        the generators ship every form disabled with a notice, so this file
+ *                  does nothing on submit. It still runs, because it also fires the
+ *                  ob_generate_lead event on the confirmation page.
  *
  * Storage (localStorage only, never a cookie):
  *   ob_attr_first_touch_v1  first-touch attribution, expires after OB_LEADS.attr_days
@@ -22,6 +37,11 @@
 
   var CFG = window.OB_LEADS || {};
   var ENDPOINT = String(CFG.endpoint || '').trim();
+  // OrthoBoost Leads backup. Both halves are required: a base URL with no site_id
+  // would earn {"error":"missing_site_id"} on every submit.
+  var BACKUP = String(CFG.backup || '').trim().replace(/\/+$/, '');
+  var SITE_ID = String(CFG.site_id || '').trim();
+  var HAS_BACKUP = !!(BACKUP && SITE_ID);
   var CONFIRM = CFG.confirm || '/appointment-request-confirmation';
   var PHONE = CFG.phone || '';
   var TEL = CFG.tel || '';
@@ -171,6 +191,12 @@
       'message': val(form, 'message'),
       'page': val(form, 'page'),
       'form_id': form.getAttribute('id') || '',
+      // source_page and form_name are what the OrthoBoost Leads backup stores and shows
+      // on the dashboard. source_page is the PATH only, with no query string: the
+      // platform matches per-form routing rules against it. `page_url` still carries
+      // the full URL for GHL. Both are additions; no existing key changed.
+      'source_page': String(location.pathname || ''),
+      'form_name': form.getAttribute('id') || '',
       'page_url': String(location.href || ''),
       'referrer': document.referrer || '',
       'first_touch_at': (first && first.at) || '',
@@ -252,32 +278,86 @@
   // Exposed so the office or a developer can recover leads from the visitor's browser.
   window.obLeadQueue = function () { return readQueue(); };
 
+  function postJSON(url, body) {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      keepalive: true
+    });
+  }
+
   function post(data) {
     // GHL's webhook trigger only parses application/json. Its CORS headers allow this
     // request from the browser, so no proxy is needed.
-    return fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-      keepalive: true
-    }).then(function (res) {
+    return postJSON(ENDPOINT, data).then(function (res) {
       if (!res || !res.ok) throw new Error('HTTP ' + (res ? res.status : 'no response'));
       return res;
     });
   }
 
+  /* ------------------------------------------------- OrthoBoost Leads backup
+     POST /api/lead. Stores the lead in Postgres and returns {ok,id,mode,token}.
+     Resolves with the parsed body, or with null on any failure at all, so callers
+     never have to catch: the backup must never be able to break a submit.
+
+     site_id is prepended rather than merged over the payload, so a form field could
+     never overwrite it. The rest of the payload is the untouched canonical contract. */
+  function backupSave(data) {
+    if (!HAS_BACKUP) return null;
+    try {
+      return postJSON(BACKUP + '/api/lead', Object.assign({ site_id: SITE_ID }, data))
+        .then(function (r) {
+          // 503 is the platform telling us the database is down. Treated as a failure,
+          // never as a save, so the visitor gets the honest call-us message.
+          if (!r || !r.ok) return null;
+          return r.json().catch(function () { return null; });
+        })
+        .catch(function () { return null; });
+    } catch (e) { return null; }
+  }
+
+  /* POST /api/lead-result: report back what GHL said about the lead the backup just
+     stored, so the dashboard can flag anything GHL dropped. Only meaningful when a GHL
+     webhook exists; with no ENDPOINT there is no result to report and this is not
+     called at all, leaving the lead 'pending' rather than claiming a delivery. */
+  function backupReport(saved, ok, code) {
+    if (!saved) return;
+    try {
+      saved.then(function (j) {
+        if (!j || !j.id || !j.token) return;
+        postJSON(BACKUP + '/api/lead-result', {
+          id: j.id, token: j.token, ok: !!ok, code: code || 0
+        }).catch(function () { /* ignore */ });
+      }).catch(function () { /* ignore */ });
+    } catch (e) { /* ignore */ }
+  }
+
   /* Retry anything queued by an earlier failure. Quiet: the visitor is not told, and a
      failure just leaves the entry queued. A retry can create a duplicate contact if the
      original POST actually landed but its response was unreadable; GHL's create/update
-     contact action collapses those by email and phone. */
+     contact action collapses those by email and phone, and a duplicate row in the
+     backup dashboard is visible and deletable rather than a lost lead.
+
+     Retries go down the same primary path a fresh submit would take, so a lead queued
+     while the backup was unreachable is flushed to the backup, and once a GHL webhook
+     exists it is flushed to GHL. Nothing is queued unless that path failed. */
+  function retryOne(data) {
+    if (ENDPOINT) return post(data);
+    return backupSave(data).then(function (j) {
+      if (!j || j.ok !== true) throw new Error('backup rejected');
+      return j;
+    });
+  }
+
   function flushQueue() {
-    if (!ENDPOINT) return;
+    if (!ENDPOINT && !HAS_BACKUP) return;
     var list = readQueue();
     if (!list.length) { writeQueue(list); return; }
     var kept = [];
     var pending = list.length;
     list.forEach(function (rec) {
-      post(rec.payload).then(function () {
+      retryOne(rec.payload).then(function () {
         pending -= 1;
         if (!pending) writeQueue(kept);
       }).catch(function () {
@@ -313,9 +393,9 @@
   function wire(form) {
     var btn = form.querySelector('button[type=submit]');
     form.addEventListener('submit', function (ev) {
-      // Endpoint unset: the generators already disabled this form, so there is nothing
-      // to intercept. Never fake a success here.
-      if (!ENDPOINT) return;
+      // No delivery path at all: the generators already disabled this form, so there
+      // is nothing to intercept. Never fake a success here.
+      if (!ENDPOINT && !HAS_BACKUP) return;
       ev.preventDefault();
 
       var q = query();
@@ -337,9 +417,38 @@
       say(form, '');
       if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
 
-      post(data)
-        .then(function () { onSuccess(data); })
-        .catch(function () { onFailure(form, btn, label, data); });
+      // 1. Backup FIRST, so the lead is durable before GHL is asked for anything.
+      //    backupSave never throws and never rejects; at worst it resolves null.
+      var saved = backupSave(data);
+
+      // 2. GHL, when a webhook exists. Success and failure follow GHL, as before, and
+      //    GHL's verdict is reported back to the backup either way.
+      if (ENDPOINT) {
+        post(data)
+          .then(function (res) {
+            backupReport(saved, true, (res && res.status) || 200);
+            onSuccess(data);
+          })
+          .catch(function (err) {
+            // post() throws 'HTTP <code>' on a non-2xx and a network error otherwise.
+            var m = /HTTP (\d+)/.exec((err && err.message) || '');
+            backupReport(saved, false, m ? Number(m[1]) : 0);
+            onFailure(form, btn, label, data);
+          });
+        return;
+      }
+
+      // 3. No GHL webhook: the backup IS the delivery, so its answer decides. No
+      //    /api/lead-result call, because there is no GHL result to report. A null or
+      //    non-ok body means the lead is NOT stored, so the visitor gets the honest
+      //    call-us message and the lead is queued locally rather than thanked for.
+      //    (`saved` cannot be null here, because reaching this line means HAS_BACKUP,
+      //    but the guard costs nothing and a thank-you for a lost lead costs a patient.)
+      if (!saved) { onFailure(form, btn, label, data); return; }
+      saved.then(function (j) {
+        if (j && j.ok === true) onSuccess(data);
+        else onFailure(form, btn, label, data);
+      }).catch(function () { onFailure(form, btn, label, data); });
     });
   }
 

@@ -84,8 +84,8 @@ def form(slug, preselect, quote_note):
     </div>
   </section>
 """
-    # The form's endpoint and its fail-safe state both come from GHL_WEBHOOK_URL in
-    # build/common.py. Same treatment on all four service pages.
+    # The form's endpoints and its fail-safe state come from LEADS_BACKUP_URL and
+    # GHL_WEBHOOK_URL in build/common.py. Same treatment on all four service pages.
     section = tpl % {"opts": "\n".join(opts), "phone": PHONE, "quote_note": quote_note,
                      "attribution": attribution_inputs(
                          slug, offer="$1,000 off full treatment")}

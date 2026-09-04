@@ -1,0 +1,39 @@
+# Keep internal working files OFF the public deployment.
+#
+# Why this file exists (2026-09-04): every one of these paths was fetchable with a
+# plain GET on the review URL. Verified by curl, all HTTP 200:
+#
+#   /CLIENT-BRIEF.md            the brief, including voice notes, the "never mention
+#                               Medicaid" rule, and the competitor positioning
+#   /BUILD-NOTES.md             56KB of build and audit history
+#   /build/reviews_data.py      the review set AND the full exclusion list of every
+#                               non-five-star review deliberately left off the site
+#   /build/GHL-WIRING.md        the lead-routing cutover checklist
+#   /build/common.py            generator source, including the lead wiring config
+#   /build/COPY-DECK-2026-09-04.md   client-reviewer rulings and the reasoning behind them
+#
+# The reviews exclusion list is the worst of those: it is a public, machine-readable
+# record that negative reviews were curated out. Nothing here is meant for anyone
+# outside the agency, and the review URL is about to be sent to the client.
+#
+# Vercel serves this repo as a static tree, so anything committed and not ignored is
+# public. There is no build step on Vercel: the generators run locally and commit
+# their output, which is why excluding build/ cannot break the deployment.
+#
+# Rule of thumb: only pages, assets and robots.txt belong on the deployment. If you add
+# a new working file, add it here in the same commit.
+
+# Build system. Runs locally only; never needed at serve time.
+build/
+
+# Internal documentation.
+*.md
+
+# Local tooling and scratch.
+.venv/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+Thumbs.db
+node_modules/

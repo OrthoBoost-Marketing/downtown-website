@@ -380,8 +380,9 @@ __ATTRIBUTION__
     "read on your bite and your exact price in writing.",
     "Monday 10:00 to 18:00 &middot; Tuesday and Thursday 08:00 to 15:00 &middot; Wednesday 08:00 to 16:30.")
 
-# The contact form's endpoint and its fail-safe state both come from GHL_WEBHOOK_URL in
-# build/common.py. wire_form bounds its disable pass to this page's one <form>.
+# The contact form's endpoints and its fail-safe state come from LEADS_BACKUP_URL and
+# GHL_WEBHOOK_URL in build/common.py. wire_form bounds its disable pass to this page's
+# one <form>.
 CONTACT_BODY = wire_form(CONTACT_BODY, "lead-contact") + leads_script()
 
 # (11) A minimal ContactPage pointing at the shared #practice entity. No address,

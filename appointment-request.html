@@ -293,6 +293,16 @@
   .hero-sub { color: var(--ink-soft); font-size: clamp(1rem, 1.15vw, 1.16rem); line-height: 1.6; max-width: 42ch; margin: 24px 0 30px; }
   .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .hero-actions .btn { padding: 16px 26px; font-size: var(--fs-xs); }
+  /* TIER 4, at 320px only: .btn is white-space:nowrap, and "BOOK A FREE CONSULTATION"
+     at .16em tracking plus 26px of side padding gives it a 327px min-content width.
+     Inset by 24px that needs 351px, so every page whose hero uses .hero-actions
+     overflowed a 320px viewport by 31px. Below 360px the label is allowed to wrap
+     and the buttons go full width, which is the only way a fixed-width nowrap CTA
+     can fit. 361px and up is untouched. */
+  @media (max-width: 360px) {
+    .hero-actions, .pactions { width: 100%; }
+    .hero-actions .btn, .pactions .btn { white-space: normal; width: 100%; justify-content: center; text-align: center; padding: 16px 18px; }
+  }
   /* on the pale-blue hero field the teal CTA has no separation: solid ink fill
      so the primary action pops (charcoal is a core kit colour) */
   .hero-actions .btn-primary { background: var(--petrol-deep); color: #fff; box-shadow: 0 16px 34px -14px rgba(1,4,8,.55);
@@ -537,7 +547,14 @@
 
   /* ---------- old way / Downtown way comparison ---------- */
   .compare-wrap { background: var(--surface); }
-  .compare { display: grid; grid-template-columns: 1fr 1fr; border-radius: var(--radius-lg); overflow: hidden; border: var(--border) solid var(--line); box-shadow: var(--shadow-soft); background: var(--bg); }
+  /* minmax(0,1fr), not a bare 1fr: a bare 1fr track floors at min-content, so the
+     longest word in the left column can push the right column past the viewport,
+     where this rule's own overflow:hidden shears it silently. It cost 18px of the
+     right column at 320px when the left column's longest word went from 8 to 10
+     characters ("specialist"), and scrollWidth does not detect it because clipped
+     content never widens the document. Same defect class as the locations card. */
+  .compare { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); border-radius: var(--radius-lg); overflow: hidden; border: var(--border) solid var(--line); box-shadow: var(--shadow-soft); background: var(--bg); }
+  .compare .ch, .compare .cc { overflow-wrap: break-word; min-width: 0; }
   .compare .ch { padding: 20px 28px; font-weight: 700; font-size: var(--fs-lg); letter-spacing: -.01em; }
   .compare .ch.old { background: var(--surface-2); color: var(--ink-soft); }
   .compare .ch.new { background: var(--petrol-deep); color: #fff; }
@@ -1551,34 +1568,27 @@
         </div>
         <div class="formcard reveal d1">
           <h2>Request your free consultation</h2>
-          <form id="lead-appointment" method="post" action="" novalidate data-ob-lead="0" aria-describedby="lead-appointment-unset">
-            <p id="lead-appointment-unset" class="microline" role="status" style="margin:0 0 var(--sp-5);
-              padding:var(--sp-4);border:var(--border) solid var(--ink-faint);
-              border-radius:var(--radius-btn);background:var(--surface);">
-              <b>Online requests are not open yet.</b> This form cannot send your details
-              at the moment. Please call the practice on
-              <a class="tlink" href="tel:+16046623290">(604) 662-3290</a> and we will book your free
-              consultation now.</p>
+          <form id="lead-appointment" method="post" action="" novalidate data-ob-lead="1">
             <div class="fgrid">
               <div class="field">
                 <label for="f-first">First name</label>
-                <input id="f-first" name="first_name" type="text" autocomplete="given-name" required disabled />
+                <input id="f-first" name="first_name" type="text" autocomplete="given-name" required />
               </div>
               <div class="field">
                 <label for="f-last">Last name</label>
-                <input id="f-last" name="last_name" type="text" autocomplete="family-name" required disabled />
+                <input id="f-last" name="last_name" type="text" autocomplete="family-name" required />
               </div>
               <div class="field">
                 <label for="f-phone">Phone</label>
-                <input id="f-phone" name="phone" type="tel" autocomplete="tel" required disabled />
+                <input id="f-phone" name="phone" type="tel" autocomplete="tel" required />
               </div>
               <div class="field">
                 <label for="f-email">Email</label>
-                <input id="f-email" name="email" type="email" autocomplete="email" required disabled />
+                <input id="f-email" name="email" type="email" autocomplete="email" required />
               </div>
               <div class="field wide">
                 <label for="f-interest">I&rsquo;m interested in</label>
-                <select id="f-interest" name="interest" disabled>
+                <select id="f-interest" name="interest">
                   <option>Not sure yet, help me choose</option>
                   <option>Braces, metal or clear</option>
                   <option>Invisalign or Quick 6 Fix</option>
@@ -1599,7 +1609,7 @@
             <input type="hidden" name="wbraid" value="" />
             <input type="hidden" name="offer" value="$1,000 off full treatment" />
             <input type="hidden" name="page" value="appointment-request" />
-            <button class="btn btn-primary" type="submit" disabled>Request my free consultation <span class="arr">&rarr;</span></button>
+            <button class="btn btn-primary" type="submit">Request my free consultation <span class="arr">&rarr;</span></button>
           </form>
           <p class="microline">Your consultation is free and there is no obligation to start.
             We only ask for a name, a phone number and an email, never health details:
@@ -1657,8 +1667,9 @@
     </div>
   </section>
 
-  <!-- Lead forms. Endpoint comes from GHL_WEBHOOK_URL in build/common.py. -->
-  <script>window.OB_LEADS = {"attr_days": 90, "confirm": "/appointment-request-confirmation", "endpoint": "", "phone": "(604) 662-3290", "queue_days": 30, "tel": "+16046623290"};</script>
+  <!-- Lead forms. Endpoints come from GHL_WEBHOOK_URL and LEADS_BACKUP_URL
+       in build/common.py. -->
+  <script>window.OB_LEADS = {"attr_days": 90, "backup": "https://leads.startorthoboost.com", "confirm": "/appointment-request-confirmation", "endpoint": "", "phone": "(604) 662-3290", "queue_days": 30, "site_id": "downtown-orthodontics", "tel": "+16046623290"};</script>
   <script src="/assets/js/ob-leads.js" defer></script>
 
   <!-- FOOTER -->

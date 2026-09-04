@@ -1,4 +1,4 @@
-# CLIENT BRIEF — Downtown Orthodontics
+# CLIENT BRIEF: Downtown Orthodontics
 Generated 2026-08-24 · status: DRAFT
 
 > Written **extractively**, not from an interview. Sources: the Notion client record
@@ -14,8 +14,23 @@ practice: Downtown Orthodontics | founded: TBD (practice is 30+ years old; no fo
 avatar: affordable-ortho
 voice notes: Professional, expert, patient-first, but warm and inclusive. Use the local term "Van City". **Never** luxury, VIP, boutique or premium-tech language: Dr. Ty's v2 brief explicitly kills the "premium Invisalign boutique" identity because the real competitor is general dentists selling discount aligners, and sounding premium puts Dr. Daher on their shelf looking overpriced. Notion brand persona: "High-Expertise Clinical Ortho". Languages: English only, **no Spanish**. Medicaid: **No, never mention.**
 
+**COPY RULE, added 2026-09-04 after Charlotte's review. This constrains how the line above may be expressed.**
+
+The positioning above is still correct: the competitor *is* general dentists selling discount aligners, and that is why premium language is banned. **But the site may never say so.** Charlotte's 3 September review asked, in writing, that we stop wording it as "dentists selling aligners on the side" and instead "hone in on 'this is a specialist'". Her reason is regulatory as well as commercial: she does not want local dentists reading the site as undercutting them, and she does not want the College of Dental Surgeons of BC taking an interest.
+
+So the competitor framing is **strategy, not copy**. In patient-facing text:
+
+- **Do not** name, characterise, or describe general dentists, dental offices, or other practitioners, favourably or otherwise. Not in headings, body copy, card titles, comparison tables, FAQ answers, meta descriptions, nav labels, image alt text, or HTML comments. Comments matter: `chrome.py` slices `index.html` comments and all, so a comment ships in all 17 pages.
+- **Do** make the same point by describing what a certified specialist does. "Orthodontics is a separate specialty after dental school" carries the whole argument without a target.
+- Where a comparison is genuinely useful, compare **processes**, not people. The compare table's left column is headed "Aligners without a specialist" and its rows describe process gaps ("No orthodontic specialist involved"), which is the pattern to follow.
+- Phrases that are now banned sitewide, and were removed on 2026-09-04: "aligners on the side", "sold on the side", "discount aligners", "between fillings", "general dental office", "general dentist", "not the shortcut", "complex cases other offices decline", "cases other offices declined".
+
+**One deliberate exception:** verbatim patient reviews. Alex Bobylev's Google review says Dr. Daher is "repairing the work I had done at a regular dentist". That is the patient's own published words, attributed, which is a different risk class from the practice asserting it. It is retained pending a decision from Charlotte or Jules, and it is the only place any such wording remains.
+
+The reasoning behind the ban on premium language, which used to sit in an `index.html` comment, now lives in `BUILD-NOTES.md` under "Why premium language is banned", because that comment was being served on every page.
+
 ## Doctors
-- Dr. Sam Daher, Certified Specialist in Orthodontics — sole doctor and founder — bio depth: **full** — 30+ years in practice; former associate professor, University of Montreal and University of the Pacific; McGill (Dr. James McCutcheon award)
+- Dr. Sam Daher, Certified Specialist in Orthodontics, sole doctor and founder, bio depth: **full**. 30+ years in practice; former associate professor, University of Montreal and University of the Pacific; McGill (Dr. James McCutcheon award)
 doctor hub page: no  ← single doctor
 
 ## Locations
@@ -57,10 +72,10 @@ logo: assets/Logo_Full-Dark_Downtown Orthodontics.png · delivered: yes
 
 > **PHOTO RULE, from the client's second reviewer:** Dr. Daher must not appear touching or hugging child patients. Three shots were pulled for this on 2026-08-24 (`img-0079`, `img-0081`, `img-4241`). A female provider reads better in family-facing slots. **Consequence: there is currently no photograph of a child anywhere on the site.** Do not solve this by reintroducing a pulled shot.
 
-## Reviews (quotable — verbatim text, not just a count)
+## Reviews (quotable: verbatim text, not just a count)
 **RESOLVED 2026-08-24.** Pulled from the practice's live Google Business Profile with Jules present.
 - **Rating: 4.4 out of 5, from 160 Google reviews.** Profile link: `https://www.google.com/maps?cid=9098292092356715373`
-- Displayed as **text only**. Never marked up as `AggregateRating` — the kit bans it and so does Google's self-serving-review policy.
+- Displayed as **text only**. Never marked up as `AggregateRating`. The kit bans it and so does Google's self-serving-review policy.
 - Twelve quotes run verbatim in the homepage reviews marquee, each doing a different job:
   Kim Patara (retention: original Invisalign 2007, teeth have not shifted) · Iryna Ponomarenko (comprehensive method, facial and lip proportions) · S Ismail (walks you through the plan) · Dante Foreman (fast first scan) · Fiona Deng (both kids like him) · SassySips (same-day retainer replacement) · Skyla W (finished Invisalign) · Riaz Meghji (attention to detail, worth the investment) · Jayden Dinh (looked forward to appointments) · amber rold (Invisalign, staff) · Sonya Lee (returning patient) · Atlas Hanen (comfort)
 - **Still to place:** service pages, the appointment page and the financing page each want a topic-matched quote beside the form. Those slots remain visible placeholders until the right quote is assigned per page.
@@ -92,7 +107,7 @@ Also offered, to fold into the pages above rather than give their own: complex b
 rating: 4.4 · reviews: 160 · patients: 900 (Notion "Patients Served") · years: 30+ · awards: see below
 trust bar: credential
 
-Dr. Daher's ten client-supplied credentials (Maya, 2026-08-24 — treat as confirmed, run **Invisalign-first** per Jules's explicit call):
+Dr. Daher's ten client-supplied credentials (Maya, 2026-08-24: treat as confirmed, run **Invisalign-first** per Jules's explicit call):
 1. An early adopter of Invisalign; worked with **Align Technology**'s founder on the company's scientific advisory board
 2. Still one of a select few orthodontists on Align's scientific advisory board
 3. Invisalign Lifetime Achievement Award, 2014
@@ -111,7 +126,7 @@ Dr. Daher's ten client-supplied credentials (Maya, 2026-08-24 — treat as confi
 ## Photography
 available: 8 real client photographs, all with real paths above
 missing: any child patient; a female provider with a child; real before/after cases; team headshots for Maya and Bita
-shoot planned: 12 August 2026 — **has not landed as of 2026-08-24**
+shoot planned: 12 August 2026, **has not landed as of 2026-08-24**
 constraints this creates: family-facing slots run without children; before/after slots run as on-brand placeholder panels, never stock models; no team page
 
 ## Team
@@ -129,15 +144,15 @@ Active offer (Notion, verified 2026-08-24): **"$1,000 Off Full Treatment Invisal
 > The Notion offer records have an **empty disclaimer field**, so no disclaimer ships. Confirm none is required before launch.
 
 ## Integrations
-ghl webhook: **NOT SUPPLIED** — blocks form wiring · booking link: currently `https://downtownorthodontics.ca/appointment-request/` on the existing WordPress site · review link: TBD · call tracking: CallTrackingMetrics → GHL → office
+ghl webhook: **NOT SUPPLIED**, blocks form wiring · booking link: currently `https://downtownorthodontics.ca/appointment-request/` on the existing WordPress site · review link: TBD · call tracking: CallTrackingMetrics → GHL → office
 
 ## Launch
 domain: downtownorthodontics.ca · dns controlled by: CloudFlare (registrar per Notion) · deadline: none current (the Notion "Expected Launch Date" of 2026-02-16 is stale) · rebuild: yes
 > **UNRESOLVED STACK CONFLICT.** Dr. Ty's brief names WordPress + Elementor + RankMath Pro, and Notion records `Hosting = Client Hosted` with WP access already sent. This site is static on Vercel. Settle before any cutover; it could invalidate the build target.
-> The Notion Sales Notes still read "NO NEW WEBSITE! Only a Transfer!" — stale, from the 2026-01-28 signing, superseded by the v2 brief.
+> The Notion Sales Notes still read "NO NEW WEBSITE! Only a Transfer!": stale, from the 2026-01-28 signing, superseded by the v2 brief.
 
 ## Page inventory  ← the build skill executes this list
-- [x] index.html — exists, live, audited
+- [x] index.html: exists, live, audited
 - [x] braces.html
 - [x] invisalign.html
 - [x] early-orthodontics.html
@@ -162,12 +177,12 @@ Derived from the skill's own rules: single doctor → no doctor hub · single of
 One deliberate deviation: a **standalone FAQ page** ships even though the practice is not education-heavy, because eight client-voiced Q&As already exist and are already in the homepage `FAQPage` schema, and the client's own Notion sitemap asks for `/faq`.
 
 ## Open questions / assumptions
-- ~~TBD — review quotes and the rating/count.~~ **RESOLVED 2026-08-24, extended 2026-08-26:** 4.4 from 160. Twenty-eight verified five-star reviews are now harvested verbatim into `build/reviews_data.py`, which also records the full non-five-star exclusion list and how it was established. Per-page quote assignment for the service, appointment and financing forms is still open, and `reviews_data.py` is the source to draw them from.
-- **TBD — GHL webhook URL.** Blocks form wiring and the leads backup.
-- **TBD — founding year.** Never write one; "30+ years" is the safe form.
-- ~~TBD — treatment duration.~~ **RESOLVED 2026-08-24:** softened everywhere. No duration range is published; every answer now points at the consultation for a case-specific timeline.
-- **TBD — social profile URLs** (Instagram, Facebook, Google reviews). The footer row was removed on 2026-08-24 rather than ship dead icons.
-- **TBD — Neera Arora endorsement quote**, named as a proof element in brief §8 and still unsupplied.
-- **ASSUMED — avatar `affordable-ortho`.** Derived from the v2 brief's "specialist for everyone: expert, full-service, affordable".
-- **ASSUMED — the four service pages.** Built from the Notion service fields; the client's own sitemap is an unfilled generic template with Dallas/Plano placeholders, so there is no client-approved page list to follow.
-- **AWAITING DR. TY —** three rulings from the 2026-08-24 audit: the "Van City" H1 versus the literal-city rule; the 5-card homepage bento that maps to no kit section type; whether the credentials marquee, before/after slider and sticky stepper count against "no carousels".
+- ~~TBD: review quotes and the rating/count.~~ **RESOLVED 2026-08-24, extended 2026-08-26:** 4.4 from 160. Twenty-eight verified five-star reviews are now harvested verbatim into `build/reviews_data.py`, which also records the full non-five-star exclusion list and how it was established. Per-page quote assignment for the service, appointment and financing forms is still open, and `reviews_data.py` is the source to draw them from.
+- **TBD: GHL webhook URL.** Blocks form wiring and the leads backup.
+- **TBD: founding year.** Never write one; "30+ years" is the safe form.
+- ~~TBD: treatment duration.~~ **RESOLVED 2026-08-24:** softened everywhere. No duration range is published; every answer now points at the consultation for a case-specific timeline.
+- **TBD: social profile URLs** (Instagram, Facebook, Google reviews). The footer row was removed on 2026-08-24 rather than ship dead icons.
+- **TBD: Neera Arora endorsement quote**, named as a proof element in brief §8 and still unsupplied.
+- **ASSUMED: avatar `affordable-ortho`.** Derived from the v2 brief's "specialist for everyone: expert, full-service, affordable".
+- **ASSUMED: the four service pages.** Built from the Notion service fields; the client's own sitemap is an unfilled generic template with Dallas/Plano placeholders, so there is no client-approved page list to follow.
+- **AWAITING DR. TY:** three rulings from the 2026-08-24 audit: the "Van City" H1 versus the literal-city rule; the 5-card homepage bento that maps to no kit section type; whether the credentials marquee, before/after slider and sticky stepper count against "no carousels".

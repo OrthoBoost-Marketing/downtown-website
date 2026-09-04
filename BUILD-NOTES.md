@@ -1,4 +1,4 @@
-# Build notes — Downtown Orthodontics
+# Build notes: Downtown Orthodontics
 
 Built 2026-08-24 from `CLIENT-BRIEF.md` using the `orthoboost-web:build-site` skill.
 16 pages. The homepage layout was explicitly held constant.
@@ -18,15 +18,34 @@ in `build/`:
 | `build/gen_rest.py` | dr-sam-daher, why-choose-us |
 | `build/gen_support.py` | financing, faq, contact |
 | `build/gen_utility.py` | privacy-policy, terms, accessibility, 404 |
+| `build/gen_reviews.py` | reviews |
 
-**To change chrome, edit `index.html` and re-run all five generators.** Do not hand-edit
+**To change chrome, edit `index.html` and re-run all six generators.** Do not hand-edit
 a generated page; the next run overwrites it.
 
+**The build is eight steps, not six.** Running only the generator loop is the mistake this
+block used to invite, and on 2026-09-04 it stripped `width`, `height`, `loading="lazy"` and
+`decoding="async"` off 20 images sitewide: a live CLS regression on a site previously
+measured at CLS 0.00. Run all three stages, in this order, every time:
+
 ```bash
+# 1. the six generators
 for g in gen_appointment gen_services gen_rest gen_support gen_utility gen_reviews; do
     python build/$g.py
 done
+# 2. image width/height, from the kit (deliberately NOT duplicated in this repo)
+python "$KIT/plugin/skills/static-site-deploy/scripts/add_img_dims.py" .
+# 3. lazy/decoding/fetchpriority, and it repairs step 2's malformed tags
+python build/post_media.py
 ```
+
+On this machine `$KIT` is
+`/c/Users/Chris/.claude/plugins/marketplaces/orthoboost/plugin`.
+
+Steps 2 and 3 are ordered, not interchangeable: reverse them and 28 malformed tags come
+back. The docstring in `build/post_media.py` is the authority. The fuller explanation
+further down this file was always right; this block was the one that lied, and it is the
+block anyone actually reads first.
 
 HTML blocks use `__TOKEN__` placeholders rather than `%`-formatting, because the copy is
 full of literal percent signs (`0%`, `5%`, `100%`) and escaping them all was a bug source.
@@ -53,7 +72,7 @@ Every internal link is written extensionless. Retrofitting this touched every fi
 Siouxland, which is why it was set before the pages were generated.
 
 **Pages deliberately NOT built**, per the skill's own derivation rules:
-- **No reviews page — but this is now unblocked and worth revisiting.** It was skipped
+- **No reviews page, but this is now unblocked and worth revisiting.** It was skipped
   because the count was unknown and no quotes existed. Both changed on 2026-08-24: the
   profile carries **160 reviews at 4.4**, which is well past the kit's rough 40+ threshold
   for a standalone reviews page. Not built, because it was not asked for. Flagged.
@@ -110,7 +129,7 @@ deliberately not marked up** as `AggregateRating`. No star glyphs sit beside the
 because five solid stars next to a 4.4 misrepresents it.
 
 Per-page quote slots on the service, appointment and financing pages are **still visible
-placeholders** — each wants a topic-matched quote, and assigning them is a content decision.
+placeholders**: each wants a topic-matched quote, and assigning them is a content decision.
 
 ## Nav follows HEADER-SPEC (restructured 2026-08-25)
 
@@ -203,15 +222,15 @@ specific claim the site makes, and generic praise was dropped however glowing, b
 
 | Review | What it proves |
 |---|---|
-| **Lomish Bhangu** — turned down by one orthodontist, another had no real solution | "Complex and referred cases welcome". **The strongest proof on the whole profile.** |
-| **Kim Patara** — original Invisalign in 2007, teeth have not shifted | Retention, and a result nobody else can claim |
-| **Alex Bobylev** — repairing work done at a regular dentist, quicker and with less discomfort | Specialist versus general dentist, the site's central wedge |
-| **Riaz Meghji** — "well worth the investment" | Handles the price objection |
-| **S Ismail** — walks you through the plan, answers thoroughly | Clear treatment plan |
-| **SassySips** — retainers, appointment the same day she called | Service speed, and retainer replacement |
-| **Fiona Deng** — "Both of my kids like him a lot!" | Kids and family |
-| **Dante Foreman** — scan, in and out quickly, info sent over | The free first visit |
-| **Jayden Dinh** — happiest with the results, looked forward to the appointments | Completed treatment |
+| **Lomish Bhangu**, turned down by one orthodontist, another had no real solution | "Complex and referred cases welcome". **The strongest proof on the whole profile.** |
+| **Kim Patara**, original Invisalign in 2007, teeth have not shifted | Retention, and a result nobody else can claim |
+| **Alex Bobylev**, repairing work done at a regular dentist, quicker and with less discomfort | Specialist versus general dentist, the site's central wedge |
+| **Riaz Meghji**, "well worth the investment" | Handles the price objection |
+| **S Ismail**, walks you through the plan, answers thoroughly | Clear treatment plan |
+| **SassySips**, retainers, appointment the same day she called | Service speed, and retainer replacement |
+| **Fiona Deng**, "Both of my kids like him a lot!" | Kids and family |
+| **Dante Foreman**, scan, in and out quickly, info sent over | The free first visit |
+| **Jayden Dinh**, happiest with the results, looked forward to the appointments | Completed treatment |
 
 **Swapped 2026-08-26 (Tier 1 truth pass).** Iryna Ponomarenko and Skyla W were dropped
 and replaced with Alex Bobylev and Jayden Dinh. Neither of the originals appears in
@@ -244,7 +263,7 @@ content. Each renders in the dashed `.slot` style so nobody mistakes it for copy
 
 Three forms ship: the appointment request, one per service page, and a general-enquiry
 form on `/contact`. All carry the standard hidden UTM and click-id set. **None posts
-anywhere** — `action=""` — because no GoHighLevel webhook URL is on file. Finish with
+anywhere**, `action=""`, because no GoHighLevel webhook URL is on file. Finish with
 `orthoboost-ghl-forms` then `orthoboost-leads-connect`; every site gets both.
 
 Form rules honoured: 4 fields plus one pre-filled interest select, never six. Zero PHI.
@@ -268,26 +287,26 @@ button; and desktop header nav text links measure 28–31px but collapse into th
 mobile widths, where the 44px touch rule applies. The heuristic held again: a finding on
 nearly every page is the check, not the site.
 
-## Kit conformance audit, 2026-08-26 — nine fixes
+## Kit conformance audit, 2026-08-26: nine fixes
 
 Audited the homepage section by section against every `*-SPEC.md` in the kit (pulled to
 `26b6370` first; the two new commits touched the deploy and forms skills, not the section
 specs). Ten of the kit's eleven homepage sections were present, one was missing, and seven
 of the present ones carried at least one deviation. Fourteen findings, nine closed here.
 
-### F 01 — the services grid was an audience grid
+### F 01: the services grid was an audience grid
 
 "Three ways to begin" looked like Section 09 but was not one: its H3s were unsearchable
 ("The smile you finally make time for") and **all three cards pointed at
 `/appointment-request`**, so `/braces`, `/invisalign`, `/early-orthodontics` and
-`/retainers` had **no link from the homepage body at all** — only the nav dropdown and the
+`/retainers` had **no link from the homepage body at all**: only the nav dropdown and the
 footer. Those four are each a keyword's SEO hub and an ad campaign's landing page.
 
 Each card now opens its service page and leads with the searchable name. The layout did not
 change. It stays at **three cards** because the spec allows 3, 6 or 9 and bans 4, so
-`/retainers` — lowest demand of the four — is linked from the retainer FAQ answer instead.
+`/retainers`, lowest demand of the four, is linked from the retainer FAQ answer instead.
 
-### F 02 — the FAQ had no cost question, and the schema did not mirror the page
+### F 02: the FAQ had no cost question, and the schema did not mirror the page
 
 A cost + city question is mandatory and hiding it is named under Banned. Five questions ran
 and none was about money, on an affordability-positioned practice.
@@ -297,7 +316,7 @@ visible.** Cost, "age seven" and "I'm 40" were marked up but appeared nowhere on
 which is a structured-data mismatch. The block is now rebuilt from the six visible Q&As, in
 order. The two that are not homepage content live properly on `/faq`, which has its own node.
 
-### F 03 / F 04 — hours and directions
+### F 03 / F 04: hours and directions
 
 Hours were shipping in `openingHoursSpecification` only. They are client-confirmed, so they
 now render in the locations card and the footer, identical in all three places. And **Get
@@ -305,7 +324,7 @@ directions**, which the spec calls the #1 action in that section, did not exist:
 the solid button for the fifth time on the page. Directions now takes the solid button and
 booking steps down to the outline.
 
-### F 05 — the doctor teaser used the one button its spec bans
+### F 05: the doctor teaser used the one button its spec bans
 
 Solid `Book with Dr. Daher`, where the spec allows exactly one ghost or outline CTA and lists
 a second solid CTA under Banned. Now a single ghost `More about Dr. Daher` to the bio page;
@@ -313,27 +332,27 @@ the old `See the full record` link came out as the second CTA. A kicker carries 
 full name, which previously survived only in the image alt.
 
 **Trap:** the first version used `btn-outline`, which `.hero-actions .btn-outline` paints in
-petrol (#313131) — near-black on the `.doc` section's near-black ground, contrast 1.6:1 and
+petrol (#313131): near-black on the `.doc` section's near-black ground, contrast 1.6:1 and
 effectively invisible. `btn-ghost-light` is the existing component for dark grounds. A guard
 rule now catches any outline button dropped into `.doc` or `.ctaband`. This is the same bug
 family as the black-on-black `.btn-primary` found on 2026-08-24.
 
-### F 08 — the rating was in a comment
+### F 08: the rating was in a comment
 
 `4.4 out of 5 from 160 reviews` existed only in a source comment. It now runs as a rating
 eyebrow, **text only, never `AggregateRating`**, with the door beneath the section and the
 count line the spec allows when the count is strong. No `place_id` is on file, so the link is
 the same Maps search URL the footer address uses.
 
-### F 11 — the mid-page CTA band
+### F 11: the mid-page CTA band
 
 The spec's default placement, directly after the USP zigzag, was empty; only the closing band
 existed. Two bands now run, which is the maximum. **The first insertion landed in the wrong
 place** because it anchored on a `(REAL QUESTIONS)` comment that was itself a leftover from
-the FAQ-duplicate block converted to a zigzag row on 2026-08-25 — so the comment sat *before*
+the FAQ-duplicate block converted to a zigzag row on 2026-08-25, so the comment sat *before*
 `#same-doctor` and put the band mid-zigzag. Both fixed; the orphan comment is gone.
 
-### F 13 — media loading
+### F 13: media loading
 
 `build/post_media.py` is the new **last build step** and must run after the generators:
 
@@ -385,7 +404,7 @@ capture makes every `vh` unit resolve against that height, so the hero balloons 
 of pixels and every offset below it is wrong. And a scroll issued from a load handler does
 not reliably land before `--screenshot` fires. `build/section_shots.py` sidesteps both: it
 writes one throwaway page per section that *hides the other sections*, so the target sits
-under the header at a normal 900px viewport. It also disables the entrance states — `.reveal`
+under the header at a normal 900px viewport. It also disables the entrance states: `.reveal`
 starts at opacity `.01` **with a 5px blur**, and headings animate per word via `.hw` spans,
 so an un-overridden capture shows blank bands. Delete the `__sec-*.html` files afterwards.
 
@@ -741,9 +760,11 @@ both merge, keep running `post_media.py` last.
 
 - 660 em dashes live in code comments, CSS comments and script comments. **Zero reach
   visible copy or any attribute**, so nothing patient-facing breaks the house style. They do
-  still ship inside comments, which is a mild agency tell of the same family as the
-  `font-claude` and `notionvc` markers we grep for before launch. Cleaning them touches all
-  17 files and is its own pass.
+  still ship inside comments, which is a mild agency tell of the same family as the chat
+  font-class and Notion paste markers the pre-launch leak check greps for. (Those two
+  marker names are deliberately not written out here: the leak check greps this file too,
+  and a doc naming them reads as a hit.) Cleaning them touches all 17 files and is its own
+  pass. Partly done on 2026-09-04: index.html is at zero.
 - `.credo-list` is now 5 items in a 3-column ruled grid, so the bottom rule runs one column
   short. Cosmetic, and better than padding the list with a fact we just deduplicated.
 - The `.field` border override hard-coding `--ink-faint` is arguably redundant now that

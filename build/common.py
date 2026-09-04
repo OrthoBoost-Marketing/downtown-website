@@ -17,13 +17,35 @@ import html as H
 #
 #   GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/<LOC>/webhook-trigger/<ID>"
 #
-# WHILE THIS IS "" (UNSET), every lead form renders in its fail-safe state: every
-# control is disabled and the card carries a notice pointing at the practice phone
-# number. No submission is accepted, no confirmation page is shown, and no lead is
-# reported as sent, because a static site with no endpoint cannot deliver one.
+# WHILE THIS IS "" (UNSET) GoHighLevel delivery is simply off. It is no longer the only
+# delivery path: LEADS_BACKUP_URL below captures every lead in Postgres, so the forms
+# stay live and honest with no GHL webhook at all. Pasting a webhook here later is
+# purely ADDITIVE and needs no rework: the forms then post to BOTH, backup first, and
+# the browser reports GHL's status back to the backup.
 #
 # Full documentation, field mapping and cutover checklist: build/GHL-WIRING.md
 GHL_WEBHOOK_URL = ""
+
+# ---------------------------------------------------------- OrthoBoost Leads backup
+#
+# The in-house capture platform (leads.startorthoboost.com, Next.js + Neon Postgres).
+# Every lead is stored there FIRST, before any GHL call, so a lead is never lost when
+# GHL is absent, unmapped or having a bad day. The site row is already registered:
+#
+#   site_id: downtown-orthodontics    mode: shadow (records, never relays)
+#   origins: https://downtown-orthodontics-website.vercel.app
+#            https://downtownorthodontics.ca
+#            https://www.downtownorthodontics.ca
+#
+# Shadow is correct both now and after cutover: today there is nothing to relay to, and
+# once GHL_WEBHOOK_URL is set THIS SITE posts to GHL itself and reports the result back
+# to /api/lead-result. See the orthoboost-leads-connect skill.
+#
+# Blanking either constant turns the backup off. If BOTH the backup and GHL_WEBHOOK_URL
+# are blank there is no delivery path at all, and wire_form() falls back to disabling
+# every control behind the "not open yet" notice rather than faking a submit.
+LEADS_BACKUP_URL = "https://leads.startorthoboost.com"
+LEADS_SITE_ID = "downtown-orthodontics"
 
 # Where a successful submit lands. The real file is appointment-request-confirmation.html;
 # vercel.json sets cleanUrls:true and trailingSlash:false, so the clean URL carries no
@@ -71,8 +93,24 @@ def attribution_inputs(page_slug, offer=""):
     return "\n".join(rows)
 
 
+def leads_backup_on():
+    """True when the OrthoBoost Leads backup is configured. Both halves are required:
+    a URL with no site_id gets `{"error":"missing_site_id"}` on every submit."""
+    return bool(LEADS_BACKUP_URL) and bool(LEADS_SITE_ID)
+
+
+def delivery_ready():
+    """True when a submitted lead has at least one place to land.
+
+    This, NOT GHL_WEBHOOK_URL alone, is what decides whether a lead form is live. The
+    backup platform is a complete delivery path on its own: it stores the lead in
+    Postgres and the office reads it from the dashboard. GHL is an additional path.
+    """
+    return bool(GHL_WEBHOOK_URL) or leads_backup_on()
+
+
 def _unset_notice(form_id):
-    """The fail-safe notice shown inside a form while GHL_WEBHOOK_URL is unset.
+    """The fail-safe notice shown inside a form while NO delivery path is configured.
 
     There is no mailto fallback because no practice email address is on file
     (CLIENT-BRIEF.md), and inventing one would be worse than omitting it.
@@ -93,12 +131,19 @@ def _unset_notice(form_id):
 
 
 def wire_form(html, form_id):
-    """Apply the GHL_WEBHOOK_URL config to one lead form's HTML.
+    """Apply the lead-routing config to one lead form's HTML.
 
-    Endpoint SET:   the form gets a real action="<endpoint>", so it stays a genuine
-                    <form> rather than a JS-only trap, and remains interactive.
-    Endpoint UNSET: every visible control is disabled and the fail-safe notice is
-                    inserted as the form's first child, so nothing can be typed or
+    A DELIVERY PATH EXISTS (backup and/or GHL): the form is live, interactive and
+                    carries data-ob-lead="1". `action` is the GHL webhook when one is
+                    set, so the form stays a genuine <form> rather than a JS-only trap.
+                    With no webhook `action` is empty, because the only two candidates
+                    are both worse: the backup's /api/lead rejects a native urlencoded
+                    POST with a 400 JSON page, and a self-POST to a static host is a
+                    405. Every form already carries a <noscript> block naming the
+                    practice phone for exactly this case, and ob-leads.js always calls
+                    preventDefault, so `action` is never used while JS runs.
+    NO DELIVERY PATH AT ALL: every visible control is disabled and the fail-safe notice
+                    is inserted as the form's first child, so nothing can be typed or
                     submitted and nothing claims to have been sent.
 
     Hidden inputs are never disabled, so the attribution set stays inspectable. The
@@ -108,9 +153,10 @@ def wire_form(html, form_id):
     tags = _FORM_OPEN_RE.findall(html)
     assert len(tags) == 1, "expected exactly one <form> in %s, found %d" % (form_id, len(tags))
     m = _FORM_OPEN_RE.search(html)
-    if GHL_WEBHOOK_URL:
+    if delivery_ready():
+        action = H.escape(GHL_WEBHOOK_URL, quote=True) if GHL_WEBHOOK_URL else ""
         open_tag = ('<form id="%s" method="post" action="%s" novalidate data-ob-lead="1">'
-                    % (form_id, H.escape(GHL_WEBHOOK_URL, quote=True)))
+                    % (form_id, action))
         return html[:m.start()] + open_tag + html[m.end():]
 
     open_tag = ('<form id="%s" method="post" action="" novalidate data-ob-lead="0"'
@@ -139,19 +185,23 @@ def wire_form(html, form_id):
 def leads_script():
     """Per-page config plus the local submit script.
 
-    The config is emitted per page from GHL_WEBHOOK_URL, so the constant above stays the
-    single source of truth. The script is a local file: no third-party or CDN script is
-    added anywhere, because the site is being de-CDN'd in parallel.
+    The config is emitted per page from the constants above, so they stay the single
+    source of truth. The script is a local file: no third-party or CDN script is added
+    anywhere, because the site is being de-CDN'd in parallel. leads.startorthoboost.com
+    is our own first-party service, called with fetch, not a loaded script.
     """
     cfg = json.dumps({
         "endpoint": GHL_WEBHOOK_URL,
+        "backup": LEADS_BACKUP_URL if leads_backup_on() else "",
+        "site_id": LEADS_SITE_ID if leads_backup_on() else "",
         "confirm": LEAD_CONFIRM_URL,
         "phone": PRACTICE_PHONE,
         "tel": PRACTICE_TEL,
         "attr_days": LEAD_ATTR_DAYS,
         "queue_days": LEAD_QUEUE_DAYS,
     }, sort_keys=True)
-    return ('\n  <!-- Lead forms. Endpoint comes from GHL_WEBHOOK_URL in build/common.py. -->\n'
+    return ('\n  <!-- Lead forms. Endpoints come from GHL_WEBHOOK_URL and LEADS_BACKUP_URL\n'
+            '       in build/common.py. -->\n'
             '  <script>window.OB_LEADS = %s;</script>\n'
             '  <script src="/assets/js/ob-leads.js" defer></script>\n' % cfg)
 

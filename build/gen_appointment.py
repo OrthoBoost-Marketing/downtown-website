@@ -16,9 +16,10 @@ TICK = ('<svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden
 
 # ------------------------------------------------------------------ the form
 # REQUEST-FORM-SPEC: exactly four fields plus at most one select. Zero PHI.
-# The endpoint comes from GHL_WEBHOOK_URL in build/common.py, the single place it is
-# set. While that is unset, wire_form() disables every control and inserts a notice
-# pointing at the practice phone, so no lead is accepted or faked. See build/GHL-WIRING.md.
+# Where a lead goes is set in build/common.py, the single place any endpoint lives:
+# LEADS_BACKUP_URL (the OrthoBoost Leads platform, live now) and GHL_WEBHOOK_URL (still
+# empty). wire_form() keeps this form live while EITHER exists, and only disables every
+# control behind the call-us notice if both are blank. See build/GHL-WIRING.md.
 FORM_TPL = """        <div class="formcard reveal d1">
           <h2>Request your free consultation</h2>
           <form method="post" action="" novalidate>

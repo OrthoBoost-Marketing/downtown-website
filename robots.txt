@@ -1,5 +1,31 @@
 # Client review build. This must not be indexed, and must not compete with
-# downtownorthodontics.ca. Remove this file (and the noindex meta in index.html)
-# only when the site goes live on the real domain.
+# downtownorthodontics.ca.
+#
+# AT LAUNCH both halves come off together, in one commit:
+#   1. build/chrome.py   REVIEW_BUILD = True  ->  False, then run the full build, which
+#                        drops the per-page <meta name="robots" content="noindex, nofollow">
+#   2. this file         delete the Disallow line, keep the Sitemap line
+#
+# Dropping only one of the two is the trap. A Disallow stops crawlers fetching the page
+# at all, so a lingering Disallow hides the fact that noindex is still there, and a
+# lingering noindex is invisible for as long as the Disallow stands. Change them together
+# or change neither.
+#
+# The launch version of this file is exactly:
+#
+#   User-agent: *
+#   Allow: /
+#   Sitemap: https://downtownorthodontics.ca/sitemap.xml
+#
+# NOTE: an earlier version of this comment said to remove "the noindex meta in
+# index.html". That was wrong and would not have worked. The noindex is emitted by
+# chrome.py for every one of the 17 pages, so it comes off by flipping REVIEW_BUILD and
+# rebuilding, not by hand-editing the homepage.
+#
+# Do not submit the sitemap to Search Console until the stack question is settled and
+# this build is confirmed as what goes live on downtownorthodontics.ca.
+
 User-agent: *
 Disallow: /
+
+Sitemap: https://downtownorthodontics.ca/sitemap.xml

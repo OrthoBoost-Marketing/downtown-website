@@ -394,6 +394,16 @@
   .hero-sub { color: var(--ink-soft); font-size: clamp(1rem, 1.15vw, 1.16rem); line-height: 1.6; max-width: 42ch; margin: 24px 0 30px; }
   .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .hero-actions .btn { padding: 16px 26px; font-size: var(--fs-xs); }
+  /* TIER 4, at 320px only: .btn is white-space:nowrap, and "BOOK A FREE CONSULTATION"
+     at .16em tracking plus 26px of side padding gives it a 327px min-content width.
+     Inset by 24px that needs 351px, so every page whose hero uses .hero-actions
+     overflowed a 320px viewport by 31px. Below 360px the label is allowed to wrap
+     and the buttons go full width, which is the only way a fixed-width nowrap CTA
+     can fit. 361px and up is untouched. */
+  @media (max-width: 360px) {
+    .hero-actions, .pactions { width: 100%; }
+    .hero-actions .btn, .pactions .btn { white-space: normal; width: 100%; justify-content: center; text-align: center; padding: 16px 18px; }
+  }
   /* on the pale-blue hero field the teal CTA has no separation: solid ink fill
      so the primary action pops (charcoal is a core kit colour) */
   .hero-actions .btn-primary { background: var(--petrol-deep); color: #fff; box-shadow: 0 16px 34px -14px rgba(1,4,8,.55);
@@ -638,7 +648,14 @@
 
   /* ---------- old way / Downtown way comparison ---------- */
   .compare-wrap { background: var(--surface); }
-  .compare { display: grid; grid-template-columns: 1fr 1fr; border-radius: var(--radius-lg); overflow: hidden; border: var(--border) solid var(--line); box-shadow: var(--shadow-soft); background: var(--bg); }
+  /* minmax(0,1fr), not a bare 1fr: a bare 1fr track floors at min-content, so the
+     longest word in the left column can push the right column past the viewport,
+     where this rule's own overflow:hidden shears it silently. It cost 18px of the
+     right column at 320px when the left column's longest word went from 8 to 10
+     characters ("specialist"), and scrollWidth does not detect it because clipped
+     content never widens the document. Same defect class as the locations card. */
+  .compare { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); border-radius: var(--radius-lg); overflow: hidden; border: var(--border) solid var(--line); box-shadow: var(--shadow-soft); background: var(--bg); }
+  .compare .ch, .compare .cc { overflow-wrap: break-word; min-width: 0; }
   .compare .ch { padding: 20px 28px; font-weight: 700; font-size: var(--fs-lg); letter-spacing: -.01em; }
   .compare .ch.old { background: var(--surface-2); color: var(--ink-soft); }
   .compare .ch.new { background: var(--petrol-deep); color: #fff; }
