@@ -237,7 +237,7 @@ WHY_BODY = phero(
   <section class="block">
     <div class="wrap">
       <div class="reqgrid reveal">
-        <div class="hero-frame" style="order:-1;"><img src="assets/photos/w880/used-3.jpg" alt="Dr. Daher explaining a treatment plan at his consultation desk" /></div>
+        <div class="hero-frame" style="order:-1;"><img src="assets/photos/w880/consult-dr-daher-treatment-planning.jpg" alt="Dr. Daher explaining a treatment plan at his consultation desk" /></div>
         <div>
           <h2 style="font-family:var(--font);font-size:var(--fs-3xl);font-weight:var(--fw-semibold);color:var(--ink);margin:0 0 var(--sp-4);letter-spacing:-.02em;">A specialist plans it either way</h2>
           <p style="color:var(--ink-soft);font-size:var(--fs-md);">Braces and Invisalign are
@@ -265,7 +265,7 @@ WHY_BODY = phero(
           <p style="color:var(--ink-soft);font-size:var(--fs-md);margin-top:var(--sp-4);">
             <a class="tlink" href="/early-orthodontics">Read about kids&rsquo; early care <span class="arr">&rarr;</span></a></p>
         </div>
-        <div class="hero-frame"><img src="assets/photos/w880/office-inside.jpg" alt="The Downtown Orthodontics treatment area" /></div>
+        <div class="hero-frame"><img src="assets/photos/w880/tech-itero-scanner-team.jpg" alt="A Downtown Orthodontics team member with the chairside scanner" /></div>
       </div>
     </div>
   </section>

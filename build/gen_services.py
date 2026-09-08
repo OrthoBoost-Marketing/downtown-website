@@ -273,8 +273,8 @@ build(
              "adjusts both braces and Invisalign himself, so the option you are offered is "
              "the one that suits your bite."],
          "link": "/#how", "link_text": "See how a first visit works",
-         "photo": "assets/photos/office-inside.jpg",
-         "alt": "The open treatment area at Downtown Orthodontics, with chairs and chairside screens",
+         "photo": "assets/photos/tech-itero-operatory-wide.jpg",
+         "alt": "A treatment room at Downtown Orthodontics with the chairside scanner",
          "mirror": True},
         {"eyebrow": "(What you get)",
          "h2": "What is actually included.",
@@ -335,8 +335,8 @@ build(
             "and still sits on Align Technology&rsquo;s scientific advisory board. Simple crowding "
             "and relapse cases fit the Quick 6 Fix at $4,299 flat.",
         chips=["Top 1% of providers globally", "Quick 6 Fix &middot; $4,299 flat", "Free consultation"],
-        photo="assets/photos/used-3.jpg",
-        alt="Dr. Daher going through an Invisalign plan at his consultation desk"),
+        photo="assets/photos/consult-dr-daher-treatment-planning.jpg",
+        alt="Dr. Daher going through a treatment plan at his consultation desk"),
     rows=[
         {"eyebrow": "(Why you're here)",
          "h2": "Invisalign is a tool. The result comes from <em>the doctor holding it.</em>",
@@ -363,8 +363,8 @@ build(
              "<b>Refinement covered.</b> Extra aligners to finish it properly are part of the plan.",
              "<b>Clear retainers at the end.</b> With a retention plan Dr. Daher checks himself."],
          "link": "/financing", "link_text": "See the full pricing and financing",
-         "photo": "assets/photos/dt-7.jpg",
-         "alt": "Dr. Daher holding an Invisalign aligner at Downtown Orthodontics"},
+         "photo": "assets/photos/detail-model-with-aligner.jpg",
+         "alt": "A clear aligner and a dental model at Downtown Orthodontics"},
         {"eyebrow": "(What to expect)",
          "h2": "Discreet enough that <em>most people never notice.</em>",
          "paras": [
@@ -395,7 +395,7 @@ build(
     # specialist. Not on the homepage marquee.
     quote_note=quote_card(18, "Invisalign"),
     service_name="Invisalign and Invisalign Teen",
-    photo="assets/photos/used-3.jpg",
+    photo="assets/photos/consult-dr-daher-treatment-planning.jpg",
 )
 
 # ============================================================ EARLY ORTHODONTICS
@@ -409,8 +409,8 @@ build(
         sub="A first check around age seven, watched by a specialist rather than guessed at. Most "
             "children need nothing done yet, and that first visit is always free.",
         chips=["Free growth assessment", "First check from age seven", "Treatment only when it helps"],
-        photo="assets/photos/used-1.jpg",
-        alt="A member of the Downtown Orthodontics team holding a clear retainer"),
+        photo="assets/photos/team-candid-workstation.jpg",
+        alt="A Downtown Orthodontics team member at the chairside workstation"),
     rows=[
         {"eyebrow": "(Why you're here)",
          "h2": "Most seven-year-olds <em>do not need braces.</em>",
@@ -472,7 +472,7 @@ build(
     # relationship the review does not state.
     quote_note=quote_card(11, "Family of a young patient"),
     service_name="Early and interceptive orthodontics for children",
-    photo="assets/photos/used-1.jpg",
+    photo="assets/photos/team-candid-workstation.jpg",
 )
 
 # ============================================================ RETAINERS
@@ -487,8 +487,8 @@ build(
             "retention plan Dr. Daher checks himself. If an old retainer has stopped fitting, we "
             "can help with that too.",
         chips=["Included in every plan", "Retention checked by a specialist", "Replacements available"],
-        photo="assets/photos/img-3127.jpg",
-        alt="Dr. Daher with an adult patient at Downtown Orthodontics"),
+        photo="assets/photos/detail-hands-retainer-case.jpg",
+        alt="A clear retainer in its case at Downtown Orthodontics"),
     rows=[
         {"eyebrow": "(Why you're here)",
          "h2": "The result is not finished <em>when the braces come off.</em>",
@@ -548,5 +548,5 @@ build(
     # claim proved by duration. Not on the homepage marquee.
     quote_note=quote_card(15, "Retention, thirteen years"),
     service_name="Clear retainers and retention",
-    photo="assets/photos/img-3127.jpg",
+    photo="assets/photos/detail-hands-retainer-case.jpg",
 )
