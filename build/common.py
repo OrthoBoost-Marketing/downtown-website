@@ -26,6 +26,17 @@ import html as H
 # Full documentation, field mapping and cutover checklist: build/GHL-WIRING.md
 GHL_WEBHOOK_URL = ""
 
+# ---------------------------------------------------------- Referring-dentist form
+#
+# /referring-dentists has its OWN GHL inbound webhook, separate from the patient forms
+# above, so referrals run through their own GHL workflow and notification.
+#
+# Unlike the patient forms, this one is NOT live on the backup alone. The backup stores
+# name, email, phone and attribution only, so the referring doctor, office, patient DOB
+# and reason would all be dropped. While this is "" the form ships disabled behind a
+# call-us notice (wire_form(..., endpoint=...)), and turns on the moment a URL is pasted.
+GHL_REFERRAL_WEBHOOK_URL = ""
+
 # ---------------------------------------------------------- OrthoBoost Leads backup
 #
 # The in-house capture platform (leads.startorthoboost.com, Next.js + Neon Postgres).
@@ -109,7 +120,7 @@ def delivery_ready():
     return bool(GHL_WEBHOOK_URL) or leads_backup_on()
 
 
-def _unset_notice(form_id):
+def _unset_notice(form_id, lead=None):
     """The fail-safe notice shown inside a form while NO delivery path is configured.
 
     There is no mailto fallback because no practice email address is on file
@@ -121,16 +132,18 @@ def _unset_notice(form_id):
             <p id="{ID}-unset" class="microline" role="status" style="margin:0 0 var(--sp-5);
               padding:var(--sp-4);border:var(--border) solid var(--ink-faint);
               border-radius:var(--radius-btn);background:var(--surface);">
-              <b>Online requests are not open yet.</b> This form cannot send your details
-              at the moment. Please call the practice on
-              <a class="tlink" href="tel:{TEL}">{NUM}</a> and we will book your free
-              consultation now.</p>"""
+              {LEAD}</p>"""
+    lead = lead or ("<b>Online requests are not open yet.</b> This form cannot send your details\n"
+                    "              at the moment. Please call the practice on\n"
+                    '              <a class="tlink" href="tel:{TEL}">{NUM}</a> and we will book your free\n'
+                    "              consultation now.")
+    tpl = tpl.replace("{LEAD}", lead)
     return (tpl.replace("{ID}", form_id)
                .replace("{TEL}", PRACTICE_TEL)
                .replace("{NUM}", PRACTICE_PHONE))
 
 
-def wire_form(html, form_id):
+def wire_form(html, form_id, endpoint=None, notice=None):
     """Apply the lead-routing config to one lead form's HTML.
 
     A DELIVERY PATH EXISTS (backup and/or GHL): the form is live, interactive and
@@ -149,12 +162,18 @@ def wire_form(html, form_id):
     Hidden inputs are never disabled, so the attribution set stays inspectable. The
     disable pass is bounded by the closing </form> tag, so it is safe to hand this whole
     page bodies: controls elsewhere on the page are never touched.
+
+    endpoint: pass a form-specific webhook (e.g. GHL_REFERRAL_WEBHOOK_URL) to make THAT
+    the sole switch. The backup alone does not count for such a form, because it cannot
+    store the form's extra fields. `notice` replaces the default unset message.
     """
     tags = _FORM_OPEN_RE.findall(html)
     assert len(tags) == 1, "expected exactly one <form> in %s, found %d" % (form_id, len(tags))
     m = _FORM_OPEN_RE.search(html)
-    if delivery_ready():
-        action = H.escape(GHL_WEBHOOK_URL, quote=True) if GHL_WEBHOOK_URL else ""
+    hook = GHL_WEBHOOK_URL if endpoint is None else endpoint
+    ready = delivery_ready() if endpoint is None else bool(endpoint)
+    if ready:
+        action = H.escape(hook, quote=True) if hook else ""
         open_tag = ('<form id="%s" method="post" action="%s" novalidate data-ob-lead="1">'
                     % (form_id, action))
         return html[:m.start()] + open_tag + html[m.end():]
@@ -179,10 +198,10 @@ def wire_form(html, form_id):
     inner = _CONTROL_RE.sub(_disable, inner)
     assert disabled[0] >= 5, "expected 5+ controls to disable in %s, got %d" % (
         form_id, disabled[0])
-    return head + open_tag + _unset_notice(form_id) + inner + rest
+    return head + open_tag + _unset_notice(form_id, notice) + inner + rest
 
 
-def leads_script():
+def leads_script(endpoint=None, confirm=None):
     """Per-page config plus the local submit script.
 
     The config is emitted per page from the constants above, so they stay the single
@@ -191,10 +210,10 @@ def leads_script():
     is our own first-party service, called with fetch, not a loaded script.
     """
     cfg = json.dumps({
-        "endpoint": GHL_WEBHOOK_URL,
+        "endpoint": GHL_WEBHOOK_URL if endpoint is None else endpoint,
         "backup": LEADS_BACKUP_URL if leads_backup_on() else "",
         "site_id": LEADS_SITE_ID if leads_backup_on() else "",
-        "confirm": LEAD_CONFIRM_URL,
+        "confirm": confirm or LEAD_CONFIRM_URL,
         "phone": PRACTICE_PHONE,
         "tel": PRACTICE_TEL,
         "attr_days": LEAD_ATTR_DAYS,

@@ -469,3 +469,24 @@ localhost is deliberately not allowlisted. Test forms from the Vercel URL, or st
 alias is.
 
 Name any test lead "Test ..." so it is obviously deletable, and archive it when done.
+
+---
+
+## 10. Referring-dentist form (`/referring-dentists`), added 2026-09-24
+
+Maya's 2026-09-11 request, laid out like vancouverbraces.com/site/orthodontist-referrals.
+Generator: `build/gen_referral.py`. Form id `lead-referral`.
+
+- **Own webhook:** `GHL_REFERRAL_WEBHOOK_URL` in `build/common.py`, separate from
+  `GHL_WEBHOOK_URL`, so referrals run through their own GHL workflow and notification.
+- **Disabled until that URL is set.** The backup stores name, email, phone and
+  attribution only, so on the backup alone the referring doctor, office, DOB and reason
+  would be lost. `wire_form(..., endpoint=...)` makes the referral webhook the only switch.
+- **Payload:** the canonical keys carry the PATIENT (`Full Name`, `Email`, `Phone`), so
+  the GHL contact is the person the office books. Extras: `ref_doctor`, `ref_office`,
+  `ref_email`, `ref_phone`, `patient_dob`, `guardian_names`, `reason`. `message` holds a
+  labelled plain-text summary of the whole referral, so one merge field
+  (`{{inboundWebhookRequest.message}}`) is enough for the notification email.
+- **Redirect:** `/referral-confirmation` (noindex), not the patient confirmation page.
+- **No file upload.** A JSON webhook cannot carry files; the page asks referrers to
+  mention records in the comments and the office arranges a secure transfer.

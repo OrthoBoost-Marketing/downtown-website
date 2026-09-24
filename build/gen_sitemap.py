@@ -44,6 +44,7 @@ PAGES = [
     ("/financing",             "0.8", "monthly"),
     ("/faq",                   "0.6", "monthly"),
     ("/contact",               "0.7", "monthly"),
+    ("/referring-dentists",    "0.5", "monthly"),
     ("/privacy-policy",        "0.2", "yearly"),
     ("/terms",                 "0.2", "yearly"),
     ("/accessibility",         "0.2", "yearly"),

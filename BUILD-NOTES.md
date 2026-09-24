@@ -30,7 +30,7 @@ measured at CLS 0.00. Run all three stages, in this order, every time:
 
 ```bash
 # 1. the six generators
-for g in gen_appointment gen_services gen_rest gen_support gen_utility gen_reviews; do
+for g in gen_appointment gen_services gen_rest gen_support gen_utility gen_reviews gen_referral; do
     python build/$g.py
 done
 # 2. image width/height, from the kit (deliberately NOT duplicated in this repo)
@@ -357,7 +357,7 @@ the FAQ-duplicate block converted to a zigzag row on 2026-08-25, so the comment 
 `build/post_media.py` is the new **last build step** and must run after the generators:
 
 ```
-for g in gen_appointment gen_services gen_rest gen_support gen_utility gen_reviews; do
+for g in gen_appointment gen_services gen_rest gen_support gen_utility gen_reviews gen_referral; do
     python build/$g.py
 done
 python "$KIT/plugin/skills/static-site-deploy/scripts/add_img_dims.py" .

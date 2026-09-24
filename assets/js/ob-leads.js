@@ -202,6 +202,21 @@
       'first_touch_at': (first && first.at) || '',
       'submitted_at': new Date().toISOString()
     };
+    // Form-specific extras (the referring-dentist form). Any control marked data-extra
+    // is sent under its own name, and a labelled plain-text summary goes in `message` so
+    // one GHL notification field carries the whole referral. Additive only: no
+    // canonical key above is renamed or dropped.
+    var extras = form.querySelectorAll('[data-extra]');
+    if (extras.length) {
+      var lines = [];
+      Array.prototype.forEach.call(extras, function (el) {
+        var v = String(el.value || '').trim();
+        data[el.name] = v;
+        if (v) lines.push((el.getAttribute('data-extra') || el.name) + ': ' + v);
+      });
+      if (data.message) lines.push('Notes: ' + data.message);
+      data.message = lines.join('\n');
+    }
     return data;
   }
 
