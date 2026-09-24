@@ -490,3 +490,7 @@ Generator: `build/gen_referral.py`. Form id `lead-referral`.
 - **Redirect:** `/referral-confirmation` (noindex), not the patient confirmation page.
 - **No file upload.** A JSON webhook cannot carry files; the page asks referrers to
   mention records in the comments and the office arranges a secure transfer.
+- **Notification recipient: Maya, maya@downtownorthodontics.ca** (Jules, 2026-09-24;
+  address from the Notion client record's "Dr Email" field). GHL location
+  `HAbBQxhvLMCooamlyR0Z` per ads-hub `connections`, access status "needed" as of
+  2026-09-24, which is what blocks creating the webhook.
