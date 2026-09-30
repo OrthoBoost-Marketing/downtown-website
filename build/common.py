@@ -35,7 +35,7 @@ GHL_WEBHOOK_URL = ""
 # name, email, phone and attribution only, so the referring doctor, office, patient DOB
 # and reason would all be dropped. While this is "" the form ships disabled behind a
 # call-us notice (wire_form(..., endpoint=...)), and turns on the moment a URL is pasted.
-GHL_REFERRAL_WEBHOOK_URL = ""
+GHL_REFERRAL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/HAbBQxhvLMCooamlyR0Z/webhook-trigger/8a88979c-2fa4-466d-a4b7-0914aee6534d"
 
 # ---------------------------------------------------------- OrthoBoost Leads backup
 #

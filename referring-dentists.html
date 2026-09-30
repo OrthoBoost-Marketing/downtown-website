@@ -1555,62 +1555,55 @@
   <section class="block">
     <div class="wrap">
       <div class="formcard reveal" style="max-width:760px;margin:0 auto;">
-        <form id="lead-referral" method="post" action="" novalidate data-ob-lead="0" aria-describedby="lead-referral-unset">
-            <p id="lead-referral-unset" class="microline" role="status" style="margin:0 0 var(--sp-5);
-              padding:var(--sp-4);border:var(--border) solid var(--ink-faint);
-              border-radius:var(--radius-btn);background:var(--surface);">
-              <b>Online referrals are not open yet.</b> This form cannot send at the moment.
-              Please call the practice on
-              <a class="tlink" href="tel:+16046623290">(604) 662-3290</a> and our team will take the
-              referral by phone.</p>
+        <form id="lead-referral" method="post" action="https://services.leadconnectorhq.com/hooks/HAbBQxhvLMCooamlyR0Z/webhook-trigger/8a88979c-2fa4-466d-a4b7-0914aee6534d" novalidate data-ob-lead="1">
           <h2>Referring doctor</h2>
           <div class="fgrid">
               <div class="field">
                 <label for="r-doc">Doctor name</label>
-                <input id="r-doc" name="ref_doctor" type="text" autocomplete="off" data-extra="Referring doctor" required disabled />
+                <input id="r-doc" name="ref_doctor" type="text" autocomplete="off" data-extra="Referring doctor" required />
               </div>
               <div class="field">
                 <label for="r-office">Office</label>
-                <input id="r-office" name="ref_office" type="text" autocomplete="organization" data-extra="Office" required disabled />
+                <input id="r-office" name="ref_office" type="text" autocomplete="organization" data-extra="Office" required />
               </div>
               <div class="field">
                 <label for="r-docemail">Email address</label>
-                <input id="r-docemail" name="ref_email" type="email" autocomplete="off" data-extra="Doctor email" required disabled />
+                <input id="r-docemail" name="ref_email" type="email" autocomplete="off" data-extra="Doctor email" required />
               </div>
               <div class="field">
                 <label for="r-docphone">Phone</label>
-                <input id="r-docphone" name="ref_phone" type="tel" autocomplete="off" data-extra="Doctor phone" required disabled />
+                <input id="r-docphone" name="ref_phone" type="tel" autocomplete="off" data-extra="Doctor phone" required />
               </div>
           </div>
           <h2 style="margin-top:var(--sp-7);">Patient information</h2>
           <div class="fgrid">
               <div class="field">
                 <label for="r-first">Patient first name</label>
-                <input id="r-first" name="first_name" type="text" autocomplete="off" data-extra="Patient first name" required disabled />
+                <input id="r-first" name="first_name" type="text" autocomplete="off" data-extra="Patient first name" required />
               </div>
               <div class="field">
                 <label for="r-last">Patient last name</label>
-                <input id="r-last" name="last_name" type="text" autocomplete="off" data-extra="Patient last name" required disabled />
+                <input id="r-last" name="last_name" type="text" autocomplete="off" data-extra="Patient last name" required />
               </div>
               <div class="field">
                 <label for="r-dob">Patient date of birth</label>
-                <input id="r-dob" name="patient_dob" type="date" data-extra="Patient date of birth" required disabled />
+                <input id="r-dob" name="patient_dob" type="date" data-extra="Patient date of birth" required />
               </div>
               <div class="field">
                 <label for="r-guardian">Parent or guardian names (if applicable)</label>
-                <input id="r-guardian" name="guardian_names" type="text" data-extra="Parent or guardian" disabled />
+                <input id="r-guardian" name="guardian_names" type="text" data-extra="Parent or guardian" />
               </div>
               <div class="field">
                 <label for="r-phone">Patient phone</label>
-                <input id="r-phone" name="phone" type="tel" autocomplete="off" data-extra="Patient phone" required disabled />
+                <input id="r-phone" name="phone" type="tel" autocomplete="off" data-extra="Patient phone" required />
               </div>
               <div class="field">
                 <label for="r-email">Patient email</label>
-                <input id="r-email" name="email" type="email" autocomplete="off" data-extra="Patient email" required disabled />
+                <input id="r-email" name="email" type="email" autocomplete="off" data-extra="Patient email" required />
               </div>
             <div class="field wide">
               <label for="r-reason">Reason for consultation or comments</label>
-              <textarea id="r-reason" name="reason" rows="5" data-extra="Reason for consultation" required style="min-height:120px;min-width:0;width:100%;font-family:var(--font);font-size:16px;color:var(--ink);background:var(--bg);border:var(--border) solid var(--ink-faint);border-radius:var(--radius-btn);padding:var(--sp-3) var(--sp-4);" disabled></textarea>
+              <textarea id="r-reason" name="reason" rows="5" data-extra="Reason for consultation" required style="min-height:120px;min-width:0;width:100%;font-family:var(--font);font-size:16px;color:var(--ink);background:var(--bg);border:var(--border) solid var(--ink-faint);border-radius:var(--radius-btn);padding:var(--sp-3) var(--sp-4);"></textarea>
             </div>
           </div>
             <!-- Attribution. Hidden, no PHI. Filled at runtime by /assets/js/ob-leads.js. -->
@@ -1625,7 +1618,7 @@
             <input type="hidden" name="wbraid" value="" />
             <input type="hidden" name="offer" value="" />
             <input type="hidden" name="page" value="referring-dentists" />
-          <button class="btn btn-primary" type="submit" disabled>Send referral <span class="arr">&rarr;</span></button>
+          <button class="btn btn-primary" type="submit">Send referral <span class="arr">&rarr;</span></button>
         </form>
         <p class="microline">Sending radiographs, photos or a referral letter? Mention them in
           the comments and our team will arrange a secure way to receive them. Please include
@@ -1664,7 +1657,7 @@
 
   <!-- Lead forms. Endpoints come from GHL_WEBHOOK_URL and LEADS_BACKUP_URL
        in build/common.py. -->
-  <script>window.OB_LEADS = {"attr_days": 90, "backup": "https://leads.startorthoboost.com", "confirm": "/referral-confirmation", "endpoint": "", "phone": "(604) 662-3290", "queue_days": 30, "site_id": "downtown-orthodontics", "tel": "+16046623290"};</script>
+  <script>window.OB_LEADS = {"attr_days": 90, "backup": "https://leads.startorthoboost.com", "confirm": "/referral-confirmation", "endpoint": "https://services.leadconnectorhq.com/hooks/HAbBQxhvLMCooamlyR0Z/webhook-trigger/8a88979c-2fa4-466d-a4b7-0914aee6534d", "phone": "(604) 662-3290", "queue_days": 30, "site_id": "downtown-orthodontics", "tel": "+16046623290"};</script>
   <script src="/assets/js/ob-leads.js" defer></script>
 
   <!-- FOOTER -->
