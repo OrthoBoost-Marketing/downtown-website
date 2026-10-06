@@ -305,8 +305,6 @@ CONTACT_BODY = phero(
           <ul class="checks" style="margin-top:var(--sp-6);">
             <li>__TICK__<span><b>840 W Hastings St</b><br />Vancouver, BC V6C 1C8<br />
               <a class="tlink" href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">Open in Maps &rarr;</a></span></li>
-            <li>__TICK__<span>Our hours change through the year, so we keep them current on Google.<br />
-              <a class="tlink" href="https://www.google.com/maps?cid=9098292092356715373" target="_blank" rel="noopener">See our current hours &rarr;</a></span></li>
             <li>__TICK__<span><b>By Canada Place</b>, across from the Terminal City Club and down
               the street from the Vancouver Club.</span></li>
           </ul>
@@ -377,7 +375,7 @@ __ATTRIBUTION__
     "Ready to <em>book?</em>",
     "The consultation is free, no referral is needed, and you leave with a digital scan, an honest "
     "read on your bite and your exact price in writing.",
-    'Our hours change through the year. <a href="https://www.google.com/maps?cid=9098292092356715373" target="_blank" rel="noopener">See our current hours on Google</a>.')
+    "840 W Hastings St, Vancouver &middot; (604) 662-3290")
 
 # The contact form's endpoints and its fail-safe state come from LEADS_BACKUP_URL and
 # GHL_WEBHOOK_URL in build/common.py. wire_form bounds its disable pass to this page's
