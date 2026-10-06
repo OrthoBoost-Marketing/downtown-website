@@ -108,9 +108,8 @@ __ATTRIBUTION__
           <ul class="checks">
             <li>__TICK__<span><b>840 W Hastings St</b><br />Vancouver, BC V6C 1C8<br />
               <a class="tlink" href="https://www.google.com/maps/search/?api=1&amp;query=840+W+Hastings+St+Vancouver+BC+V6C+1C8" target="_blank" rel="noopener">Open in Maps &rarr;</a></span></li>
-            <li>__TICK__<span><b>Monday</b> 10:00 to 18:00<br /><b>Tuesday</b> 08:00 to 15:00<br />
-              <b>Wednesday</b> 08:00 to 16:30<br /><b>Thursday</b> 08:00 to 15:00<br />
-              <span style="color:var(--ink-faint);">Friday to Sunday, closed</span></span></li>
+            <li>__TICK__<span>Our hours change through the year, so we keep them current on Google.<br />
+              <a class="tlink" href="https://www.google.com/maps?cid=9098292092356715373" target="_blank" rel="noopener">See our current hours &rarr;</a></span></li>
           </ul>
         </div>
       </div>

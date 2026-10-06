@@ -241,8 +241,8 @@ CONF_BODY = fill("""
     </div>
   </section>
 
-  <!-- "NEED US SOONER?" band. UTILITY-PAGES-SPEC requires phone + hours here,
-       before the footer. Same number and same hours as contact.html. -->
+  <!-- "NEED US SOONER?" band. Phone only: hours came off the site 2026-10-06 at the
+       client's request (they change often and Google is kept current), so link there. -->
   <section class="block" style="border-top:var(--border) solid var(--line);">
     <div class="wrap">
       <div class="reqgrid">
@@ -255,11 +255,8 @@ CONF_BODY = fill("""
         </div>
         <div class="reveal d1">
           <ul class="checks" style="margin-top:0;">
-            <li>__TICK__<span><b>Monday</b> 10:00 to 18:00</span></li>
-            <li>__TICK__<span><b>Tuesday</b> 08:00 to 15:00</span></li>
-            <li>__TICK__<span><b>Wednesday</b> 08:00 to 16:30</span></li>
-            <li>__TICK__<span><b>Thursday</b> 08:00 to 15:00</span></li>
-            <li>__TICK__<span style="color:var(--ink-faint);">Friday to Sunday, closed</span></li>
+            <li>__TICK__<span>Our hours change through the year, so we keep them current on Google.<br />
+              <a class="tlink" href="https://www.google.com/maps?cid=9098292092356715373" target="_blank" rel="noopener">See our current hours &rarr;</a></span></li>
           </ul>
         </div>
       </div>

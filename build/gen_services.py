@@ -40,7 +40,6 @@ def form(slug, preselect, quote_note):
             all of that on the call.</p>
           <p class="promise" style="margin-top:var(--sp-6);">Rather just call?</p>
           <a class="big-tel" href="tel:+16046623290">%(phone)s (604) 662-3290</a>
-          <p class="promise">Monday 10&ndash;6, Tuesday and Thursday 8&ndash;3, Wednesday 8&ndash;4:30.</p>
           %(quote_note)s
         </div>
         <div class="formcard reveal d1">
