@@ -2,6 +2,23 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/about-us", "destination": "/why-choose-us", "permanent": true },
+    { "source": "/our-practice", "destination": "/why-choose-us", "permanent": true },
+    { "source": "/contact-us", "destination": "/contact", "permanent": true },
+    { "source": "/terms-conditions", "destination": "/terms", "permanent": true },
+    { "source": "/flexible-financing", "destination": "/financing", "permanent": true },
+    { "source": "/booking-quick-consultation", "destination": "/appointment-request", "permanent": true },
+    { "source": "/adult-braces-invisalign-vancouver", "destination": "/invisalign", "permanent": true },
+    { "source": "/teen-orthodontist-vancouver", "destination": "/braces", "permanent": true },
+    { "source": "/child-orthodontist-vancouver", "destination": "/early-orthodontics", "permanent": true },
+    { "source": "/patient-information", "destination": "/faq", "permanent": true },
+    { "source": "/partnership-opportunities", "destination": "/", "permanent": true },
+    { "source": "/partnerships/:path*", "destination": "/", "permanent": true },
+    { "source": "/partnerships", "destination": "/", "permanent": true },
+    { "source": "/events/:path*", "destination": "/", "permanent": true },
+    { "source": "/events", "destination": "/", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

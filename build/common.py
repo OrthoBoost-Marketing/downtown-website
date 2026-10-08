@@ -24,7 +24,7 @@ import html as H
 # the browser reports GHL's status back to the backup.
 #
 # Full documentation, field mapping and cutover checklist: build/GHL-WIRING.md
-GHL_WEBHOOK_URL = ""
+GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/HAbBQxhvLMCooamlyR0Z/webhook-trigger/ZceIqyM0LWHRkMgROdBP"
 
 # ---------------------------------------------------------- Referring-dentist form
 #

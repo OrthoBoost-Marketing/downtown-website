@@ -27,7 +27,7 @@ DOMAIN = "https://downtownorthodontics.ca"
 #
 # Until 2026-08-27 this switch did not exist and the noindex parameter below was accepted
 # but never read, so neither half of this was actually possible.
-REVIEW_BUILD = True
+REVIEW_BUILD = False
 
 # Photographs ship twice: the client's full-resolution original in assets/photos/,
 # and an 880px-wide derivative in assets/photos/w880/ built by build/make_w880.py.
