@@ -22,13 +22,15 @@
  *                  (there is no GHL result to report), and the lead sits at 'pending'
  *                  on the dashboard, which is the truth: captured, not yet in GHL.
  *   neither        the generators ship every form disabled with a notice, so this file
- *                  does nothing on submit. It still runs, because it also fires the
- *                  ob_generate_lead event on the confirmation page.
+ *                  does nothing on submit. It still runs to record first touch.
+ *
+ * Analytics: NONE in this file. GTM (GTM-KJLKZHT, loaded in every page's <head>)
+ * owns the lead event and fires it on the confirmation page. This script pushes
+ * nothing to window.dataLayer and dispatches no DOM event (removed 2026-10-12).
  *
  * Storage (localStorage only, never a cookie):
  *   ob_attr_first_touch_v1  first-touch attribution, expires after OB_LEADS.attr_days
  *   ob_lead_queue_v1        leads whose POST failed, expires after OB_LEADS.queue_days
- *   ob_lead_event_pending_v1 (sessionStorage) one-shot flag for the confirmation event
  *
  * Retrieve queued leads from the browser console:  obLeadQueue()
  */
@@ -48,7 +50,6 @@
 
   var ATTR_KEY = 'ob_attr_first_touch_v1';
   var QUEUE_KEY = 'ob_lead_queue_v1';
-  var EVENT_KEY = 'ob_lead_event_pending_v1';
   var ATTR_MS = (CFG.attr_days || 90) * 864e5;
   var QUEUE_MS = (CFG.queue_days || 30) * 864e5;
   var QUEUE_MAX = 20;
@@ -64,7 +65,6 @@
   function lsDel(k) { try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } }
   function ssGet(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }
   function ssSet(k, v) { try { window.sessionStorage.setItem(k, v); return true; } catch (e) { return false; } }
-  function ssDel(k) { try { window.sessionStorage.removeItem(k); } catch (e) { /* ignore */ } }
   function parse(s) { try { return JSON.parse(s); } catch (e) { return null; } }
 
   /* ---------------------------------------------------------------- attribution */
@@ -244,31 +244,6 @@
     return '<a class="tlink" href="tel:' + TEL + '">' + PHONE + '</a>';
   }
 
-  /* ---------------------------------------------------------------- the event
-     ob_generate_lead. No analytics vendor is wired on this site and none is added
-     here: this dispatches a DOM event and pushes onto window.dataLayer if anything
-     ever creates one. Creating the array loads nothing. No name, email or phone is
-     put in the event detail. */
-  function fireEvent(d) {
-    var detail = {
-      event: 'ob_generate_lead',
-      form_id: d.form_id || '',
-      page: d.page || '',
-      interest: d.interest || '',
-      utm_source: d.utm_source || '',
-      utm_medium: d.utm_medium || '',
-      utm_campaign: d.utm_campaign || '',
-      offer: d.Offer || d.offer || ''
-    };
-    try {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push(detail);
-    } catch (e) { /* ignore */ }
-    try {
-      document.dispatchEvent(new CustomEvent('ob_generate_lead', { detail: detail }));
-    } catch (e) { /* ignore */ }
-  }
-
   /* ---------------------------------------------------------------- queue */
   function readQueue() {
     var list = parse(lsGet(QUEUE_KEY));
@@ -384,16 +359,9 @@
   }
 
   /* ---------------------------------------------------------------- submit */
-  function onSuccess(data) {
-    fireEvent(data);
-    // Fire again on the confirmation page. The redirect below can cut a tag's own
-    // request short, and the confirmation page is the conversion URL, so the flag is
-    // replayed there. One-shot, so a direct visit to that URL fires nothing.
-    ssSet(EVENT_KEY, JSON.stringify({
-      form_id: data.form_id || '', page: data.page || '', interest: data.interest || '',
-      utm_source: data.utm_source || '', utm_medium: data.utm_medium || '',
-      utm_campaign: data.utm_campaign || '', offer: data.Offer || ''
-    }));
+  function onSuccess() {
+    // No event is fired here. GTM keys the lead event on the confirmation page,
+    // which only loads after a durable accept, so the redirect IS the signal.
     location.href = CONFIRM;
   }
 
@@ -468,21 +436,7 @@
   }
 
   /* ---------------------------------------------------------------- boot */
-  function onConfirmPage() {
-    var here = String(location.pathname || '').replace(/\.html$/, '').replace(/\/$/, '');
-    var want = String(CONFIRM).replace(/\.html$/, '').replace(/\/$/, '');
-    return here === want;
-  }
-
   function start() {
-    if (onConfirmPage()) {
-      var raw = ssGet(EVENT_KEY);
-      if (raw) {
-        ssDel(EVENT_KEY);
-        fireEvent(parse(raw) || {});
-      }
-    }
-
     // Record first touch on EVERY page that loads this script, not just pages with a
     // form: an ad can land on any page and the visitor converts on another one, by
     // which time the URL no longer carries the parameters.

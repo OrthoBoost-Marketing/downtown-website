@@ -133,6 +133,28 @@ ANNOUNCE_X = relink(ANNOUNCE)
 MBAR_X = relink(MBAR)
 DRAWER_X = relink(DRAWER)
 
+# ---------------------------------------------------------------- analytics
+# OrthoBoost's GTM container for Downtown Orthodontics (Steph, 2026-10-12). It is the
+# ONLY analytics on the site and it owns the lead event: GTM fires it on the
+# confirmation page. assets/js/ob-leads.js pushes nothing to the dataLayer. The
+# same two blocks are hand-placed in index.html, which this module slices for chrome.
+GTM_ID = "GTM-KJLKZHT"
+GTM_HEAD = (
+    "<!-- Google Tag Manager -->\n"
+    "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});"
+    "var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;"
+    "j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);"
+    "})(window,document,'script','dataLayer','" + GTM_ID + "');</script>\n"
+    "<!-- End Google Tag Manager -->"
+)
+GTM_BODY = (
+    "<!-- Google Tag Manager (noscript) -->\n"
+    '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=' + GTM_ID + '" '
+    'height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>\n'
+    "<!-- End Google Tag Manager (noscript) -->"
+)
+
+
 # ---------------------------------------------------------------- page assembly
 def head(title, desc, slug, noindex=False, preload=None, schema=None, og_image=None):
     canon = DOMAIN + "/" if slug == "" else DOMAIN + "/" + slug
@@ -141,6 +163,7 @@ def head(title, desc, slug, noindex=False, preload=None, schema=None, og_image=N
         "<!doctype html>",
         '<html lang="en-CA">',
         "<head>",
+        GTM_HEAD,
         '<meta charset="utf-8" />',
         '<meta name="viewport" content="width=device-width, initial-scale=1" />',
         "<title>%s</title>" % title,
@@ -180,6 +203,7 @@ def page(title, desc, slug, body, noindex=False, preload=None, schema=None, og_i
     return "\n".join([
         head(title, desc, slug, noindex, preload, schema, og_image),
         "<body>",
+        GTM_BODY,
         ANNOUNCE_X,
         "\n  <!-- NAV -->",
         HEADER_X,

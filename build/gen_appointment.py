@@ -263,9 +263,9 @@ CONF_BODY = fill("""
     </div>
   </section>
 """) + leads_script()
-# The confirmation page loads the same script so the ob_generate_lead event fires here,
-# on the conversion URL. It is a one-shot flag set at submit time, so arriving at this
-# page directly fires nothing.
+# The confirmation page loads the same script for first touch and queue flushing only.
+# It is the conversion URL: GTM (GTM-KJLKZHT, in every <head>) fires the lead event
+# on this page. The script itself pushes no event (removed 2026-10-12).
 
 # UTILITY-PAGES-SPEC mobile nuance: the visitor has already converted, so this
 # page's sticky-bar centre segment becomes an explore action instead of "Book".

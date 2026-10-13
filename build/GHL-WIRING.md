@@ -218,8 +218,8 @@ interactive, `data-ob-lead="1"` and the notice disappears.
      anything else, including the platform's honest 503 when Postgres is down, queues
      the lead locally and shows the practice number. `/api/lead-result` is **not**
      called, because there is no GHL result to report.
-7. On success the `ob_generate_lead` event fires and the browser redirects to
-   `/appointment-request-confirmation`.
+7. On success the browser redirects to `/appointment-request-confirmation`. GTM
+   (GTM-KJLKZHT) fires the lead event on that page; the site code pushes nothing.
 
 A lead is never thanked for unless something durable accepted it. That is the whole
 reason the backup goes first.
@@ -231,30 +231,17 @@ no webhook exists, and even with one the native POST would send
 carries a `<noscript>` block telling the visitor to call the practice. Do not claim the
 no-JS path works until someone tests it against a real endpoint.
 
-### The `ob_generate_lead` event
+### Analytics
 
-**There is no existing analytics or event convention in this repository.** A search for
-`ob_generate_lead`, `dataLayer`, `gtag` and `generate_lead` across all HTML, Python,
-JS, Markdown and JSON returns nothing, and no `/thank-you/` page exists. The house name
-`ob_generate_lead` and the existing `appointment-request-confirmation.html` page were used
-on that basis.
+**GTM container GTM-KJLKZHT is the only analytics on the site** (installed 2026-10-12 on
+Steph's instruction). It is loaded in every page's `<head>` with the `<noscript>` frame
+after `<body>`: hand-placed in `index.html`, and emitted for every generated page by
+`GTM_HEAD` / `GTM_BODY` in `build/chrome.py`.
 
-No analytics vendor, pixel or third-party script was added, because the site is being
-de-CDN'd in parallel. The event only:
-
-- pushes onto `window.dataLayer` (creating the array if absent, which loads nothing), and
-- dispatches a DOM `CustomEvent` named `ob_generate_lead` on `document`.
-
-Event detail: `event`, `form_id`, `page`, `interest`, `utm_source`, `utm_medium`,
-`utm_campaign`, `offer`. **No name, email or phone is put in the event.**
-
-It fires twice by design: once on the form page at the moment of success, and once on the
-confirmation page, which is the conversion URL. The second firing uses a one-shot
-`sessionStorage` flag set at submit time, so navigating to the confirmation URL directly
-fires nothing. A tag installed later will catch the confirmation-page firing even though
-the redirect can cut the first one short.
-
----
+GTM owns the lead event and keys it on `/appointment-request-confirmation`, which only
+loads after a durable accept. `assets/js/ob-leads.js` pushes **nothing** to
+`window.dataLayer` and dispatches no DOM event: the earlier `ob_generate_lead` push and
+its `sessionStorage` one-shot flag were removed the same day.
 
 ## 6. In-browser queue (last resort, not the backup)
 
@@ -296,7 +283,6 @@ database the practice can query is the OrthoBoost Leads platform, §9.
 | `ob_attr_first_touch_v1` | localStorage | **90 days** (`LEAD_ATTR_DAYS`), checked and dropped on read | first-touch attribution |
 | `ob_attr_first_touch_v1` | sessionStorage | the browser session | mirror, for when localStorage is blocked but sessionStorage is not |
 | `ob_lead_queue_v1` | localStorage | 30 days | in-browser queue for a lead nothing accepted |
-| `ob_lead_event_pending_v1` | sessionStorage | one-shot, deleted on read | fires `ob_generate_lead` on the confirmation page |
 
 **No cookie is set anywhere by these forms.** A never-expiring attribution cookie is a
 known defect in the OrthoBoost WordPress plugin, and it is avoided here by not using
